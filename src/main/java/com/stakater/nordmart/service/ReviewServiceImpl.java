@@ -37,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> getReviews(String productId) {
+    public List<Review> getReviews(String productId) throws Exception {
         LOG.info("getReviews: " + productId);
         List<Review> ret = new ArrayList<Review>();
         for (Review review : repository.findByProductId(productId)) {
@@ -50,10 +50,10 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review addReview(String productId, String costumerName, int rating, String text) {
+    public Review addReview(String productId, String customerName, int rating, String text) throws Exception {
 
-        LOG.info("addReview: productId: " + productId + ", customerName: " + costumerName+ ", rating: " + rating+ ", text: " + text);
-        Review review = new Review(productId, costumerName, rating, text);
+        LOG.info("addReview: productId: " + productId + ", customerName: " + customerName + ", rating: " + rating+ ", text: " + text);
+        Review review = new Review(productId, customerName, rating, text);
         Date now = new Date();
         review.setDateTime(now);
         BasicDBObject timeNow = new BasicDBObject("date", now);
@@ -62,7 +62,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReview(String reviewId) {
+    public void deleteReview(String reviewId) throws Exception {
         LOG.info("deleteReview: " + reviewId);
         repository.deleteById(reviewId);
     }

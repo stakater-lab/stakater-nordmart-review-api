@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface ReviewService {
 
-    public List<Review> getReviews(String productId);
+    public List<Review> getReviews(String productId) throws Exception;
 
-    public Review addReview(String productId, String costumerName, int rating, String text);
-    public void deleteReview(String reviewId);
+    public Review addReview(String productId, String customerName, int rating, String text) throws Exception;
+    public void deleteReview(String reviewId) throws Exception;
 
 }

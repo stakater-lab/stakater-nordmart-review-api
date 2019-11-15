@@ -23,7 +23,7 @@ public class Review implements Serializable {
 
     }
 
-    public Review(String productId, String custumerName, int rating, String text) {
+    public Review(String productId, String customerName, int rating, String text) {
         super();
         if(rating < 1) {
             this.rating = 1;
@@ -36,7 +36,7 @@ public class Review implements Serializable {
             this.reviewText = text;
         }
         this.productId = productId;
-        this.customerName = custumerName;
+        this.customerName = customerName;
         this.dateTime = new Date();
 
     }
