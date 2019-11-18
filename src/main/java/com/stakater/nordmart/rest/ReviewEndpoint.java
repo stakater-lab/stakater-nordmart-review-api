@@ -23,18 +23,15 @@ public class ReviewEndpoint {
     @Autowired
     private ReviewService reviewService;
 
-    @GET
-    @Path("/{productId}")
+    @GetMapping("/{productId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    @CrossOrigin
     public List<Review> getReview(@PathParam("productId") String productId) throws Exception {
         List<Review> ret = reviewService.getReviews(productId);
         LOG.info("<rest getReview");
         return ret;
     }
 
-    @POST
-    @Path("/{productId}/{customerName}/{rating}/{text}")
+    @PostMapping("/{productId}/{customerName}/{rating}/{text}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public Review add(@PathParam("productId") String productId,
                    @PathParam("customerName") String customerName,
@@ -45,8 +42,7 @@ public class ReviewEndpoint {
     }
 
 
-    @DELETE
-    @Path("/{reviewId}")
+    @DeleteMapping("/{reviewId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathParam("reviewId") String reviewId
     ) throws Exception {
