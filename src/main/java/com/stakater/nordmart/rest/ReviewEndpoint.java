@@ -15,7 +15,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 @RestController
-@Scope(scopeName = WebApplicationContext.SCOPE_SESSION)
 @Path("/review")
 public class ReviewEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(ReviewEndpoint.class);
