@@ -9,10 +9,13 @@ import com.stakater.nordmart.service.ReviewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 @RestController
+@Path("/review")
 public class ReviewEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(ReviewEndpoint.class);
 
@@ -20,14 +23,18 @@ public class ReviewEndpoint {
     @Autowired
     private ReviewService reviewService;
 
-    @GetMapping("review/{productId}")
+    @GET
+    @Path("/{productId}")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
     public List<Review> getReview(@PathParam("productId") String productId) throws Exception {
         List<Review> ret = reviewService.getReviews(productId);
         LOG.info("<rest getReview");
         return ret;
     }
 
-    @PostMapping("review/{productId}/{customerName}/{rating}/{text}")
+    @POST
+    @Path("/{productId}/{customerName}/{rating}/{text}")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
     public Review add(@PathParam("productId") String productId,
                    @PathParam("customerName") String customerName,
                    @PathParam("rating") String rating,
@@ -37,7 +44,9 @@ public class ReviewEndpoint {
     }
 
 
-    @DeleteMapping("review/{reviewId}")
+    @DELETE
+    @Path("/{reviewId}")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathParam("reviewId") String reviewId
     ) throws Exception {
         reviewService.deleteReview(reviewId);
