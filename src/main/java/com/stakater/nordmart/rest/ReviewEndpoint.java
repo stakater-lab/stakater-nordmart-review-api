@@ -21,7 +21,6 @@ public class ReviewEndpoint {
     private ReviewService reviewService;
 
     @GetMapping("review/{productId}")
-    @Produces(MediaType.APPLICATION_JSON_VALUE)
     public List<Review> getReview(@PathParam("productId") String productId) throws Exception {
         List<Review> ret = reviewService.getReviews(productId);
         LOG.info("<rest getReview");
@@ -29,7 +28,6 @@ public class ReviewEndpoint {
     }
 
     @PostMapping("review/{productId}/{customerName}/{rating}/{text}")
-    @Produces(MediaType.APPLICATION_JSON_VALUE)
     public Review add(@PathParam("productId") String productId,
                    @PathParam("customerName") String customerName,
                    @PathParam("rating") String rating,
@@ -40,7 +38,6 @@ public class ReviewEndpoint {
 
 
     @DeleteMapping("review/{reviewId}")
-    @Produces(MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathParam("reviewId") String reviewId
     ) throws Exception {
         reviewService.deleteReview(reviewId);
