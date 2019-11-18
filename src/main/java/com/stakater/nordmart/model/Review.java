@@ -54,6 +54,28 @@ public class Review implements Serializable {
     public Date getDateTime() { return this.dateTime; }
     public void setDateTime(Date d) { this.dateTime = d; }
 
+
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public void setReviewText(String reviewText) {
+        this.reviewText = reviewText;
+    }
+
     @Override
     public String toString() {
         return String.format(
