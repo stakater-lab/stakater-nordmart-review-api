@@ -26,16 +26,16 @@ public class ReviewEndpoint {
     @Autowired
     private ReviewService reviewService;
 
-    @GET
+    /*@GET
     @Path("/{productId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public List<Review> getReview(@PathParam("productId") String productId) throws Exception {
         List<Review> ret = reviewService.getReviews(productId);
         LOG.info("<rest getReview");
         return ret;
-    }
+    }*/
     @GET
-    @Path("/a/{productId}")
+    @Path("/{productId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Review>> getReview2(@PathParam("productId") String productId) throws Exception {
         List<Review> ret = reviewService.getReviews(productId);
