@@ -26,13 +26,18 @@ public class ReviewEndpoint {
     @Autowired
     private ReviewService reviewService;
 
+
     @GET
     @Path("/{productId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public List<Review> getReview(@PathParam("productId") String productId) throws Exception {
+    public ResponseEntity<List<Review>> getReview2(@PathParam("productId") String productId) throws Exception {
         List<Review> ret = reviewService.getReviews(productId);
-        LOG.info("<rest getReview");
-        return ret;
+        LOG.info("<rest getReview2");
+
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.noCache())
+                .body(ret);
     }
 
     @POST
@@ -54,6 +59,7 @@ public class ReviewEndpoint {
     ) throws Exception {
         reviewService.deleteReview(reviewId);
     }
+
     @GET
     @Path("/logError")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
