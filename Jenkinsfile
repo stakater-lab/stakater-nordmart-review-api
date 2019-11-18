@@ -2,10 +2,10 @@
 @Library('github.com/stakater/stakater-pipeline-library@v2.16.15') _
 
 releaseApplication {
-    appName = "gateway"
+    appName = "review"
     appType = "maven"
     builderImage = "stakater/builder-maven:3.5.4-jdk1.8-apline8-v0.0.3"
-    goal = "clean package vertx:package"
+    goal = "clean package"
     notifySlack = true
     runIntegrationTest = false
     gitUser = "stakater-user"
