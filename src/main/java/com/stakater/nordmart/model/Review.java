@@ -23,17 +23,22 @@ public class Review implements Serializable {
 
     }
 
-    public Review(String productId, String customerName, int rating, String text) {
+    public Review(String productId, String customerName, String rating, String text) {
         super();
-        if(rating < 1) {
-            this.rating = 1;
-        } else if (rating > 5) {
-            this.rating = 5;
-        } else {
-            this.rating = rating;
-        }
-        if(text != null) {
-            this.reviewText = text;
+        try {
+            int ratingNumber = Integer.parseInt(rating);
+            if (ratingNumber < 1) {
+                this.rating = 1;
+            } else if (ratingNumber > 5) {
+                this.rating = 5;
+            } else {
+                this.rating = ratingNumber;
+            }
+            if (text != null) {
+                this.reviewText = text;
+            }
+        } catch (NumberFormatException ne) {
+
         }
         this.productId = productId;
         this.customerName = customerName;

@@ -8,7 +8,7 @@ public interface ReviewService {
 
     public List<Review> getReviews(String productId);
 
-    public Review addReview(String productId, String customerName, int rating, String text);
+    public Review addReview(String productId, String customerName, String rating, String text);
     public void deleteReview(String reviewId);
 
 }

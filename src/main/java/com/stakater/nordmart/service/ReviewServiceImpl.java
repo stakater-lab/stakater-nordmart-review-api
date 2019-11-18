@@ -30,10 +30,21 @@ public class ReviewServiceImpl implements ReviewService {
         if ("dev".contentEquals(mode)) {
             repository.deleteAll();
             // cache dummy review
-            Review dummy = new Review("666", "Dummy Review0", 3, "dev team thinks this product is ok...");
+            List<Review> dummy = new ArrayList<Review>();
+            dummy.add(new Review("329199", "Tolvan+Tolvansson", "3", "I+think+this+sticker+is+ok"));
+            dummy.add(new Review("329199", "Darth+Vader", "5", "Best+ever!+I+always+use+on+the+walls+of+the+death+star"));
+            dummy.add(new Review("329199", "Stormtrooper0032", "5", "My+boss+forced+me+to+put+5+stars"));
+            dummy.add(new Review("165613", "Frodo", "4", "Cool+enough+for+summer+warm+enough+for+winter"));
+            dummy.add(new Review("165614", "Dr+Nykterstein", "1", "i+dont+like+it"));
+            dummy.add(new Review("165614", "Marko+Polo", "2", "Not+what+I+was+looking+for"));
+            dummy.add(new Review("165954", "Marko+Polo", "5", "Exactly+what+I+was+looking+for!"));
+            dummy.add(new Review("444434", "Earthman", "3", "The+watch+is+average+I+think"));
+            dummy.add(new Review("444435", "Luke+Skywalker", "4", "My+goto+practice+gadget"));
             try {
-                repository.save(dummy);
-                LOG.info("Saved dummy review: " + dummy.toString());
+                for(Review r : dummy){
+                    repository.save(r);
+                    LOG.info("Saved dummy review: " + r.toString());
+                }
             } catch (IllegalArgumentException iae) {
                 LOG.error("Error saving the review");
                 LOG.error(iae.getMessage());
@@ -60,7 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review addReview(String productId, String customerName, int rating, String text) {
+    public Review addReview(String productId, String customerName, String rating, String text) {
 
         LOG.info("addReview: productId: " + productId + ", customerName: " + customerName + ", rating: " + rating+ ", text: " + text);
         Review review = new Review(productId, customerName, rating, text);

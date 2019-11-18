@@ -1,10 +1,8 @@
 package com.stakater.nordmart.rest;
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
-//import javax.ws.rs.core.MediaType;
+import org.springframework.http.MediaType;
 
 import com.stakater.nordmart.model.Review;
 import com.stakater.nordmart.service.ReviewService;
@@ -12,12 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
-import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @RestController
@@ -32,30 +26,31 @@ public class ReviewEndpoint {
 
     @GET
     @Path("/{productId}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
-    public List<Review> getReview(@PathParam("productId") String productId) {
+    public List<Review> getReview(@PathParam("productId") String productId) throws Exception {
         List<Review> ret = reviewService.getReviews(productId);
+        LOG.info("<rest getReview");
         return ret;
     }
 
     @POST
     @Path("/{productId}/{customerName}/{rating}/{text}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
     public Review add(@PathParam("productId") String productId,
                    @PathParam("customerName") String customerName,
-                   @PathParam("rating") int rating,
+                   @PathParam("rating") String rating,
                    @PathParam("text") String text
-                   ) {
+                   ) throws Exception {
         return reviewService.addReview(productId, customerName, rating, text);
     }
 
 
     @DELETE
     @Path("/{reviewId}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathParam("reviewId") String reviewId
-    ) {
+    ) throws Exception {
         reviewService.deleteReview(reviewId);
     }
 
