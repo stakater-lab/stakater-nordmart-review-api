@@ -11,6 +11,14 @@ USER 1001
 ENV HOME=/opt/app
 WORKDIR $HOME
 
+# Pass environment variables for jaeger opentracing
+ENV JAEGER_SERVICE_NAME=nordmart-opentracing\
+  JAEGER_PROPAGATION=b3\
+  JAEGER_TRACEID_128BIT=true\
+  JAEGER_REPORTER_LOG_SPANS=true\
+  JAEGER_SAMPLER_TYPE=const\
+  JAEGER_SAMPLER_PARAM=1
+
 # Expose the port on which your service will run
 EXPOSE 8080
 

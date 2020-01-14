@@ -3,6 +3,7 @@ package com.stakater.nordmart.rest;
 
 import javax.ws.rs.*;
 
+import com.stakater.nordmart.tracing.Traced;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 
@@ -27,6 +28,7 @@ public class ReviewEndpoint {
     private ReviewService reviewService;
 
 
+    @Traced
     @GET
     @Path("/{productId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -40,6 +42,7 @@ public class ReviewEndpoint {
                 .body(ret);
     }
 
+    @Traced
     @POST
     @Path("/{productId}/{customerName}/{rating}/{text}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -52,6 +55,7 @@ public class ReviewEndpoint {
     }
 
 
+    @Traced
     @DELETE
     @Path("/{reviewId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -60,6 +64,7 @@ public class ReviewEndpoint {
         reviewService.deleteReview(reviewId);
     }
 
+    @Traced
     @GET
     @Path("/logError")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
