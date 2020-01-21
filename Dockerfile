@@ -12,7 +12,7 @@ ENV HOME=/opt/app
 WORKDIR $HOME
 
 # Pass environment variables for jaeger opentracing
-ENV JAEGER_SERVICE_NAME=nordmart-opentracing\
+ENV JAEGER_SERVICE_NAME=nordmart-opentracing-review\
   JAEGER_PROPAGATION=b3\
   JAEGER_ENDPOINT="http://jaeger-collector.istio-system:14268/api/traces"\
   JAEGER_TRACEID_128BIT=true\
