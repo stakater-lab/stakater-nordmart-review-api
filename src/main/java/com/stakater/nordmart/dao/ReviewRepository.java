@@ -1,10 +1,10 @@
 package com.stakater.nordmart.dao;
 
 
-import java.util.List;
-
 import com.stakater.nordmart.model.Review;
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
 
 public interface ReviewRepository extends MongoRepository<Review, String> {
 

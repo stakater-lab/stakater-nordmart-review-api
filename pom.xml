@@ -90,25 +90,30 @@
             <version>${version.org.infinispan}</version>
         </dependency>
         <dependency>
-            <groupId>io.opentracing</groupId>
-            <artifactId>opentracing-api</artifactId>
-            <version>${version.opentracing}</version>
+            <groupId>io.opentracing.contrib</groupId>
+            <artifactId>opentracing-spring-cloud-starter</artifactId>
+            <version>0.0.7</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.opentracing.contrib</groupId>-->
-<!--            <artifactId>opentracing-spring-cloud-starter</artifactId>-->
-<!--            <version>${version.opentracing.spring}</version>-->
-<!--        </dependency>-->
         <dependency>
-            <groupId>io.jaegertracing</groupId>
+            <groupId>com.uber.jaeger</groupId>
             <artifactId>jaeger-core</artifactId>
-            <version>${version.jaeger}</version>
+            <version>0.21.0</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.jaegertracing</groupId>-->
-<!--            <artifactId>jaeger-client</artifactId>-->
-<!--            <version>${version.jaeger}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.uber.jaeger</groupId>
+            <artifactId>jaeger-b3</artifactId>
+            <version>0.21.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.opentracing.brave</groupId>
+            <artifactId>brave-opentracing</artifactId>
+            <version>0.21.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.zipkin.reporter</groupId>
+            <artifactId>zipkin-sender-okhttp3</artifactId>
+            <version>0.10.0</version>
+        </dependency>
     </dependencies>
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
