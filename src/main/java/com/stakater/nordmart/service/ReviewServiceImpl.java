@@ -3,6 +3,7 @@ package com.stakater.nordmart.service;
 import com.mongodb.BasicDBObject;
 import com.stakater.nordmart.dao.ReviewRepository;
 import com.stakater.nordmart.model.Review;
+import com.stakater.nordmart.tracing.Traced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Value("${application.mode}")
     String mode;
 
-
+    @Traced
     @PostConstruct
     public void init() {
         if ("dev".contentEquals(mode)) {
@@ -52,6 +53,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+    @Traced
     @Override
     public List<Review> getReviews(String productId) {
         LOG.info("getReviews: " + productId);
@@ -70,6 +72,7 @@ public class ReviewServiceImpl implements ReviewService {
         return ret;
     }
 
+    @Traced
     @Override
     public Review addReview(String productId, String customerName, String rating, String text) {
 
@@ -88,6 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
         return review;
     }
 
+    @Traced
     @Override
     public void deleteReview(String reviewId) {
         LOG.info("deleteReview: " + reviewId);
