@@ -1,0 +1,48 @@
+---
+# Source: application/templates/deployment.yaml
+
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: review
+    group: com.stakater.platform
+    provider: stakater
+    version: "1.0.0"
+    chart: "application-0.0.12"
+    release: "RELEASE-NAME"
+    heritage: "Tiller"
+  annotations:
+    reloader.stakater.com/auto: "true"
+    
+  name: review
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: review
+        group: com.stakater.platform
+        provider: stakater
+        version: "1.0.0"
+        chart: "application-0.0.12"
+        release: "RELEASE-NAME"
+        heritage: "Tiller"
+        app: review
+        
+    spec:      
+      imagePullSecrets:
+      - name: docker-registry-nexus-secret
+      containers:
+      - name: review
+        image: "docker.release.stakater.com:443/stakater/review:v0.0.2"
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: DB_NAME
+            value: nordmartDB
+          - name: MONGO_HOST
+            value: mongodb-svc.nordmart-dev-apps.svc.cluster.local
+          - name: JAEGER_ENDPOINT
+            value: http://jaeger-collector.istio-system:14268/api/traces
+          
+      serviceAccountName: default        
