@@ -43,19 +43,4 @@ rbac:
   serviceAccount:
     create: true
 configMap:
-      enabled: false
-
-ingress:
   enabled: false
-  servicePort: 8080
-  hosts:
-    - chart-example.local
-  annotations: 
-    # kubernetes.io/ingress.class: external-ingress
-    # ingress.kubernetes.io/rewrite-target: /
-    # ingress.kubernetes.io/force-ssl-redirect: true
-  tls:
-    # Secrets must be manually created in the namespace.
-    # - secretName: chart-example-tls
-    #   hosts:
-    #     - chart-example.local
