@@ -1,20 +1,46 @@
 applicationName: "review"
 deployment:
+    annotations:
   podLabels:
     app: review
+  volumes: {}
   image:
-    repository: docker.release.stakater.com:443/stakater/review
-    tag: v0.0.2
+    repository: stakater/review
+    tag: v0.0.1
   env:
   - name: DB_NAME
     value: "nordmartDB"
   - name: MONGO_HOST
-    value: "mongodb-svc.nordmart-dev-apps.svc.cluster.local"
+    value: "mongodb-svc"
   - name: JAEGER_ENDPOINT
     value: "http://jaeger-collector.istio-system:14268/api/traces"
-  imagePullSecrets: "docker-registry-nexus-secret"
+  probes:
+    readinessProbe:
+      failureThreshold: 3
+      periodSeconds: 60
+      successThreshold: 1
+      timeoutSeconds: 1
+      initialDelaySeconds: 10
+      httpGet:
+        path: /health
+        port: 8080
+    livenessProbe:
+      failureThreshold: 3
+      periodSeconds: 60
+      successThreshold: 1
+      timeoutSeconds: 1
+      initialDelaySeconds: 10
+      httpGet:
+        path: /health
+        port: 8080
+service:
+  ports:
+  - port: 8080
+    name: https
+    targetPort: 8080
 rbac:
-  create: false
+  create: true
   serviceAccount:
-    name: default
-configMap: {}
+    create: true
+configMap:
+  enabled: false
