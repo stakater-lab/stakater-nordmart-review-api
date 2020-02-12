@@ -6,7 +6,7 @@
 
     <groupId>com.stakater.nordmart</groupId>
     <artifactId>review</artifactId>
-    <version>v0.0.2</version>
+    <version>v0.0.3</version>
     <name>Nordmart Review Service</name>
     <description>Nordmart Review Service with Spring Boot</description>
     <properties>
