@@ -1,11 +1,11 @@
 applicationName: "review"
 deployment:
-    annotations:
+  annotations:
   podLabels:
     app: review
   volumes: {}
   image:
-    repository: stakater/review
+    repository: stakater/stakater-nordmart-review
     tag: v0.0.1
   env:
   - name: DB_NAME
