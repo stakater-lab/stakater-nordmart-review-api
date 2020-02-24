@@ -1,5 +1,7 @@
 applicationName: "review"
 deployment:
+  additionalLabels:
+    appCategory: "backend"
   annotations:
   podLabels:
     app: review
