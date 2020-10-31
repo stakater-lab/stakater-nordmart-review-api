@@ -1,29 +1,29 @@
-FROM gcr.io/distroless/java:8
+## BUILD
+FROM maven:3.6.3-openjdk-11-slim AS build
+COPY src /usr/src/app/src
+COPY pom.xml /usr/src/app
+RUN mvn -f /usr/src/app/pom.xml clean package
 
-LABEL name="Cart Service" \
-      maintainer="hello@stakater.com" \
+## RUN
+FROM registry.access.redhat.com/ubi8/openjdk-11
+
+LABEL name="review" \
+      maintainer="Stakater <hello@stakater.com>" \
       vendor="Stakater" \
       release="1" \
-      summary="Project containing cart service for Nordmart"
+      summary="Java Spring boot application"
 
-USER 1001
-
+# Set working directory
 ENV HOME=/opt/app
 WORKDIR $HOME
-
-# Pass environment variables for jaeger opentracing
-ENV JAEGER_SERVICE_NAME=nordmart-opentracing-review\
-  JAEGER_PROPAGATION=b3\
-  JAEGER_ENDPOINT="http://jaeger-collector.istio-system:14268/api/traces"\
-  JAEGER_TRACEID_128BIT=true\
-  JAEGER_REPORTER_LOG_SPANS=true\
-  JAEGER_SAMPLER_TYPE=const\
-  JAEGER_SAMPLER_PARAM=1
 
 # Expose the port on which your service will run
 EXPOSE 8080
 
 # NOTE we assume there's only 1 jar in the target dir
-COPY target/*.jar $HOME/artifacts/app.jar
+COPY --from=build /usr/src/app/target/*.jar $HOME/artifacts/app.jar
 
-CMD ["artifacts/app.jar"]
+USER 1001
+
+# Set Entrypoint
+ENTRYPOINT exec java $JAVA_OPTS -jar artifacts/app.jar
