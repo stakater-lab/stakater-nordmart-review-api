@@ -1,0 +1,58 @@
+application: 
+ applicationName: "review"
+ deployment:
+   additionalLabels:
+     appCategory: "backend"
+   annotations:
+   podLabels:
+     app: review
+   volumes: {}
+   image:
+     repository: stakater/stakater-nordmart-review
+     tag: v0.0.2
+   env:
+   - name: DB_NAME
+     value: "nordmartDB"
+   - name: MONGO_HOST
+     value: "mongodb"
+   - name: JAEGER_ENDPOINT
+     value: "http://jaeger-collector.istio-system:14268/api/traces"
+   probes:
+     readinessProbe:
+       failureThreshold: 3
+       periodSeconds: 60
+       successThreshold: 1
+       timeoutSeconds: 1
+       initialDelaySeconds: 10
+       httpGet:
+         path: /health
+         port: 8080
+     livenessProbe:
+       failureThreshold: 3
+       periodSeconds: 60
+       successThreshold: 1
+       timeoutSeconds: 1
+       initialDelaySeconds: 10
+       httpGet:
+         path: /health
+         port: 8080
+ service:
+   ports:
+   - port: 8080
+     name: https
+     targetPort: 8080
+ rbac:
+   create: true
+   serviceAccount:
+     create: true
+     enabled: true
+ configMap:
+   enabled: false
+mongodb:
+  auth:
+    enabled: false
+  fullnameOverride: mongodb  
+  podSecurityContext:
+    enabled: false
+  containerSecurityContext:
+    enabled: false
