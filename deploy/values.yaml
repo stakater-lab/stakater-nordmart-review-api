@@ -4,8 +4,6 @@ application:
    additionalLabels:
      appCategory: "backend"
    annotations:
-   podLabels:
-     app: review
    volumes: {}
    image:
      repository: stakater/stakater-nordmart-review
