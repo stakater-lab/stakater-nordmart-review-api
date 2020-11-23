@@ -5,6 +5,7 @@ application:
      appCategory: "backend"
    annotations:
    volumes: {}
+   imagePullSecrets: nexus-creds 
    image:
      repository: stakater/stakater-nordmart-review
      tag: v0.0.2
@@ -12,7 +13,7 @@ application:
    - name: DB_NAME
      value: "nordmartDB"
    - name: MONGO_HOST
-     value: "mongodb"
+     value: "review-mongodb"
    - name: JAEGER_ENDPOINT
      value: "http://jaeger-collector.istio-system:14268/api/traces"
    probes:
@@ -49,7 +50,7 @@ application:
 mongodb:
   auth:
     enabled: false
-  fullnameOverride: mongodb  
+  fullnameOverride: review-mongodb  
   podSecurityContext:
     enabled: false
   containerSecurityContext:
