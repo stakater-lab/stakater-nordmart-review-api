@@ -9,6 +9,13 @@ application:
    image:
      repository: stakater/stakater-nordmart-review
      tag: v0.0.2
+   resources: 
+     limits:
+       memory: 1Gi 
+       cpu: 0.5
+     requests:
+       memory: 128Mi
+       cpu: 0.1
    env:
    - name: DB_NAME
      value: "nordmartDB"
