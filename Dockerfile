@@ -5,7 +5,7 @@ COPY pom.xml /usr/src/app
 RUN mvn -f /usr/src/app/pom.xml clean package
 
 ## RUN
-FROM registry.access.redhat.com/ubi8/openjdk-11
+FROM registry.access.redhat.com/ubi8/openjdk-8
 
 LABEL name="review" \
       maintainer="Stakater <hello@stakater.com>" \
