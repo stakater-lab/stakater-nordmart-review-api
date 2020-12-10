@@ -5,7 +5,7 @@ application:
      appCategory: "backend"
    annotations:
    volumes: {}
-   imagePullSecrets: nexus-creds 
+   imagePullSecrets: nexus-docker-config-forked 
    image:
      repository: stakater/stakater-nordmart-review
      tag: v0.0.2
