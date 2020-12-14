@@ -1,11 +1,22 @@
 application: 
  applicationName: "review"
+ configMap:
+    enabled: true
+    files:
+    - nameSuffix: ""
+      data:
+        DB_NAME: "nordmartDB"
+        MONGO_HOST: "review-mongodb"
+        JAEGER_ENDPOINT: "http://jaeger-collector.istio-system:14268/api/traces"
  deployment:
    additionalLabels:
      appCategory: "backend"
    annotations:
    volumes: {}
-   imagePullSecrets: nexus-docker-config-forked 
+   imagePullSecrets: nexus-docker-config-forked
+   envFrom:
+    - type: configmap
+      name: ""    
    image:
      repository: stakater/stakater-nordmart-review
      tag: v0.0.2
@@ -16,13 +27,7 @@ application:
      requests:
        memory: 128Mi
        cpu: 0.1
-   env:
-   - name: DB_NAME
-     value: "nordmartDB"
-   - name: MONGO_HOST
-     value: "review-mongodb"
-   - name: JAEGER_ENDPOINT
-     value: "http://jaeger-collector.istio-system:14268/api/traces"
+
    probes:
      readinessProbe:
        failureThreshold: 3
@@ -52,8 +57,6 @@ application:
    serviceAccount:
      create: true
      enabled: true
- configMap:
-   enabled: false
 mongodb:
   auth:
     enabled: false
