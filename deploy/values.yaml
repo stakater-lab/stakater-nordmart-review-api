@@ -1,5 +1,9 @@
 application: 
  applicationName: "review"
+ route:
+    enabled: true
+    port:
+      targetPort: https
  configMap:
     enabled: true
     files:
