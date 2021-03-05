@@ -1,5 +1,13 @@
 application: 
  applicationName: "review"
+ space:
+    enabled: true
+    additionalLabels:
+      kind: pr
+      team: gabbar
+    annotations:
+      argocd.argoproj.io/sync-wave: "-1"
+    tenant: gabbar
  route:
     enabled: true
     port:
