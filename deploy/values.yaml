@@ -1,5 +1,17 @@
 application: 
  applicationName: "review"
+ space:
+    enabled: true
+    additionalLabels:
+      kind: pr
+      team: gabbar
+    annotations:
+      argocd.argoproj.io/sync-wave: "-1"
+    tenant: gabbar
+ route:
+    enabled: true
+    port:
+      targetPort: https
  configMap:
     enabled: true
     files:
@@ -27,7 +39,6 @@ application:
      requests:
        memory: 128Mi
        cpu: 0.1
-
    probes:
      readinessProbe:
        failureThreshold: 3
