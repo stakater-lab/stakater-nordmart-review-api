@@ -12,6 +12,10 @@ It requires following things to be installed:
 * Maven
 * Mongodb
 
+## Dummy Data
+
+Some dummy data is loaded into the system which can be found here: https://github.com/stakater-lab/stakater-nordmart-review/blob/master/src/main/java/com/stakater/nordmart/service/ReviewServiceImpl.java#L30-L54
+
 ## Deployment strategy
 
 ### Local deployment
