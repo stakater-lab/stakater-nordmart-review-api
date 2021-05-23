@@ -1,6 +1,5 @@
 package com.stakater.nordmart.rest;
 
-
 import com.stakater.nordmart.model.Review;
 import com.stakater.nordmart.service.ReviewService;
 import com.stakater.nordmart.tracing.Traced;
@@ -26,10 +25,8 @@ import java.util.List;
 public class ReviewEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(ReviewEndpoint.class);
 
-
     @Autowired
     private ReviewService reviewService;
-
 
     @Traced
     @GET
