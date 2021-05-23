@@ -41,9 +41,9 @@ mvn clean spring-boot:run
 - `/review/{productId}`
   - Get a review for the given product id
 - `/review/{productId}/{customerName}/{rating}/{text}`
-  Add a review for the given product id
+  - Add a review for the given product id
 - `/review/{reviewId}`
-  Delete a review for the given product id
+  - Delete a review for the given product id
 
 ## Configuration
 
