@@ -54,7 +54,6 @@ public class ReviewEndpoint {
         return reviewService.addReview(productId, customerName, rating, text);
     }
 
-
     @Traced
     @DELETE
     @Path("/{reviewId}")
