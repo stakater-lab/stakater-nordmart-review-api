@@ -1,8 +1,18 @@
 # stakater-nordmart-review
 
-## Overview
+Spring Boot microservice for product reviews
 
-A maven spring boot review application.
+## Introduction
+
+This project implements review functionality for the products. It provides CRUDS API for reviews
+
+## User scenarios
+
+### Review Operations
+
+- Add: add a product review
+- Delete: delete a product review
+- Get: get all reviews for a given product
 
 ## Dependencies
 
@@ -25,3 +35,11 @@ To run the application locally use the command given below:
 ```bash
 mvn clean spring-boot:run
 ```
+
+## APIs
+
+_TODO_
+
+## Configuration
+
+_TODO_
