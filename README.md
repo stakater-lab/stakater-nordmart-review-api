@@ -39,7 +39,7 @@ mvn clean spring-boot:run
 ## APIs
 
 - `/review/{productId}`
-  Get a review for the given product id
+  - Get a review for the given product id
 - `/review/{productId}/{customerName}/{rating}/{text}`
   Add a review for the given product id
 - `/review/{reviewId}`
