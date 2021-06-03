@@ -69,6 +69,13 @@ application:
      create: true
      enabled: true
 mongodb:
+  resources:
+   limits: 
+     cpu: 100m
+     memory: 128Mi
+   requests: 
+     cpu: 100m
+     memory: 128Mi
   auth:
     enabled: false
   fullnameOverride: review-mongodb  
