@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: review
+    appVersion: "v0.0.2"
+    group: com.stakater.platform
+    provider: stakater
+    team: stakater
+    chart: "application-0.0.31"
+    release: "stakater-nordmart-review"
+    heritage: "Helm"
+  name: review
+data:
+  DB_NAME: nordmartDB
+  JAEGER_ENDPOINT: http://jaeger-collector.istio-system:14268/api/traces
+  MONGO_HOST: review-mongodb
+

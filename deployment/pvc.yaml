@@ -1,0 +1,18 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: review-mongodb
+  namespace: default
+  labels:
+    app.kubernetes.io/name: mongodb
+    helm.sh/chart: mongodb-10.0.5
+    app.kubernetes.io/instance: stakater-nordmart-review
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: mongodb
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "8Gi"
+
