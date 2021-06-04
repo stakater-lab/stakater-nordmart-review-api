@@ -10,6 +10,8 @@ application:
     tenant: disp
  route:
     enabled: true
+    additionalLabels:
+       router: default
     port:
       targetPort: https
  configMap:
