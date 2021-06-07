@@ -1,9 +1,3 @@
-## BUILD
-FROM maven:3.6.3-openjdk-11-slim AS build
-COPY src /usr/src/app/src
-COPY pom.xml /usr/src/app
-RUN mvn -f /usr/src/app/pom.xml clean package
-
 ## RUN
 FROM registry.access.redhat.com/ubi8/openjdk-8
 
@@ -21,7 +15,7 @@ WORKDIR $HOME
 EXPOSE 8080
 
 # NOTE we assume there's only 1 jar in the target dir
-COPY --from=build /usr/src/app/target/*.jar $HOME/artifacts/app.jar
+COPY target/*.jar $HOME/artifacts/app.jar
 
 USER 1001
 
