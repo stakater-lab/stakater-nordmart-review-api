@@ -4,10 +4,10 @@ application:
     enabled: true
     additionalLabels:
       kind: pr
-      team: disp
+      team: gabbar
     annotations:
       argocd.argoproj.io/sync-wave: "-1"
-    tenant: disp
+    tenant: gabbar
  route:
     enabled: true
     additionalLabels:
@@ -32,8 +32,10 @@ application:
     - type: configmap
       name: ""    
    image:
-     repository: stakater/stakater-nordmart-review
-     tag: v0.0.2
+     # replaced by CI pipeline
+     repository: {{ IMAGE }}
+     # replaced by CI pipeline     
+     tag: {{ TAG }}
    resources: 
      limits:
        memory: 1Gi 
