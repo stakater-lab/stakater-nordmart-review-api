@@ -4,10 +4,10 @@ application:
     enabled: true
     additionalLabels:
       kind: pr
-      team: disp
+      team: gabbar
     annotations:
       argocd.argoproj.io/sync-wave: "-1"
-    tenant: disp
+    tenant: gabbar
  route:
     enabled: true
     additionalLabels:
