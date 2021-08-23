@@ -33,9 +33,9 @@ application:
       name: ""    
    image:
      # replaced by CI pipeline
-     repository: {{ IMAGE }}
+     repository: IMAGE 
      # replaced by CI pipeline     
-     tag: {{ TAG }}
+     tag: TAG 
    resources: 
      limits:
        memory: 1Gi 
