@@ -1,5 +1,5 @@
 # stakater-nordmart-review
-sa
+ssa
 Spring Boot microservice for product reviews
 
 ## Introduction
