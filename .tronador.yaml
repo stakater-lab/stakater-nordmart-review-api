@@ -1,0 +1,28 @@
+---
+version: v1alpha1
+target_branches:
+  - master
+application:
+  chart_path: deploy
+  chart_vars_repo_path:
+    - "values.yaml"
+  value_overrides:
+    - "some.value=foobar"
+dependencies:
+  - name: backend
+    chart_path: deploy
+    chart_vars_repo_path:
+      - "values.yaml"
+    value_overrides:
+      - "some.value=foobar"
+    type: repo
+  - name: wordpress
+    chart_repo_path: https://charts.bitnami.com/bitnami
+    version: 12.0.3
+    requires:
+      - nginx
+    type: chart
+  - name: nginx
+    chart_repo_path: https://charts.bitnami.com/bitnami
+    version: 9.4.2
+    type: chart
