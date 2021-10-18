@@ -5,15 +5,11 @@
 
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load('ext://restart_process', 'docker_build_with_restart')
-load('ext://namespace', 'namespace_create', 'namespace_inject')
 
 settings = read_json('tilt_options.json', default={})
 
 if settings.get("namespace"):
   namespace =  settings.get("namespace")
-
-# TODO: The namespace creation should be handled outside of the tilt-file
-namespace_create(namespace)
 
 if settings.get("default_registry"):
   default_registry(settings.get("default_registry").format(namespace), host_from_cluster='image-registry.openshift-image-registry.svc:5000/{}'.format(namespace))
