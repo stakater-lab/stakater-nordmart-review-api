@@ -4,6 +4,6 @@ dependencies:
   version: 10.0.5
 - name: application
   repository: https://stakater.github.io/stakater-charts
-  version: 0.0.31
-digest: sha256:e5af18182b1cc87a7da666701ed297e5fa55e5198115f5e6c8196d50720b81ff
-generated: "2020-12-14T19:55:37.862512843+05:00"
+  version: 0.0.69
+digest: sha256:11e34b6b9769891e7dedf23398b934b530af8fe8dba6cd87de771f9ab1f94d7b
+generated: "2021-10-15T11:38:39.763664+02:00"

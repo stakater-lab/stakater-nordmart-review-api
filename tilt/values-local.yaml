@@ -1,0 +1,10 @@
+application:
+
+  space:
+    enabled: false
+
+  deployment:
+    imagePullSecrets: null
+
+    # Tilt live update only supports one replica
+    replicas: 1

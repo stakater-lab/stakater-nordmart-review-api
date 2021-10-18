@@ -1,9 +1,7 @@
 package com.stakater.nordmart.rest;
 
-
 import com.stakater.nordmart.model.Review;
 import com.stakater.nordmart.service.ReviewService;
-import com.stakater.nordmart.tracing.Traced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +24,9 @@ import java.util.List;
 public class ReviewEndpoint {
     private static final Logger LOG = LoggerFactory.getLogger(ReviewEndpoint.class);
 
-
     @Autowired
     private ReviewService reviewService;
 
-
-    @Traced
     @GET
     @Path("/{productId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -45,7 +40,6 @@ public class ReviewEndpoint {
                 .body(ret);
     }
 
-    @Traced
     @POST
     @Path("/{productId}/{customerName}/{rating}/{text}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -57,8 +51,6 @@ public class ReviewEndpoint {
         return reviewService.addReview(productId, customerName, rating, text);
     }
 
-
-    @Traced
     @DELETE
     @Path("/{reviewId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -67,13 +59,18 @@ public class ReviewEndpoint {
         reviewService.deleteReview(reviewId);
     }
 
-    @Traced
     @GET
     @Path("/logError")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
-    public void logError() {
-        LOG.error("LOGGING ERROR");
+    public ResponseEntity<String> logError() {
+        String msg = "LOGGING ERROR FOR TILT HANZALA";
+        LOG.error(msg);
+
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.noCache())
+                .body(msg);                
     }
 
 }

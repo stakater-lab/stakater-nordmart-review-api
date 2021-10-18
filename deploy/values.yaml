@@ -1,5 +1,8 @@
+# Application / App / Microservice
 application: 
+
  applicationName: "review"
+
  space:
     enabled: true
     additionalLabels:
@@ -8,10 +11,12 @@ application:
     annotations:
       argocd.argoproj.io/sync-wave: "-1"
     tenant: gabbar
+
  route:
     enabled: true
     port:
       targetPort: https
+
  configMap:
     enabled: true
     files:
@@ -19,7 +24,7 @@ application:
       data:
         DB_NAME: "nordmartDB"
         MONGO_HOST: "review-mongodb"
-        JAEGER_ENDPOINT: "http://jaeger-collector.istio-system:14268/api/traces"
+
  deployment:
    additionalLabels:
      appCategory: "backend"
@@ -48,7 +53,7 @@ application:
        timeoutSeconds: 1
        initialDelaySeconds: 10
        httpGet:
-         path: /health
+         path: /actuator/health/readiness
          port: 8080
      livenessProbe:
        failureThreshold: 3
@@ -57,23 +62,31 @@ application:
        timeoutSeconds: 1
        initialDelaySeconds: 10
        httpGet:
-         path: /health
+         path: /actuator/health/readiness
          port: 8080
+
  service:
    ports:
    - port: 8080
      name: https
      targetPort: 8080
+
  rbac:
    create: true
    serviceAccount:
      create: true
      enabled: true
+
+# MongoDB dependency
 mongodb:
+
+  fullnameOverride: review-mongodb  
+
   auth:
     enabled: false
-  fullnameOverride: review-mongodb  
+
   podSecurityContext:
     enabled: false
+
   containerSecurityContext:
     enabled: false
