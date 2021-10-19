@@ -12,9 +12,7 @@ This project implements review functionality for the products; it provides CRUDS
 
 - Add: add a product review
 - Delete: delete a product review
-- 
 - Get: get all reviews for a given product
-
 
 ## Dependencies
 
