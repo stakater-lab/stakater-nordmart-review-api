@@ -1,6 +1,5 @@
 package com.stakater.nordmart.service;
 
-import com.mongodb.BasicDBObject;
 import com.stakater.nordmart.dao.ReviewRepository;
 import com.stakater.nordmart.model.Review;
 import org.slf4j.Logger;

@@ -1,7 +1,8 @@
 # Prerequisites:
-# 1. oc login
-# 2. docker login
-# 3. cd deploy; helm dependency update
+# 1. oc login --token=<TOKEN> --server=<SERVER>
+# 2. HOST=$(oc get route default-route -n openshift-image-registry --template='{{ .spec.host }}')
+# 3. docker login -u <USERNAME> -p $(oc whoami -t) $HOST
+# 4. cd deploy; helm dependency update
 
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load('ext://restart_process', 'docker_build_with_restart')
@@ -21,7 +22,6 @@ if settings.get("allow_k8s_contexts"):
 local_resource(
   'compile',
   'mvn package && ' +
-  # TODO: why review-v0.0.0?
   'java -Djarmode=layertools -jar target/review-v0.0.0-SNAPSHOT.jar extract --destination target/jar-extracted && ' +
   'rsync --delete --inplace --checksum -r target/jar-extracted/ target/jar',
   deps=['src', 'pom.xml'])
