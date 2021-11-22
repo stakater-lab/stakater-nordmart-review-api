@@ -2,7 +2,8 @@
 application: 
 
  applicationName: "review"
-
+ namespace:
+   enabled: true
  space:
     enabled: true
     additionalLabels:
