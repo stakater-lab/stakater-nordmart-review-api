@@ -4,6 +4,10 @@ application:
  applicationName: "review"
  namespace:
    enabled: true
+   additionalLabels:
+      kind: pr
+      team: gabbar
+      stakter.com/tenant: gabbar
  space:
     enabled: true
     additionalLabels:
