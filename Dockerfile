@@ -1,3 +1,6 @@
+#########################################
+## BUILD
+#########################################
 FROM maven:3.8.2-openjdk-11 as  builder
 
 WORKDIR /usr/src/app
@@ -12,6 +15,8 @@ RUN mkdir -p dependencies/ \
     && touch application/.dockerignore
 
 COPY pom.xml /usr/src/app
+
+RUN mvn -f /usr/src/app/pom.xml clean package
 # NOTE we assume there's only 1 jar in the target dir
 COPY target/*.jar target/app.jar
 
