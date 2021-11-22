@@ -7,7 +7,7 @@ application:
    additionalLabels:
       kind: pr
       team: gabbar
-      stakter.com/tenant: gabbar
+      stakater.com/tenant: gabbar
  space:
     enabled: true
     additionalLabels:
