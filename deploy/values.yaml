@@ -43,11 +43,14 @@ application:
            secretProviderClass: mongo-host
    imagePullSecrets: nexus-docker-config-forked
    envFrom:
-    - type: configmap
-      name: "" 
-    - secretRef:
-        name: secret-mongo-host
-        key: MONGO_HOST
+     - type: configmap
+       name: "" 
+   env:
+     - name: MONGO_HOST
+       valueFrom:
+         - secretKeyRef:
+           name: secret-mongo-host
+           key: MONGO_HOST
    volumeMounts:
      - name: vault-db-creds
        readOnly: true
