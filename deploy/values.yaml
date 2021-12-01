@@ -48,7 +48,7 @@ application:
    env:
      - name: MONGO_HOST
        valueFrom:
-         - secretKeyRef:
+         secretKeyRef:
            name: secret-mongo-host
            key: MONGO_HOST
    volumeMounts:
