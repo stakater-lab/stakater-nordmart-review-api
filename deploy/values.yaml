@@ -28,30 +28,17 @@ application:
     - nameSuffix: ""
       data:
         DB_NAME: "nordmartDB"
-        #MONGO_HOST: "review-mongodb"
+        MONGO_HOST: "review-mongodb"
 
  deployment:
    additionalLabels:
      appCategory: "backend"
    annotations:
-   volumes:
-     - name: vault-db-creds
-       csi:
-         driver: secrets-store.csi.k8s.io
-         readOnly: true
-         volumeAttributes:
-           secretProviderClass: mongo-host
+   volumes: {} 
    imagePullSecrets: nexus-docker-config-forked
    envFrom:
     - type: configmap
       name: "" 
-    - secretRef:
-        name: secret-mongo-host
-        key: MONGO_HOST
-   volumeMounts:
-     - name: vault-db-creds
-       readOnly: true
-       mountPath: /data/abc
    image:
      repository: stakater/stakater-nordmart-review
      tag: v0.0.2
