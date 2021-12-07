@@ -8,9 +8,6 @@ application:
       kind: pr
       team: gabbar
       stakater.com/tenant: gabbar
- space:
-    enabled: false
-
  route:
     enabled: true
     port:
