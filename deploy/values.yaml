@@ -8,15 +8,6 @@ application:
       kind: pr
       team: gabbar
       stakater.com/tenant: gabbar
- space:
-    enabled: true
-    additionalLabels:
-      kind: pr
-      team: gabbar
-    annotations:
-      argocd.argoproj.io/sync-wave: "-1"
-    tenant: gabbar
-
  route:
     enabled: true
     port:
