@@ -26,7 +26,7 @@ application:
   name: mongo-host
   provider: vault
   vaultAddress: "http://vault:8200"
-  roleName: "testing-role"
+  roleName: '{{ .Release.Namespace }}'
   objects: |
     - objectName: "MONGO_HOST"
       secretPath: "gabbar/kv/data/mongoDb"
@@ -34,7 +34,7 @@ application:
   secretObjects:
     - data:
       - key: MONGO_HOST
-        objectName: mongo-host
+        objectName: MONGO_HOST
       secretName: secret-mongo-host
       type: Opaque 
 
