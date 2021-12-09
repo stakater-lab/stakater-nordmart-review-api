@@ -19,7 +19,24 @@ application:
     - nameSuffix: ""
       data:
         DB_NAME: "nordmartDB"
-        MONGO_HOST: "review-mongodb"
+        #MONGO_HOST: "review-mongodb"
+ 
+ secretProviderClass:
+  enabled: true
+  name: mongo-host
+  provider: vault
+  vaultAddress: "http://vault:8200"
+  roleName: "testing-role"
+  objects: |
+    - objectName: "MONGO_HOST"
+      secretPath: "gabbar/kv/data/mongoDb"
+      secretKey: "MONGO_HOST"  
+  secretObjects:
+    - data:
+      - key: MONGO_HOST
+        objectName: mongo-host
+      secretName: secret-mongo-host
+      type: Opaque 
 
  deployment:
    additionalLabels:
