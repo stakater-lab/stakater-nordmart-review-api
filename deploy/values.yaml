@@ -42,11 +42,27 @@ application:
    additionalLabels:
      appCategory: "backend"
    annotations:
-   volumes: {} 
+   volumes: 
+     - name: mongo-db-creds
+       csi:
+         driver: secrets-store.csi.k8s.io
+         readOnly: true
+         volumeAttributes:
+           secretProviderClass: mongo-host
    imagePullSecrets: nexus-docker-config-forked
    envFrom:
     - type: configmap
-      name: "" 
+      name: ""
+   env:
+     - name: MONGO_HOST
+       valueFrom:
+         secretKeyRef:
+           name: secret-mongo-host
+           key: MONGO_HOST
+   volumeMounts:
+     - name: mongo-db-creds
+       readOnly: true
+       mountPath: /data/db-creds
    image:
      repository: stakater/stakater-nordmart-review
      tag: v0.0.2
