@@ -19,17 +19,50 @@ application:
     - nameSuffix: ""
       data:
         DB_NAME: "nordmartDB"
-        MONGO_HOST: "review-mongodb"
+        #MONGO_HOST: "review-mongodb"
+ 
+ secretProviderClass:
+  enabled: true
+  name: mongo-host
+  provider: vault
+  vaultAddress: "http://vault:8200"
+  roleName: '{{ .Release.Namespace }}'
+  objects: |
+    - objectName: "MONGO_HOST"
+      secretPath: "gabbar/kv/data/mongoDb"
+      secretKey: "MONGO_HOST"  
+  secretObjects:
+    - data:
+      - key: MONGO_HOST
+        objectName: MONGO_HOST
+      secretName: secret-mongo-host
+      type: Opaque 
 
  deployment:
    additionalLabels:
      appCategory: "backend"
    annotations:
-   volumes: {} 
+   volumes: 
+     - name: mongo-db-creds
+       csi:
+         driver: secrets-store.csi.k8s.io
+         readOnly: true
+         volumeAttributes:
+           secretProviderClass: mongo-host
    imagePullSecrets: nexus-docker-config-forked
    envFrom:
     - type: configmap
-      name: "" 
+      name: ""
+   env:
+     - name: MONGO_HOST
+       valueFrom:
+         secretKeyRef:
+           name: secret-mongo-host
+           key: MONGO_HOST
+   volumeMounts:
+     - name: mongo-db-creds
+       readOnly: true
+       mountPath: /data/db-creds
    image:
      repository: stakater/stakater-nordmart-review
      tag: v0.0.2
