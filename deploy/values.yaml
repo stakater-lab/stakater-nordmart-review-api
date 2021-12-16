@@ -106,7 +106,7 @@ application:
      create: true
      enabled: true
      additionalLabels: 
-       stakater.com/vault-access: true
+       stakater.com/vault-access: "true"
 
 # MongoDB dependency
 mongodb:
