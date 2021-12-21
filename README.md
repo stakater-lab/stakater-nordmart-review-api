@@ -71,9 +71,12 @@ Install following tools:
 - Docker etc.
 - oc
 
-### ToDos
+### Secrets Handling
 
-- How to handle secrets? (Really don't want to use sealed secrets )
+Secrets are being managed using vault CSI provider and secretProviderClass. 
+Set secretProviderClass to true and provide vault credentials and the path of secret along with credentials like name and type of the kubernetes secret you would like to create. 
+Secret is then mounted into the pod using volumes. 
+Previously, MONGO_HOST value was fetched from configMap and now it is being used in pod as an env variable. 
 
 ### Files
 
