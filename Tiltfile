@@ -33,7 +33,7 @@ docker_build_with_restart(
   # TODO: Update to match your application name
   #############################################
   'stakater/application-v1',
-  '.',
+  'DockerfileTilt',
   entrypoint=['java', 'org.springframework.boot.loader.JarLauncher'],
   #########################################################
   # NOTE: Remember Dockerfile must have a particular format
