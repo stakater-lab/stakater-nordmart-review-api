@@ -1,5 +1,5 @@
 #################################################################################
-# BUILD
+##### BUILD
 #################################################################################
 FROM maven:3.8.2-openjdk-11 as builder
 LABEL maintainer="Stakater"
@@ -22,7 +22,7 @@ COPY target/*.jar target/app.jar
 RUN java -Djarmode=layertools -jar target/app.jar extract
 
 #################################################################################
-# RUN
+##### RUN
 #################################################################################
 FROM registry.access.redhat.com/ubi8/openjdk-11
 LABEL maintainer="Stakater"
