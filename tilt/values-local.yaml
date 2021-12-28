@@ -3,6 +3,9 @@ application:
   space:
     enabled: false
 
+  namespace:
+    enabled: false
+    
   deployment:
     imagePullSecrets: null
 
