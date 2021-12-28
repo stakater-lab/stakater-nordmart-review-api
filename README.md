@@ -55,9 +55,8 @@ mvn clean spring-boot:run
 
 _TODO_
 
-## Data
+## Test API
 
-To load dummy data!
 ```bash
 curl localhost:8080/api/review/329199
 ```
