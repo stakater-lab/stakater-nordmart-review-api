@@ -5,13 +5,19 @@ application:
 
  applicationName: "review"
  
+ ##################################
+ # Namespace
+ ##################################
  namespace:
    enabled: true
    additionalLabels:
       kind: pr
       team: gabbar
       stakater.com/tenant: gabbar
-       
+
+ ##################################
+ # SecretProviderClass
+ ##################################
  secretProviderClass:
   enabled: true
   name: mongo-host
@@ -29,6 +35,9 @@ application:
       secretName: secret-mongo-host
       type: Opaque 
 
+ ##################################
+ # Deployment
+ ##################################
  deployment:
    additionalLabels:
      appCategory: "backend"
@@ -85,11 +94,17 @@ application:
          path: /actuator/health/readiness
          port: 8080
 
+ ##################################
+ # Route
+ ##################################
  route:
     enabled: true
     port:
       targetPort: https
 
+ ##################################
+ # ConfigMap
+ ##################################
  configMap:
     enabled: true
     files:
@@ -98,12 +113,18 @@ application:
         DB_NAME: "nordmartDB"
         #MONGO_HOST: "review-mongodb"
 
+ ##################################
+ # Service
+ ##################################
  service:
    ports:
    - port: 8080
      name: https
      targetPort: 8080
 
+ ##################################
+ # RBAC
+ ##################################
  rbac:
    create: true
    serviceAccount:
