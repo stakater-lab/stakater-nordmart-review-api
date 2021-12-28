@@ -30,13 +30,17 @@ Some dummy data is loaded into the system which can be found [here](https://gith
 
 ## Deployment strategy
 
-### Local deployment
+### Local machine
 
 To run the application locally use the command given below:
 
 ```bash
 mvn clean spring-boot:run
 ```
+
+### Kubernetes/OpenShift
+
+[Here](https://docs.cloud.stakater.com/content/sre/local-development/tilt/step-by-step-guide.html) is the step by step for local development with Tilt
 
 ## APIs
 
@@ -57,7 +61,3 @@ To load dummy data!
 ```bash
 curl localhost:8080/api/review/329199
 ```
-
-## Local Development
-
-[Here](https://docs.cloud.stakater.com/content/sre/local-development/tilt/step-by-step-guide.html) is the step by step for local development with Tilt
