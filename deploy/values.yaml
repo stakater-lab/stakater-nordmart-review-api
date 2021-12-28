@@ -1,26 +1,17 @@
+###################################
 # Application / App / Microservice
+###################################
 application: 
 
  applicationName: "review"
+ 
  namespace:
    enabled: true
    additionalLabels:
       kind: pr
       team: gabbar
       stakater.com/tenant: gabbar
- route:
-    enabled: true
-    port:
-      targetPort: https
-
- configMap:
-    enabled: true
-    files:
-    - nameSuffix: ""
-      data:
-        DB_NAME: "nordmartDB"
-        #MONGO_HOST: "review-mongodb"
- 
+       
  secretProviderClass:
   enabled: true
   name: mongo-host
@@ -42,14 +33,6 @@ application:
    additionalLabels:
      appCategory: "backend"
    annotations:
-   volumes: 
-     - name: mongo-db-creds
-       csi:
-         driver: secrets-store.csi.k8s.io
-         readOnly: true
-         volumeAttributes:
-           secretProviderClass: mongo-host
-   imagePullSecrets: nexus-docker-config-forked
    envFrom:
     - type: configmap
       name: ""
@@ -59,13 +42,21 @@ application:
          secretKeyRef:
            name: secret-mongo-host
            key: MONGO_HOST
+   imagePullSecrets: nexus-docker-config-forked
+   image:
+     repository: stakater/stakater-nordmart-review
+     tag: v0.0.2              
    volumeMounts:
      - name: mongo-db-creds
        readOnly: true
        mountPath: /data/db-creds
-   image:
-     repository: stakater/stakater-nordmart-review
-     tag: v0.0.2
+   volumes: 
+     - name: mongo-db-creds
+       csi:
+         driver: secrets-store.csi.k8s.io
+         readOnly: true
+         volumeAttributes:
+           secretProviderClass: mongo-host       
    resources: 
      limits:
        memory: 1Gi 
@@ -94,6 +85,19 @@ application:
          path: /actuator/health/readiness
          port: 8080
 
+ route:
+    enabled: true
+    port:
+      targetPort: https
+
+ configMap:
+    enabled: true
+    files:
+    - nameSuffix: ""
+      data:
+        DB_NAME: "nordmartDB"
+        #MONGO_HOST: "review-mongodb"
+
  service:
    ports:
    - port: 8080
@@ -108,7 +112,9 @@ application:
      additionalLabels: 
        stakater.com/vault-access: "true"
 
+###################################
 # MongoDB dependency
+###################################
 mongodb:
 
   fullnameOverride: review-mongodb  
