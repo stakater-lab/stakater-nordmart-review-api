@@ -60,35 +60,4 @@ curl localhost:8080/api/review/329199
 
 ## Local Development
 
-### Prereqs
-
-Install following tools:
-
-- Java
-- Maven
-- Tilt
-- Helm
-- Docker etc.
-- oc
-
-### ToDos
-
-- How to handle secrets? (Really don't want to use sealed secrets )
-
-### Files
-
-- Tiltfile
-- tilt_options.json
-- .tiltignore
-
-When ready, run:
-
-```
-$ tilt up
-```
-
-When done:
-
-```
-$ tilt down
-```
+[Here](https://docs.cloud.stakater.com/content/sre/local-development/tilt/step-by-step-guide.html) is the step by step for local development with Tilt
