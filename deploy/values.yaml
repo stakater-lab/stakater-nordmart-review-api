@@ -51,6 +51,11 @@ application:
          secretKeyRef:
            name: secret-mongo-host
            key: MONGO_HOST
+     - name: DB_NAME: 
+       valueFrom:
+         secretKeyRef:
+           name: secret-db
+           key: nordmartDB
    imagePullSecrets: nexus-docker-config-forked
    image:
      repository: stakater/stakater-nordmart-review
@@ -106,11 +111,11 @@ application:
  # ConfigMap
  ##################################
  configMap:
-    enabled: true
+    enabled: false
     files:
     - nameSuffix: ""
       data:
-        DB_NAME: "nordmartDB"
+        #DB_NAME: "nordmartDB"
         #MONGO_HOST: "review-mongodb"
 
  ##################################
