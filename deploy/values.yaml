@@ -42,9 +42,9 @@ application:
    additionalLabels:
      appCategory: "backend"
    annotations:
-   envFrom:
-    - type: configmap
-      name: ""
+   #envFrom:
+   # - type: configmap
+   #   name: ""
    env:
      - name: MONGO_HOST
        valueFrom:
