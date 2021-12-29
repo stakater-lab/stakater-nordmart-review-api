@@ -112,9 +112,9 @@ application:
  ##################################
  configMap:
     enabled: false
-    files:
-    - nameSuffix: ""
-      data:
+    #files:
+    #- nameSuffix: ""
+    #  data:
         #DB_NAME: "nordmartDB"
         #MONGO_HOST: "review-mongodb"
 
