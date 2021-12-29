@@ -51,7 +51,7 @@ application:
          secretKeyRef:
            name: secret-mongo-host
            key: MONGO_HOST
-     - name: DB_NAME: 
+     - name: DB_NAME
        valueFrom:
          secretKeyRef:
            name: secret-db
