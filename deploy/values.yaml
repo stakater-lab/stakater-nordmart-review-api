@@ -1,71 +1,47 @@
-###################################
 # Application / App / Microservice
-###################################
 application: 
 
  applicationName: "review"
- 
- ##################################
- # Namespace
- ##################################
  namespace:
    enabled: true
    additionalLabels:
       kind: pr
       team: gabbar
       stakater.com/tenant: gabbar
+ space:
+    enabled: true
+    additionalLabels:
+      kind: pr
+      team: gabbar
+    annotations:
+      argocd.argoproj.io/sync-wave: "-1"
+    tenant: gabbar
 
- ##################################
- # SecretProviderClass
- ##################################
- secretProviderClass:
-  enabled: true
-  name: mongo-host
-  provider: vault
-  vaultAddress: "http://vault:8200"
-  roleName: '{{ .Release.Namespace }}'
-  objects: |
-    - objectName: "MONGO_HOST"
-      secretPath: "gabbar/kv/data/mongoDb"
-      secretKey: "MONGO_HOST"  
-  secretObjects:
-    - data:
-      - key: MONGO_HOST
-        objectName: MONGO_HOST
-      secretName: secret-mongo-host
-      type: Opaque 
+ route:
+    enabled: true
+    port:
+      targetPort: https
 
- ##################################
- # Deployment
- ##################################
+ configMap:
+    enabled: true
+    files:
+    - nameSuffix: ""
+      data:
+        DB_NAME: "nordmartDB"
+        MONGO_HOST: "review-mongodb"
+
  deployment:
    additionalLabels:
      appCategory: "backend"
    annotations:
+   volumes: {}
+   imagePullSecrets: nexus-docker-config-forked
    envFrom:
     - type: configmap
-      name: ""
-   env:
-     - name: MONGO_HOST
-       valueFrom:
-         secretKeyRef:
-           name: secret-mongo-host
-           key: MONGO_HOST
-   imagePullSecrets: nexus-docker-config-forked
+      name: ""    
    image:
      repository: stakater/stakater-nordmart-review
-     tag: v0.0.2              
-   volumeMounts:
-     - name: mongo-db-creds
-       readOnly: true
-       mountPath: /data/db-creds
-   volumes: 
-     - name: mongo-db-creds
-       csi:
-         driver: secrets-store.csi.k8s.io
-         readOnly: true
-         volumeAttributes:
-           secretProviderClass: mongo-host       
+     tag: v0.0.2
    resources: 
      limits:
        memory: 1Gi 
@@ -94,48 +70,19 @@ application:
          path: /actuator/health/readiness
          port: 8080
 
- ##################################
- # Route
- ##################################
- route:
-    enabled: true
-    port:
-      targetPort: https
-
- ##################################
- # ConfigMap
- ##################################
- configMap:
-    enabled: true
-    files:
-    - nameSuffix: ""
-      data:
-        DB_NAME: "nordmartDB"
-        #MONGO_HOST: "review-mongodb"
-
- ##################################
- # Service
- ##################################
  service:
    ports:
    - port: 8080
      name: https
      targetPort: 8080
 
- ##################################
- # RBAC
- ##################################
  rbac:
    create: true
    serviceAccount:
      create: true
      enabled: true
-     additionalLabels: 
-       stakater.com/vault-access: "true"
 
-###################################
 # MongoDB dependency
-###################################
 mongodb:
 
   fullnameOverride: review-mongodb  
