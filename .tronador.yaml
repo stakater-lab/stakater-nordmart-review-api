@@ -1,8 +1,8 @@
-version: v1alpha1
 application:
   chart_path: deploy
   value_overrides:
     application:
       deployment:
         image:
-          tag: "native"
+          name: {{APPLICATION_IMAGE_NAME}}
+          tag: {{APPLICATION_IMAGE_TAG}}
