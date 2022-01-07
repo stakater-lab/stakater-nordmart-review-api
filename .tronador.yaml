@@ -4,5 +4,5 @@ application:
     application:
       deployment:
         image:
-          name: {{APPLICATION_IMAGE_NAME}}
+          repository: {{APPLICATION_IMAGE_NAME}}
           tag: {{APPLICATION_IMAGE_TAG}}
