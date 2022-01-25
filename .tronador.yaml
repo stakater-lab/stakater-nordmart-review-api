@@ -1,0 +1,12 @@
+application:
+  chart_path: deploy
+  namespaceLabels:
+    label: value
+    stakater.com/tenant: alpha
+    owner: stakater
+  value_overrides:
+    application:
+      deployment:
+        image:
+          repository: {{APPLICATION_IMAGE_NAME}}
+          tag: {{APPLICATION_IMAGE_TAG}}
