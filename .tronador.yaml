@@ -1,9 +1,9 @@
 application:
   chart_path: deploy
   namespaceLabels:
-    label: value
-    stakater.com/tenant: alpha
-    owner: stakater
+    kind: pr
+    team: gabbar
+    stakater.com/tenant: gabbar
   value_overrides:
     application:
       deployment:
