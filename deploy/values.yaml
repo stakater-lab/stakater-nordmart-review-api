@@ -2,12 +2,6 @@
 application: 
 
  applicationName: "review"
- namespace:
-   enabled: false
-   additionalLabels:
-      kind: pr
-      team: gabbar
-      stakater.com/tenant: gabbar
 
  route:
     enabled: true
