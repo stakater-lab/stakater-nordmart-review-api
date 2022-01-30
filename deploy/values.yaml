@@ -1,26 +1,13 @@
+##################################
 # Application / App / Microservice
+##################################
 application: 
 
  applicationName: "review"
 
- route:
-    enabled: true
-    port:
-      targetPort: https
-
- configMap:
-    enabled: true
-    files:
-    - nameSuffix: ""
-      data:
-        DB_NAME: "nordmartDB"
-        MONGO_HOST: "review-mongodb"
-
  deployment:
    additionalLabels:
      appCategory: "backend"
-   annotations:
-   volumes: {}
    imagePullSecrets: nexus-docker-config-forked
    envFrom:
     - type: configmap
@@ -56,6 +43,14 @@ application:
          path: /actuator/health/readiness
          port: 8080
 
+ configMap:
+    enabled: true
+    files:
+    - nameSuffix: ""
+      data:
+        DB_NAME: "nordmartDB"
+        MONGO_HOST: "review-mongodb"
+        
  service:
    ports:
    - port: 8080
@@ -63,12 +58,17 @@ application:
      targetPort: 8080
 
  rbac:
-   create: true
    serviceAccount:
-     create: true
      enabled: true
 
+ route:
+    enabled: true
+    port:
+      targetPort: https
+
+#####################
 # MongoDB dependency
+#####################
 mongodb:
 
   fullnameOverride: review-mongodb  
