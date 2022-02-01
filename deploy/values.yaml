@@ -13,8 +13,8 @@ application:
     - type: configmap
       name: ""    
    image:
-     repository: REPLACED_CI_PIPELINE
-     tag: REPLACED_CI_PIPELINE
+     repository: REPLACED_BY_CI_PIPELINE
+     tag: REPLACED_BY_CI_PIPELINE
    resources: 
      limits:
        memory: 1Gi 
