@@ -13,8 +13,8 @@ application:
     - type: configmap
       name: ""    
    image:
-     repository: REPLACED_BY_CI_PIPELINE
-     tag: REPLACED_BY_CI_PIPELINE
+     repository: stakater-nordmart-review
+     tag: any-version
    resources: 
      limits:
        memory: 1Gi 
