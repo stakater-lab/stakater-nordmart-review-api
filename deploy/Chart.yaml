@@ -20,7 +20,7 @@ dependencies:
 type: application
 
 # DON'T TOUCH THIS
-# This is the chart version. This version number is is incremented each time you make changes
+# This is the chart version. This version number is incremented automatically each time you make changes
 # to the application.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.0.0
