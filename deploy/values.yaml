@@ -5,13 +5,14 @@ application:
 
  applicationName: "review"
 
+ # Deployment
  deployment:
    additionalLabels:
      appCategory: "backend"
    imagePullSecrets: nexus-docker-config-forked
    envFrom:
     - type: configmap
-      name: ""    
+      name: ""  
    image:
      repository: stakater-nordmart-review
      tag: any-version
@@ -22,7 +23,6 @@ application:
      requests:
        memory: 128Mi
        cpu: 0.1
-
    probes:
      readinessProbe:
        failureThreshold: 3
@@ -43,6 +43,7 @@ application:
          path: /actuator/health/readiness
          port: 8080
 
+ ## ConfigMap
  configMap:
     enabled: true
     files:
@@ -50,17 +51,20 @@ application:
       data:
         DB_NAME: "nordmartDB"
         MONGO_HOST: "review-mongodb"
-        
- service:
-   ports:
-   - port: 8080
-     name: https
-     targetPort: 8080
 
+ ## RBAC
  rbac:
    serviceAccount:
      enabled: true
+     
+ ## Service     
+ service:
+   ports:
+   - name: https
+     port: 8080     
+     targetPort: 8080
 
+ ## Route
  route:
     enabled: true
     port:
@@ -72,6 +76,7 @@ application:
 mongodb:
 
   fullnameOverride: review-mongodb  
+  
   resources: 
      limits:
        memory: 1Gi 
@@ -79,6 +84,7 @@ mongodb:
      requests:
        memory: 128Mi
        cpu: 0.1
+       
   auth:
     enabled: false
 
