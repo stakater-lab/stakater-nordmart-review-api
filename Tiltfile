@@ -32,7 +32,7 @@ docker_build_with_restart(
   #############################################
   # TODO: Update to match your application name
   #############################################
-  'stakater/stakater-nordmart-review',
+  'stakater-nordmart-review',
   '.',
   entrypoint=['java', 'org.springframework.boot.loader.JarLauncher'],
   #########################################################

@@ -45,7 +45,7 @@ application:
 
  ## ConfigMap
  configMap:
-    enabled: true
+    enabled: false
     files:
     - nameSuffix: ""
       data:
