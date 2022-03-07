@@ -47,11 +47,11 @@ application:
  ## ConfigMap
   configMap:
     enabled: false
-      files:
-        config:
-          data:
-            DB_NAME: "nordmartDB"
-            MONGO_HOST: "review-mongodb"
+    files:
+      config:
+        data:
+          DB_NAME: "nordmartDB"
+          MONGO_HOST: "review-mongodb"
 
   ## RBAC
   rbac:
@@ -62,7 +62,7 @@ application:
   service:
     ports:
     - name: https
-       port: 8080     
+      port: 8080     
       targetPort: 8080
 
   ## Route
