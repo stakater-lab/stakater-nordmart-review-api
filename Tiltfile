@@ -18,7 +18,7 @@ if settings.get("allow_k8s_contexts"):
 
 # Watch source code and on change rebuild artifacts and place in target folder
 local_resource(
-  'compile',
+  'review-compile',
   'mvn package && ' +
   ########################################################################################
   # TODO: Update this to match what your pom file produces application-v1-2.0-SNAPSHOT.jar
@@ -30,9 +30,11 @@ local_resource(
 # Keeps the docker image updated
 docker_build_with_restart(
   #############################################
-  # TODO: Update to match your application name
+  # TODO: Should match following
+  # application.applicationName and
+  # application.deployment.image.repository
   #############################################
-  'stakater-nordmart-review',
+  'review',
   '.',
   entrypoint=['java', 'org.springframework.boot.loader.JarLauncher'],
   #########################################################
@@ -54,4 +56,4 @@ k8s_yaml(yaml)
 # NOTE: These are application dependent; so, you will need to update it
 #######################################################################
 k8s_resource('review-mongodb', port_forwards=['27017:27017'])
-k8s_resource('review', port_forwards=['9000:8080'], resource_deps=['compile'])
+k8s_resource('review', port_forwards=['9000:8080'], resource_deps=['review-compile'])

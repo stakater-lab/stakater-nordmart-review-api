@@ -3,19 +3,19 @@
 ##################################
 application: 
 
-  applicationName: "review"
+  applicationName: review
 
  # Deployment
   deployment:
     additionalLabels:
-      appCategory: "backend"
+      appCategory: backend
     imagePullSecrets: nexus-docker-config-forked
     envFrom:
-      mongodb-config:
+      review-config:
         type: configmap
         nameSuffix: config  
     image:
-      repository: stakater-nordmart-review
+      repository: review
       tag: any-version
     resources: 
       limits:
@@ -46,12 +46,11 @@ application:
 
  ## ConfigMap
   configMap:
-    enabled: false
+    enabled: true
     files:
       config:
-        data:
-          DB_NAME: "nordmartDB"
-          MONGO_HOST: "review-mongodb"
+        DB_NAME: "nordmartDB"
+        MONGO_HOST: "review-mongodb"
 
   ## RBAC
   rbac:
