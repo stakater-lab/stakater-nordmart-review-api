@@ -5,3 +5,6 @@ application:
 
     # Tilt live update only supports one replica
     replicas: 1
+
+    image:
+      tag: null
