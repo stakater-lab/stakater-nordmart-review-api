@@ -3,70 +3,70 @@
 ##################################
 application: 
 
- applicationName: "review"
+  applicationName: "review"
 
  # Deployment
- deployment:
-   additionalLabels:
-     appCategory: "backend"
-   imagePullSecrets: nexus-docker-config-forked
-   envFrom:
-     mongodb-config:
-      type: configmap
-      nameSuffix: config  
-   image:
-     repository: stakater-nordmart-review
-     tag: any-version
-   resources: 
-     limits:
-       memory: 1Gi 
-       cpu: 0.5
-     requests:
-       memory: 128Mi
-       cpu: 0.1
-   probes:
-     readinessProbe:
-       failureThreshold: 3
-       periodSeconds: 60
-       successThreshold: 1
-       timeoutSeconds: 1
-       initialDelaySeconds: 10
-       httpGet:
-         path: /actuator/health/readiness
-         port: 8080
-     livenessProbe:
-       failureThreshold: 3
-       periodSeconds: 60
-       successThreshold: 1
-       timeoutSeconds: 1
-       initialDelaySeconds: 10
-       httpGet:
-         path: /actuator/health/readiness
-         port: 8080
+  deployment:
+    additionalLabels:
+      appCategory: "backend"
+    imagePullSecrets: nexus-docker-config-forked
+    envFrom:
+      mongodb-config:
+        type: configmap
+        nameSuffix: config  
+    image:
+      repository: stakater-nordmart-review
+      tag: any-version
+    resources: 
+      limits:
+        memory: 1Gi 
+        cpu: 0.5
+      requests:
+        memory: 128Mi
+        cpu: 0.1
+    probes:
+      readinessProbe:
+        failureThreshold: 3
+        periodSeconds: 60
+        successThreshold: 1
+        timeoutSeconds: 1
+        initialDelaySeconds: 10
+        httpGet:
+          path: /actuator/health/readiness
+          port: 8080
+      livenessProbe:
+        failureThreshold: 3
+        periodSeconds: 60
+        successThreshold: 1
+        timeoutSeconds: 1
+        initialDelaySeconds: 10
+        httpGet:
+          path: /actuator/health/readiness
+          port: 8080
 
  ## ConfigMap
- configMap:
-    enabled: true
-    files:
-     config:
-      data:
-        DB_NAME: "nordmartDB"
-        MONGO_HOST: "review-mongodb"
+  configMap:
+    enabled: false
+      files:
+        config:
+          data:
+            DB_NAME: "nordmartDB"
+            MONGO_HOST: "review-mongodb"
 
- ## RBAC
- rbac:
-   serviceAccount:
-     enabled: true
+  ## RBAC
+  rbac:
+    serviceAccount:
+      enabled: true
      
- ## Service     
- service:
-   ports:
-   - name: https
-     port: 8080     
-     targetPort: 8080
+  ## Service     
+  service:
+    ports:
+    - name: https
+       port: 8080     
+      targetPort: 8080
 
- ## Route
- route:
+  ## Route
+  route:
     enabled: true
     port:
       targetPort: https
