@@ -11,8 +11,9 @@ application:
      appCategory: "backend"
    imagePullSecrets: nexus-docker-config-forked
    envFrom:
-    - type: configmap
-      name: ""  
+     mongodb-config:
+     type: configmap
+     nameSuffix: config  
    image:
      repository: stakater-nordmart-review
      tag: any-version
@@ -45,9 +46,9 @@ application:
 
  ## ConfigMap
  configMap:
-    enabled: false
+    enabled: true
     files:
-    - nameSuffix: ""
+     config:
       data:
         DB_NAME: "nordmartDB"
         MONGO_HOST: "review-mongodb"
