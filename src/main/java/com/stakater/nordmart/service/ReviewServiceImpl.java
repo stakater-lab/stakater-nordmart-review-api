@@ -29,7 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
             repository.deleteAll();
             // cache dummy review
             List<Review> dummy = new ArrayList<Review>();
-            dummy.add(new Review("329199", "Tolvan+Tolvansson", "3", "I+think+this+sticker+is+ok"));
+            dummy.add(new Review("329199", "Demo run", "3", "I+think+this+sticker+is+ok"));
             dummy.add(new Review("329199", "Darth+Vader", "5", "Best+ever!+I+always+use+on+the+walls+of+the+death+star"));
             dummy.add(new Review("329199", "Stormtrooper0032", "5", "My+boss+forced+me+to+put+5+stars"));
             dummy.add(new Review("165613", "Frodo", "4", "Cool+enough+for+summer+warm+enough+for+winter"));
