@@ -2,9 +2,10 @@ package com.stakater.nordmart.service;
 
 import com.stakater.nordmart.dao.ReviewRepository;
 import com.stakater.nordmart.model.Review;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +18,17 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
     private static final Logger LOG = LoggerFactory.getLogger(ReviewServiceImpl.class);
 
-    @Autowired
     private ReviewRepository repository;
+    private MeterRegistry meterRegistry;
+    private Counter ratingCounter;
 
     @Value("${application.mode}")
     String mode;
+
+    public ReviewServiceImpl(ReviewRepository repository, MeterRegistry meterRegistry) {
+        this.repository = repository;
+        this.meterRegistry = meterRegistry;
+    }
 
     @PostConstruct
     public void init() {
@@ -48,6 +55,11 @@ public class ReviewServiceImpl implements ReviewService {
                 LOG.error(iae.getMessage());
             }
         }
+
+        ratingCounter = Counter.builder("nordmart-review.low.ratings")    // 2 - create a counter using the fluent API
+                .tag("type", "product")
+                .description("Total number of ratings below 3 for all product")
+                .register(meterRegistry);
     }
 
     @Override
@@ -78,7 +90,12 @@ public class ReviewServiceImpl implements ReviewService {
         //BasicDBObject timeNow = new BasicDBObject("date", now);
         try {
             repository.save(review);
-            LOG.info("added review: " + review.toString());
+            LOG.info("added review: " + review);
+            if (Integer.parseInt(rating) <= 3) {
+                ratingCounter.increment();
+            }
+        } catch (NumberFormatException ne) {
+            LOG.warn("error parsing the rating to Integer from string, will not increment rating counter");
         } catch (IllegalArgumentException iae) {
             LOG.error("error saving review");
             LOG.error(iae.getMessage());
