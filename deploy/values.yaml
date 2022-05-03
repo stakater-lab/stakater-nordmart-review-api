@@ -32,7 +32,7 @@ application:
         timeoutSeconds: 1
         initialDelaySeconds: 10
         httpGet:
-          path: /actuator/health/readiness
+          path: /actuator/health
           port: 8080
       livenessProbe:
         failureThreshold: 3
@@ -41,7 +41,7 @@ application:
         timeoutSeconds: 1
         initialDelaySeconds: 10
         httpGet:
-          path: /actuator/health/readiness
+          path: /actuator/health
           port: 8080
 
  ## ConfigMap
@@ -60,7 +60,7 @@ application:
   ## Service     
   service:
     ports:
-    - name: https
+    - name: http
       port: 8080     
       targetPort: 8080
 
@@ -69,6 +69,10 @@ application:
     enabled: true
     port:
       targetPort: https
+
+  ## Service Monitor
+  serviceMonitor:
+    enabled: true
 
 #####################
 # MongoDB dependency
