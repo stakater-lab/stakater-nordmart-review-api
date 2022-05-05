@@ -68,7 +68,7 @@ application:
   route:
     enabled: true
     port:
-      targetPort: https
+      targetPort: http
 
   ## Service Monitor
   serviceMonitor:
