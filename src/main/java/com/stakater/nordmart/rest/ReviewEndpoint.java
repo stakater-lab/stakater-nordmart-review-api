@@ -46,17 +46,19 @@ public class ReviewEndpoint {
     public Review add(@PathParam("productId") String productId,
                       @PathParam("customerName") String customerName,
                       @PathParam("rating") String rating,
-                      @PathParam("text") String text
-    ) {
+                      @PathParam("text") String text) {
         return reviewService.addReview(productId, customerName, rating, text);
     }
 
     @DELETE
     @Path("/{reviewId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public void delete(@PathParam("reviewId") String reviewId
-    ) {
-        reviewService.deleteReview(reviewId);
+    public ResponseEntity<String> delete(@PathParam("reviewId") String reviewId) {
+        String response = reviewService.deleteReview(reviewId);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.noCache())
+                .body(response);
     }
 
     @GET

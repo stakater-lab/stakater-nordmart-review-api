@@ -44,6 +44,23 @@ application:
           path: /actuator/health
           port: 8080
 
+
+  ## Prometheus Rule to trigger alerts based on ratings
+  prometheusRule:
+    enabled: true
+    groups:
+      - name: nordmart-review-low-rating-warning
+        rules:
+          - alert: NordmartReviewLowRatingsCritical
+            annotations:
+              message: >-
+                Total ratings below 2 has crossed the threshold 8. Total reviews: {{ $value }}.
+            expr: >
+              sum (nordmart_review_ratings_total{rating="2"} or nordmart_review_ratings_total{rating="1"}) > 8
+            for: 1m
+            labels:
+              severity: critical
+
  ## ConfigMap
   configMap:
     enabled: true
@@ -97,3 +114,9 @@ mongodb:
 
   containerSecurityContext:
     enabled: false
+
+#####################
+# Grafana dashboard
+#####################
+grafanaDashboard:
+  enabled: true

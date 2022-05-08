@@ -28,7 +28,7 @@ public class Review implements Serializable {
     String reviewText = "";
     Date dateTime;
 
-    public Review(String productId, String customerName, String rating, String text) {
+    public Review(final String productId, final String customerName, final String rating, final String text) {
         super();
         setRating(NumberUtils.toInt(rating, 3));
         if (StringUtils.isNotBlank(text)) {

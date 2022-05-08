@@ -6,9 +6,8 @@ import java.util.List;
 
 public interface ReviewService {
 
-    public List<Review> getReviews(String productId);
-
-    public Review addReview(String productId, String customerName, String rating, String text);
-    public void deleteReview(String reviewId);
+    List<Review> getReviews(final String productId);
+    Review addReview(final String productId, final String customerName, final String rating, final String text);
+    String deleteReview(final String reviewId);
 
 }

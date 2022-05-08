@@ -4,6 +4,8 @@ import com.stakater.nordmart.dao.ReviewRepository;
 import com.stakater.nordmart.model.Review;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,25 +18,36 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Objects;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReviewServiceImpl implements ReviewService {
-    private static final Logger LOG = LoggerFactory.getLogger(ReviewServiceImpl.class);
+    static final Logger LOG = LoggerFactory.getLogger(ReviewServiceImpl.class);
 
-    private final ReviewRepository repository;
-    private final MeterRegistry meterRegistry;
-    private final Map<Integer, Counter> ratingCounters = new HashMap<>();
+    final ReviewRepository repository;
+    final MeterRegistry meterRegistry;
+    // A map that contains the rating as key and counter as value
+    final Map<Integer, Counter> ratingCounters = new HashMap<>();
 
+    // mode is not final because it is getting value from application.properties
     @Value("${application.mode}")
     String mode;
 
-    public ReviewServiceImpl(ReviewRepository repository, MeterRegistry meterRegistry) {
+    public ReviewServiceImpl(final ReviewRepository repository, final MeterRegistry meterRegistry) {
         this.repository = repository;
         this.meterRegistry = meterRegistry;
     }
 
     @PostConstruct
     public void init() {
+        // Adding separate counter for each type of rating
+        ratingCounters.put(1, buildRatingCounters(1));
+        ratingCounters.put(2, buildRatingCounters(2));
+        ratingCounters.put(3, buildRatingCounters(3));
+        ratingCounters.put(4, buildRatingCounters(4));
+        ratingCounters.put(5, buildRatingCounters(5));
+
         if ("dev".contentEquals(mode)) {
             repository.deleteAll();
             // cache dummy review
@@ -49,21 +62,17 @@ public class ReviewServiceImpl implements ReviewService {
             dummy.add(new Review("444434", "Earthman", "3", "The+watch+is+average+I+think"));
             dummy.add(new Review("444435", "Luke+Skywalker", "4", "My+goto+practice+gadget"));
             try {
-                for(Review r : dummy){
-                    repository.save(r);
-                    LOG.info("Saved dummy review: {}", r);
+                for(Review review : dummy){
+                    repository.save(review);
+                    // Increment the counter upon adding a new review
+                    ratingCounters.get(review.getRating()).increment();
+                    LOG.info("Saved dummy review: {}", review);
                 }
             } catch (IllegalArgumentException iae) {
                 LOG.error("Error saving the review");
                 LOG.error(iae.getMessage());
             }
         }
-
-        ratingCounters.put(1, buildRatingCounters(1));
-        ratingCounters.put(2, buildRatingCounters(2));
-        ratingCounters.put(3, buildRatingCounters(3));
-        ratingCounters.put(4, buildRatingCounters(4));
-        ratingCounters.put(5, buildRatingCounters(5));
     }
 
     private Counter buildRatingCounters(final Integer rating) {
@@ -74,7 +83,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<Review> getReviews(String productId) {
+    public List<Review> getReviews(final String productId) {
         LOG.info("getReviews: {}", productId);
         List<Review> ret = new ArrayList<>();
         try {
@@ -91,7 +100,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review addReview(String productId, String customerName, String rating, String text) {
+    public Review addReview(final String productId, final String customerName, final String rating, final String text) {
 
         LOG.info("addReview: productId: {}, customerName: {}, rating: {}, text: {}", productId, customerName, rating, text);
         Review review = new Review(productId, customerName, rating, text);
@@ -100,6 +109,7 @@ public class ReviewServiceImpl implements ReviewService {
         try {
             repository.save(review);
             LOG.info("added review: {}", review);
+            // Increment the counter upon adding a new review
             ratingCounters.get(Review.getRangedRating(NumberUtils.toInt(rating, 3))).increment();
         } catch (NumberFormatException ne) {
             LOG.warn("error parsing the rating to Integer from string, will not increment rating counter");
@@ -110,15 +120,17 @@ public class ReviewServiceImpl implements ReviewService {
         return review;
     }
 
+    // Micrometer Prometheus counter doesn't support decrement, so can't decrease the counter upone deletion
     @Override
-    public void deleteReview(String reviewId) {
+    public String deleteReview(final String reviewId) {
         LOG.info("deleteReview: {}", reviewId);
-        try {
+        String response = String.format("Review does not exist for reviewId: %s", reviewId);
+        Review review = repository.findReviewById(reviewId);
+        if (Objects.nonNull(review)) {
             repository.deleteById(reviewId);
-            LOG.info("deleted review: {}", reviewId);
-        } catch (IllegalArgumentException iae) {
-            LOG.error("error deleting review");
-            LOG.error(iae.getMessage());
+            response = String.format("Deleted review: %s", reviewId);
         }
+        LOG.info(response);
+        return response;
     }
 }
