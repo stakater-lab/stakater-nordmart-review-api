@@ -11,12 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import java.util.List;
 
 @RestController
@@ -30,7 +25,7 @@ public class ReviewEndpoint {
     @GET
     @Path("/{productId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Review>> getReview2(@PathParam("productId") String productId) throws Exception {
+    public ResponseEntity<List<Review>> getReview2(@PathParam("productId") String productId) {
         List<Review> ret = reviewService.getReviews(productId);
         LOG.info("<rest getReview2");
 
@@ -44,10 +39,10 @@ public class ReviewEndpoint {
     @Path("/{productId}/{customerName}/{rating}/{text}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public Review add(@PathParam("productId") String productId,
-                   @PathParam("customerName") String customerName,
-                   @PathParam("rating") String rating,
-                   @PathParam("text") String text
-                   ) throws Exception {
+                      @PathParam("customerName") String customerName,
+                      @PathParam("rating") String rating,
+                      @PathParam("text") String text
+    ) {
         return reviewService.addReview(productId, customerName, rating, text);
     }
 
@@ -55,7 +50,7 @@ public class ReviewEndpoint {
     @Path("/{reviewId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathParam("reviewId") String reviewId
-    ) throws Exception {
+    ) {
         reviewService.deleteReview(reviewId);
     }
 
@@ -70,7 +65,7 @@ public class ReviewEndpoint {
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.noCache())
-                .body(msg);                
+                .body(msg);
     }
 
 }
