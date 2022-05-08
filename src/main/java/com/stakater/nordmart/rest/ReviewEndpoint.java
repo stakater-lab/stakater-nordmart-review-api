@@ -30,7 +30,7 @@ public class ReviewEndpoint {
     @GET
     @Path("/{productId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Review>> getReview2(@PathParam("productId") String productId) throws Exception {
+    public ResponseEntity<List<Review>> getReview2(@PathParam("productId") String productId) {
         List<Review> ret = reviewService.getReviews(productId);
         LOG.info("<rest getReview2");
 
@@ -44,10 +44,10 @@ public class ReviewEndpoint {
     @Path("/{productId}/{customerName}/{rating}/{text}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public Review add(@PathParam("productId") String productId,
-                   @PathParam("customerName") String customerName,
-                   @PathParam("rating") String rating,
-                   @PathParam("text") String text
-                   ) throws Exception {
+                      @PathParam("customerName") String customerName,
+                      @PathParam("rating") String rating,
+                      @PathParam("text") String text
+    ) {
         return reviewService.addReview(productId, customerName, rating, text);
     }
 
@@ -55,7 +55,7 @@ public class ReviewEndpoint {
     @Path("/{reviewId}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathParam("reviewId") String reviewId
-    ) throws Exception {
+    ) {
         reviewService.deleteReview(reviewId);
     }
 
@@ -70,7 +70,7 @@ public class ReviewEndpoint {
         return ResponseEntity
                 .ok()
                 .cacheControl(CacheControl.noCache())
-                .body(msg);                
+                .body(msg);
     }
 
 }
