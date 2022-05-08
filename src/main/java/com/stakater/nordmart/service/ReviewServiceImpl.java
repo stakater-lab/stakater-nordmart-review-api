@@ -11,7 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -19,7 +23,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository repository;
     private final MeterRegistry meterRegistry;
-    private Map<Integer, Counter> ratingCounters = new HashMap<>();
+    private final Map<Integer, Counter> ratingCounters = new HashMap<>();
 
     @Value("${application.mode}")
     String mode;
