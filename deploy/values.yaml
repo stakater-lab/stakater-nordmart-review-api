@@ -48,6 +48,8 @@ application:
   ## Prometheus Rule to trigger alerts based on ratings
   prometheusRule:
     enabled: true
+    additionalLabels:
+      prometheus: stakater-workload-monitoring
     groups:
       - name: nordmart-review-low-rating-warning
         rules:
