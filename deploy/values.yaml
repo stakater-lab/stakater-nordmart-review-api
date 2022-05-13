@@ -86,8 +86,6 @@ application:
         matchers:
           - name: alertname
             value: NordmartReviewLowRatingsCritical
-          - name: namespace
-            value: gabbar-dev
         receiver: nordmart-review-receiver
 
   sealedSecret:
