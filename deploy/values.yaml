@@ -59,11 +59,47 @@ application:
                 Total ratings below 2 has crossed the threshold 8. Total reviews: {{ $value }}.
             expr: >
               sum (nordmart_review_ratings_total{rating="2"} or nordmart_review_ratings_total{rating="1"}) > 8
-            for: 1m
             labels:
               severity: critical
 
- ## ConfigMap
+  ## Alert manager Configuration to send the alerts
+  alertmanagerConfig:
+    enabled: true
+    selectionLabels:
+      alertmanagerConfig: workload
+    spec:
+      receivers:
+        - name: nordmart-review-receiver
+          slackConfigs:
+            - apiURL:
+                key: api_url
+                name: nordmart-review-slack-webhook
+              channel: nordmart-gabbar-application-alerts
+              sendResolved: true
+      route:
+        groupBy:
+          - alertname
+          - severity
+        groupInterval: 3m
+        groupWait: 30s
+        repeatInterval: 6h
+        matchers:
+          - name: alertname
+            value: NordmartReviewLowRatingsCritical
+          - name: namespace
+            value: gabbar-dev
+        receiver: nordmart-review-receiver
+
+  sealedSecret:
+    enabled: true
+    annotations:
+      sealedsecrets.bitnami.com/cluster-wide: "true"
+    files:
+      - name: nordmart-review-slack-webhook
+        encryptedData:
+          api_url: AgCjZLtFmo2ZfwJf0AjAbM1qDsSEY1RFLL/0oqmVH7dX2E+O/n2ifIZmTUh+1pn/5a61caniNDbeTf6f2LVwRIvyvXMZBJzyJgUt+qzEVFhX5+3FcDMn9c1fWOcfj7AN3jEPtsp5wwqFADUBzoa4RBySLFQ37lh9nNd769LoK3Q9qSxQ96vSa1oAmKGQxo87FlZvwsXjKNT4w1OooDmWr7N3vdxZe/7jD8gNjSlmM6fYoXjIloVb5+Srrw2JjHy77zFhksZRVkR2GnH4fdCAQQs+1YFa4CTRZJqAkYVi6fkT8WBtqLU3oj/6jMuWjB4ooJGBkP5Ii26Jq4jUQOw4ytM3qdTk108IPa1RXt6HsSbuoVHiGhBB4JEaN4cFvQXmh7bPkt7+fb2KgQn/Fc0m6bmaMXFY/SjVhINVdCyzMuCljaLdfuwdA2qLbJV3Zi3/BVknNgCK76mTcalNIqIL4wb2tEbtITYYhN2kGTa7A7SBkBspptA5Mgi4cJAp+k+BMxHGDE6cHe55ZVluuyE/hGq+ELKdpjsu0BfmH2LfPtu1kvB+N5uytPqV+g0fsKf51nO2A+QL+MPnckdk6+sH5cQ+Isff7HBPKzJW1/dC+pjMgu8AXzYvG4zxBugZeabxmfgmEUIz1Bu1+pv5B7UTw67Xvyr8HuoRO3ItbMn7yynypxFYNntw5g1fHcHTym8MBSCOJKPvEU8Ehn6i8J+hGO+OZmIVIN6G3iBu9oGpH0BBYsbLUx1eZrfuyyaoBWUeJPlI4kP9PyjJOeHLBnGIgSSVtKwJtCQeT6DJWyIE/FEQ
+
+  ## ConfigMap
   configMap:
     enabled: true
     files:
