@@ -110,7 +110,9 @@ public class ReviewServiceImpl implements ReviewService {
             repository.save(review);
             LOG.info("added review: {}", review);
             // Increment the counter upon adding a new review
-            ratingCounters.get(Review.getRangedRating(NumberUtils.toInt(rating, 3))).increment();
+            if (Objects.nonNull(ratingCounters) && !ratingCounters.isEmpty()) {
+                ratingCounters.get(Review.getRangedRating(NumberUtils.toInt(rating, 3))).increment();
+            }
         } catch (NumberFormatException ne) {
             LOG.warn("error parsing the rating to Integer from string, will not increment rating counter");
         } catch (IllegalArgumentException iae) {
