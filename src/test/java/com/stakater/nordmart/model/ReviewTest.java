@@ -10,11 +10,11 @@ class ReviewTest {
 
     @ParameterizedTest
     @CsvSource({"-2,1", "7,5", "2,2"})
-    void getRangedRatingTest(final int inputRating, final int responseRating) {
+    void getRangedRatingTest(final int input, final int expected) {
         // WHEN
-        int result = Review.getRangedRating(inputRating);
+        int result = Review.getRangedRating(input);
 
         // THEN
-        Assertions.assertEquals(responseRating, result);
+        Assertions.assertEquals(expected, result);
     }
 }
