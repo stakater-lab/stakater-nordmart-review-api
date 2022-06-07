@@ -1,0 +1,23 @@
+{
+    "extends": [
+      "config:base",
+      ":disableRateLimiting",
+      ":dependencyDashboard",
+      ":rebaseStalePrs",
+      ":renovatePrefix",
+      ":separateMajorReleases",
+      ":separateMultipleMajorReleases",
+      ":separatePatchReleases"
+    ],
+    "packageRules": [
+      {
+        "matchUpdateTypes": ["major", "minor", "patch", "digest"],
+        "matchPackagePatterns": ["*"],
+        "automerge": false,
+        "labels": [
+          "all-dependencies-updates"
+        ]
+      }
+    ],
+    "rollbackPrs": true
+  }
