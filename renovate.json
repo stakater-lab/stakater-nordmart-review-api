@@ -1,7 +1,13 @@
 {
     "extends": [
       "config:base",
-      ":rebaseStalePrs"
+      ":disableRateLimiting",
+      ":dependencyDashboard",
+      ":rebaseStalePrs",
+      ":renovatePrefix",
+      ":separateMajorReleases",
+      ":separateMultipleMajorReleases",
+      ":separatePatchReleases"
     ],
     "packageRules": [
       {
@@ -13,7 +19,5 @@
         ]
       }
     ],
-    "rollbackPrs": true,
-    "prHourlyLimit": 0
+    "rollbackPrs": true
   }
-  
