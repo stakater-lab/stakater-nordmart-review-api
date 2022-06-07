@@ -1,24 +1,20 @@
 package com.stakater.nordmart.model;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = Review.class)
 class ReviewTest {
 
-    @Test
-    void getRangedRatingTest() {
-        // GIVEN
-        int negativeRating = -2;
-        int ratingGreaterThanFive = 7;
-
+    @ParameterizedTest
+    @CsvSource({"-2,1", "7,5", "2,2"})
+    void getRangedRatingTest(final int inputRating, final int responseRating) {
         // WHEN
-        int negativeRatingResult = Review.getRangedRating(negativeRating);
-        int ratingGreaterThanFiveResult = Review.getRangedRating(ratingGreaterThanFive);
+        int result = Review.getRangedRating(inputRating);
 
         // THEN
-        Assertions.assertEquals(1, negativeRatingResult);
-        Assertions.assertEquals(5, ratingGreaterThanFiveResult);
+        Assertions.assertEquals(responseRating, result);
     }
 }
