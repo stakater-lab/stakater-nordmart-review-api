@@ -1,0 +1,19 @@
+{
+    "extends": [
+      "config:base",
+      ":rebaseStalePrs"
+    ],
+    "packageRules": [
+      {
+        "matchUpdateTypes": ["major", "minor", "patch", "digest"],
+        "matchPackagePatterns": ["*"],
+        "automerge": false,
+        "labels": [
+          "all-dependencies-updates"
+        ]
+      }
+    ],
+    "rollbackPrs": true,
+    "prHourlyLimit": 0
+  }
+  
