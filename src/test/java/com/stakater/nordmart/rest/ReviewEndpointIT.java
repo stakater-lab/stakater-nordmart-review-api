@@ -1,31 +1,31 @@
-package com.stakater.nordmart.service;
+package com.stakater.nordmart.rest;
 
 import com.stakater.nordmart.dao.ReviewRepository;
-import com.stakater.nordmart.exception.InvalidDataException;
 import com.stakater.nordmart.model.Review;
+import com.stakater.nordmart.service.ReviewServiceImpl;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import lombok.AccessLevel;
-import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 @DataMongoTest
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class ReviewServiceImplTest {
-    ReviewServiceImpl reviewService;
+class ReviewEndpointIT {
+
+    ReviewEndpoint reviewEndpoint;
 
     @Autowired
     ReviewRepository reviewRepository;
@@ -39,7 +39,7 @@ class ReviewServiceImplTest {
         dummy.add(new Review("165613", "Frodo", "4", "Cool+enough+for+summer+warm+enough+for+winter"));
         dummy.add(new Review("165614", "Dr+Nykterstein", "1", "i+dont+like+it"));
         reviewRepository.saveAll(dummy);
-        reviewService = new ReviewServiceImpl(reviewRepository, new SimpleMeterRegistry());
+        reviewEndpoint = new ReviewEndpoint(new ReviewServiceImpl(reviewRepository, new SimpleMeterRegistry()));
     }
 
     @AfterEach
@@ -53,10 +53,11 @@ class ReviewServiceImplTest {
         String productId = "329199";
 
         // WHEN
-        List<Review> reviews = reviewService.getReviews(productId);
+        ResponseEntity<List<Review>> responseEntity = reviewEndpoint.get(productId);
+        List<Review> reviews = responseEntity.getBody();
 
         // THEN
-        assertAll("Test Get review",
+        assertAll("Test Get review API",
                 () -> assertEquals(3, reviews.size()),
                 () -> assertEquals(3, reviews.get(0).getRating()),
                 () -> assertEquals("Tolvan+Tolvansson - Callum", reviews.get(0).getCustomerName()),
@@ -64,21 +65,6 @@ class ReviewServiceImplTest {
     }
 
     @Test
-    void getInvalidReviewsTest() {
-        // GIVEN
-        String productId = "testId";
-
-        // WHEN
-        List<Review> reviews = reviewService.getReviews(productId);
-
-        // THEN
-        assertAll("Test Get Invalid review",
-                () -> assertNotNull(reviews),
-                () -> assertEquals(0, reviews.size()));
-    }
-
-    @Test
-    @SneakyThrows
     void addReviewTest() {
         // GIVEN
         String productId = "123456";
@@ -87,10 +73,11 @@ class ReviewServiceImplTest {
         String text = "Good";
 
         // WHEN
-        Review review = reviewService.addReview(productId, customerName, rating, text);
+        ResponseEntity response = reviewEndpoint.add(productId, customerName, rating, text);
+        Review review = (Review) response.getBody();
 
         // THEN
-        assertAll("Test Add review",
+        assertAll("Test Add review API",
                 () -> assertEquals(productId, review.getProductId()),
                 () -> assertEquals(5, review.getRating()),
                 () -> assertEquals(customerName, review.getCustomerName()),
@@ -98,8 +85,7 @@ class ReviewServiceImplTest {
     }
 
     @Test
-    @SneakyThrows
-    void addReviewInvalidProductIdTest() {
+    void addInvalidReviewTest() {
         // GIVEN
         String productId = null;
         String customerName = "Callum";
@@ -107,62 +93,31 @@ class ReviewServiceImplTest {
         String text = "Good";
 
         // WHEN
-        InvalidDataException thrown = assertThrows(
-                InvalidDataException.class,
-                () -> reviewService.addReview(productId, customerName, rating, text),
-                "Expected addReview() to throw, but it didn't");
+        ResponseEntity response = reviewEndpoint.add(productId, customerName, rating, text);
 
         // THEN
-        assertTrue(thrown.getMessage().contains("Error while saving the review. ProductId cannot be blank"));
-    }
-
-    @Test
-    @SneakyThrows
-    void addReviewInvalidRatingTest() {
-        // GIVEN
-        String productId = "12345";
-        String customerName = "Callum";
-        String rating = "invalid ratings";
-        String text = "Good";
-
-        // WHEN
-        InvalidDataException thrown = assertThrows(
-                InvalidDataException.class,
-                () -> reviewService.addReview(productId, customerName, rating, text),
-                "Expected addReview() to throw, but it didn't");
-
-        // THEN
-        assertTrue(thrown.getMessage().contains("Error while saving the review. Rating can only be a number"));
+        assertAll("Test Add review API",
+                () -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
+                () -> assertInstanceOf(String.class, response.getBody()),
+                () -> assertEquals("Error while saving the review. ProductId cannot be blank", response.getBody()));
     }
 
     @Test
     void deleteReviewTest() {
         // GIVEN
         String productId = "329199";
-        List<Review> reviews = reviewService.getReviews(productId);
+        ResponseEntity<List<Review>> responseEntity = reviewEndpoint.get(productId);
+        List<Review> reviews = responseEntity.getBody();
         String reviewId = reviews.get(0).getId();
         String expectedResponse = String.format("Deleted review: %s", reviewId);
 
         // WHEN
-        String response = reviewService.deleteReview(reviewId);
-        List<Review> reviewResult = reviewService.getReviews(productId);
+        ResponseEntity<String> response = reviewEndpoint.delete(reviewId);
+        List<Review> reviewResult = reviewEndpoint.get(productId).getBody();
 
         // THEN
-        assertAll("Test Delete review",
-                () -> assertEquals(expectedResponse, response),
+        assertAll("Test Delete review API",
+                () -> assertEquals(expectedResponse, response.getBody()),
                 () -> assertEquals(2, reviewResult.size()));
-    }
-
-    @Test
-    void deleteReviewInvalidReviewIdTest() {
-        // GIVEN
-        String reviewId = "Invalid Review Id";
-        String expectedResponse = String.format("Review does not exist for reviewId: %s", reviewId);
-
-        // WHEN
-        String response = reviewService.deleteReview(reviewId);
-
-        // THEN
-        assertEquals(expectedResponse, response);
     }
 }

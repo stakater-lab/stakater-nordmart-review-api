@@ -1,11 +1,11 @@
 package com.stakater.nordmart.model;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = Review.class)
-public class ReviewTest {
+class ReviewTest {
 
     @Test
     void getRangedRatingTest() {

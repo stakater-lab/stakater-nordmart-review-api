@@ -74,8 +74,20 @@ application:
             - apiURL:
                 key: api_url
                 name: nordmart-review-slack-webhook
-              channel: nordmart-gabbar-application-alerts
+              channel: '#nordmart-gabbar-application-alerts'
               sendResolved: true
+              text: |2-
+                {{ range .Alerts }}
+                *Alert:* `{{ .Labels.severity | toUpper }}` - {{ .Annotations.summary }}
+                *Description:* {{ .Annotations.description }}
+                *Details:*
+                  {{ range .Labels.SortedPairs }} *{{ .Name }}:* `{{ .Value }}`
+                  {{ end }}
+                {{ end }}
+              title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] SAAP Alertmanager Event Notification'
+              httpConfig:
+                tlsConfig:
+                  insecureSkipVerify: true
       route:
         groupBy:
           - alertname
