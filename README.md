@@ -78,3 +78,15 @@ A grafana dashboard is setup to display the number of reviews overtime. The tren
 
 
 An Alertmanager rule is setup to send alerts if the total rating <= 2 goes beyond 5
+
+## DevSecOps scans
+
+iac and config:
+- trivy
+- checkov
+
+containers:
+- trivy
+- rhacs 
+
+
