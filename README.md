@@ -81,12 +81,11 @@ An Alertmanager rule is setup to send alerts if the total rating <= 2 goes beyon
 
 ## DevSecOps scans
 
-iac and config:
-- trivy
-- checkov
-
-containers:
+tooling:
 - trivy
 - rhacs 
+- stackrox
+- checkov
+
 
 
