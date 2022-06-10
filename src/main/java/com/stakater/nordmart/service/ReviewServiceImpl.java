@@ -35,8 +35,6 @@ public class ReviewServiceImpl implements ReviewService {
     // mode is not final because it is getting value from application.properties
     @Value("${application.mode}")
     String mode;
-    @Value("${application.namespace}")
-    String namespace;
 
     public ReviewServiceImpl(final ReviewRepository repository, final MeterRegistry meterRegistry) {
         this.repository = repository;

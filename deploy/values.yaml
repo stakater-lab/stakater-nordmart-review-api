@@ -10,12 +10,6 @@ application:
     additionalLabels:
       appCategory: backend
     imagePullSecrets: nexus-docker-config-forked
-    # Environment variables
-    env:
-      - name: APPLICATION_NAMESPACE
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.namespace
     envFrom:
       review-config:
         type: configmap
