@@ -1,6 +1,5 @@
 application:
   chart_path: deploy
-  secret_name: secret
   namespaceLabels:
     stakater.com/kind: pr
     stakater.com/tenant: gabbar
@@ -10,3 +9,4 @@ application:
         image:
           repository: {{APPLICATION_IMAGE_NAME}}
           tag: {{APPLICATION_IMAGE_TAG}}
+
