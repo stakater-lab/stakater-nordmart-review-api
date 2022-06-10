@@ -1,4 +1,5 @@
 application:
+  secret_name: secret
   chart_path: deploy
   namespaceLabels:
     stakater.com/kind: pr
