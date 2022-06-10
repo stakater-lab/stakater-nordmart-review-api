@@ -1,5 +1,6 @@
 application:
   chart_path: deploy
+  secret_name: secret
   namespaceLabels:
     stakater.com/kind: pr
     stakater.com/tenant: gabbar
