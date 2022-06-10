@@ -5,7 +5,6 @@ import com.stakater.nordmart.exception.InvalidDataException;
 import com.stakater.nordmart.model.Review;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tag;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.StringUtils;
@@ -67,7 +66,7 @@ public class ReviewServiceImpl implements ReviewService {
             dummy.add(new Review("444434", "Earthman", "3", "The+watch+is+average+I+think"));
             dummy.add(new Review("444435", "Luke+Skywalker", "4", "My+goto+practice+gadget"));
             try {
-                for (Review review : dummy) {
+                for(Review review : dummy){
                     repository.save(review);
                     // Increment the counter upon adding a new review
                     ratingCounters.get(review.getRating()).increment();
@@ -81,11 +80,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private Counter buildRatingCounters(final Integer rating) {
-        List<Tag> tags = new ArrayList<>();
-        tags.add(Tag.of("rating", rating.toString()));
-        tags.add(Tag.of("namespace", namespace));
         return Counter.builder("nordmart-review.ratings")    // 2 - create a counter using the fluent API
-                .tags(tags)
+                .tag("rating", rating.toString())
                 .description("Total number of ratings for all product")
                 .register(meterRegistry);
     }

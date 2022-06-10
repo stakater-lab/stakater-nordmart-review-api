@@ -64,7 +64,7 @@ application:
               message: >-
                 Total ratings below 2 has crossed the threshold 8. Total reviews: {{ $value }}.
             expr: >
-              sum (nordmart_review_ratings_total{rating="2"} or nordmart_review_ratings_total{rating="1"}) > 8
+              sum by (namespace) (nordmart_review_ratings_total{rating="2"} or nordmart_review_ratings_total{rating="1"}) > 8
             labels:
               severity: critical
 
