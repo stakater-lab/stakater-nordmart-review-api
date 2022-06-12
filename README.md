@@ -86,6 +86,6 @@ tooling:
 - rhacs 
 - stackrox
 - checkov
-
+- zap 
 
 
