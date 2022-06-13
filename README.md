@@ -86,5 +86,5 @@ tooling:
 - rhacs full power
 - stackrox rhacs cli for cicd integration
 - checkov to discover and scan all suprted iac types
-
+ - dummy
 
