@@ -82,9 +82,9 @@ An Alertmanager rule is setup to send alerts if the total rating <= 2 goes beyon
 ## DevSecOps scans
 
 tooling:
-- trivy
-- rhacs 
-- stackrox
-- checkov
+- trivy container and config scanning
+- rhacs full power
+- stackrox rhacs cli for cicd integration
+- checkov to discover and scan all suprted iac types
 
 
