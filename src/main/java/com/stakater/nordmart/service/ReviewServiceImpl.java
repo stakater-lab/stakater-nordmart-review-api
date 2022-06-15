@@ -55,7 +55,8 @@ public class ReviewServiceImpl implements ReviewService {
             // cache dummy review
             List<Review> dummy = new ArrayList<>();
             dummy.add(new Review("329199", "Tolvan+Tolvansson - Callum", "3", "I+think+this+sticker+is+ok"));
-            dummy.add(new Review("329199", "Darth+Vader", "5", "Best+ever!+I+always+use+on+the+walls+of+the+death+star"));
+            dummy.add(
+                    new Review("329199", "Darth+Vader", "5", "Best+ever!+I+always+use+on+the+walls+of+the+death+star"));
             dummy.add(new Review("329199", "Stormtrooper0032", "5", "My+boss+forced+me+to+put+5+stars"));
             dummy.add(new Review("165613", "Frodo", "4", "Cool+enough+for+summer+warm+enough+for+winter"));
             dummy.add(new Review("165614", "Dr+Nykterstein", "1", "i+dont+like+it"));
@@ -64,7 +65,7 @@ public class ReviewServiceImpl implements ReviewService {
             dummy.add(new Review("444434", "Earthman", "3", "The+watch+is+average+I+think"));
             dummy.add(new Review("444435", "Luke+Skywalker", "4", "My+goto+practice+gadget"));
             try {
-                for(Review review : dummy){
+                for (Review review : dummy) {
                     repository.save(review);
                     // Increment the counter upon adding a new review
                     ratingCounters.get(review.getRating()).increment();
@@ -78,7 +79,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private Counter buildRatingCounters(final Integer rating) {
-        return Counter.builder("nordmart-review.ratings")    // 2 - create a counter using the fluent API
+        return Counter.builder("nordmart-review.ratings") // 2 - create a counter using the fluent API
                 .tag("rating", rating.toString())
                 .description("Total number of ratings for all product")
                 .register(meterRegistry);
@@ -96,9 +97,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review addReview(final String productId, final String customerName, final String rating, final String text) throws InvalidDataException {
+    public Review addReview(final String productId, final String customerName, final String rating, final String text)
+            throws InvalidDataException {
         validateReview(productId, rating);
-        LOG.info("addReview: productId: {}, customerName: {}, rating: {}, text: {}", productId, customerName, rating, text);
+        LOG.info("addReview: productId: {}, customerName: {}, rating: {}, text: {}", productId, customerName, rating,
+                text);
         Review review = new Review(productId, customerName, rating, text);
         Date now = new Date();
         review.setDateTime(now);
@@ -111,7 +114,8 @@ public class ReviewServiceImpl implements ReviewService {
         return review;
     }
 
-    // Micrometer Prometheus counter doesn't support decrement, so can't decrease the counter upone deletion
+    // Micrometer Prometheus counter doesn't support decrement, so can't decrease
+    // the counter upone deletion
     @Override
     public String deleteReview(final String reviewId) {
         LOG.info("deleteReview: {}", reviewId);

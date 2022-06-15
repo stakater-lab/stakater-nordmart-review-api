@@ -29,7 +29,11 @@ public class Review implements Serializable {
     String reviewText = "";
     Date dateTime;
 
-    public Review(final String productId, final String customerName, final String rating, final String text) {
+    public Review(
+            final String productId,
+            final String customerName,
+            final String rating,
+            final String text) {
         super();
         setRating(NumberUtils.toInt(rating, 3));
         if (StringUtils.isNotBlank(text)) {
@@ -47,7 +51,7 @@ public class Review implements Serializable {
 
     public static int getRangedRating(final int rating) {
         if (rating < 1) {
-            return  1;
+            return 1;
         }
         return Math.min(rating, 5);
     }

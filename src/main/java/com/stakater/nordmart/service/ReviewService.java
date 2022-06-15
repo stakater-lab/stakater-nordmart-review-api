@@ -6,8 +6,8 @@ import com.stakater.nordmart.model.Review;
 import java.util.List;
 
 public interface ReviewService {
-    List<Review> getReviews(final String productId);
-    Review addReview(final String productId, final String customerName, final String rating, final String text)
+    List<Review> getReviews(String productId);
+    Review addReview(String productId, String customerName, String rating, String text)
             throws InvalidDataException;
-    String deleteReview(final String reviewId);
+    String deleteReview(String reviewId);
 }
