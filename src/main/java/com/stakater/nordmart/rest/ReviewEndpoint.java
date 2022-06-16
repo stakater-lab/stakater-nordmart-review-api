@@ -27,7 +27,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ReviewEndpoint {
-    static final Logger LOG = LoggerFactory.getLogger(ReviewEndpoint.class);
+    static Logger LOG = LoggerFactory.getLogger(ReviewEndpoint.class);
     ReviewService reviewService;
 
     @GET

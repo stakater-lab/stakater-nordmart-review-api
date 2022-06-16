@@ -58,7 +58,7 @@ application:
               message: >-
                 Total ratings below 2 has crossed the threshold 8. Total reviews: {{ $value }}.
             expr: >
-              sum (nordmart_review_ratings_total{rating="2"} or nordmart_review_ratings_total{rating="1"}) > 8
+              sum by (namespace) (nordmart_review_ratings_total{rating="2"} or nordmart_review_ratings_total{rating="1"}) > 8
             labels:
               severity: critical
 
@@ -107,7 +107,7 @@ application:
     files:
       - name: nordmart-review-slack-webhook
         encryptedData:
-          api_url: AgCjZLtFmo2ZfwJf0AjAbM1qDsSEY1RFLL/0oqmVH7dX2E+O/n2ifIZmTUh+1pn/5a61caniNDbeTf6f2LVwRIvyvXMZBJzyJgUt+qzEVFhX5+3FcDMn9c1fWOcfj7AN3jEPtsp5wwqFADUBzoa4RBySLFQ37lh9nNd769LoK3Q9qSxQ96vSa1oAmKGQxo87FlZvwsXjKNT4w1OooDmWr7N3vdxZe/7jD8gNjSlmM6fYoXjIloVb5+Srrw2JjHy77zFhksZRVkR2GnH4fdCAQQs+1YFa4CTRZJqAkYVi6fkT8WBtqLU3oj/6jMuWjB4ooJGBkP5Ii26Jq4jUQOw4ytM3qdTk108IPa1RXt6HsSbuoVHiGhBB4JEaN4cFvQXmh7bPkt7+fb2KgQn/Fc0m6bmaMXFY/SjVhINVdCyzMuCljaLdfuwdA2qLbJV3Zi3/BVknNgCK76mTcalNIqIL4wb2tEbtITYYhN2kGTa7A7SBkBspptA5Mgi4cJAp+k+BMxHGDE6cHe55ZVluuyE/hGq+ELKdpjsu0BfmH2LfPtu1kvB+N5uytPqV+g0fsKf51nO2A+QL+MPnckdk6+sH5cQ+Isff7HBPKzJW1/dC+pjMgu8AXzYvG4zxBugZeabxmfgmEUIz1Bu1+pv5B7UTw67Xvyr8HuoRO3ItbMn7yynypxFYNntw5g1fHcHTym8MBSCOJKPvEU8Ehn6i8J+hGO+OZmIVIN6G3iBu9oGpH0BBYsbLUx1eZrfuyyaoBWUeJPlI4kP9PyjJOeHLBnGIgSSVtKwJtCQeT6DJWyIE/FEQ
+          api_url: AgBufrsb7WLTF2/NrCmkrew8nzflHeAST8aAtnB6ESuN39k64k4qiK8xjaerLKk6UTvUfpByuXHA3wnCjHdnlfEh9tN7Eqx7hdO9ist7qJcQM6nQJ1WW6YaoAATMIjoidyyoclMjnnswFGj8hj6xdeA0UppnFJ/ywcumf93dX/ePIXAuB5u0L3IwwRg3lVkTSx09h7kvwNXNpkZKANjzvO7b4nPD9LMPCjEd9i9W6hvF6NG1/SOAZu010XsySUDCOHVDc9YG0SC/OUwyDpPcU3vT4RM3pFeINzSI7ZeXKrmj9PfrKQWW0ustBe3ysIzEqVeQaVjnYw5fHmNiBQoJDfz5aMDxnRYOphSGspCk11pBywlIYNgZGtpQPFhr0w+qLqLIyf5NazFiY0XHUDUeZhYtZM4MFleEuHjJIBX41BOEOrkSOzwv8AgpANi3zPXq2dre+pDKUeJzUZ+CsbEgLtCrKNVAK3Ny7cruhV8T5uECO9PawNynbAJ2TGjXMTjKYk1YCO/XZ2JB/ciI2ICWYZ8eAm3McOsbeRhpkrLvdx11/uBTzxvqVv60vrjuwRbhjBJN70mZ92Q1ho7yAWsS4Ru3Deaq2iZhX72uYo0sHSygp6rsTEcAqeUW4hrCINQn14RYwmBtJa/sbMjDEBFeGwIUXuvKp0gMLmoj2qCHuGey064aJavmtpi2FkBlsAYQjenYfub0OMcT69Svp655hElyIEAwgoR/j9JxsAbwqdX/7y6fI7b+0ci3jiQECncgSHnuYK9HT6UIKo2fKLYU7py6/6QPlzMeybA/S9QCzcjD
 
   ## ConfigMap
   configMap:
