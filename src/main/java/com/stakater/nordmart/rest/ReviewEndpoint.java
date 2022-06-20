@@ -25,10 +25,10 @@ import java.util.List;
 @RestController
 @Path("/review")
 @AllArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReviewEndpoint {
     static final Logger LOG = LoggerFactory.getLogger(ReviewEndpoint.class);
-    ReviewService reviewService;
+    final ReviewService reviewService;
 
     @GET
     @Path("/{productId}")
@@ -47,9 +47,9 @@ public class ReviewEndpoint {
     @Path("/{productId}/{customerName}/{rating}/{text}")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity add(final @PathParam("productId") String productId,
-            final @PathParam("customerName") String customerName,
-            final @PathParam("rating") String rating,
-            final @PathParam("text") String text) {
+                              final @PathParam("customerName") String customerName,
+                              final @PathParam("rating") String rating,
+                              final @PathParam("text") String text) {
         try {
             Review review = reviewService.addReview(productId, customerName, rating, text);
             return ResponseEntity.ok(review);
