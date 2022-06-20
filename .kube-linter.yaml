@@ -9,3 +9,4 @@ checks:
   - required-annotation-email
   - minimum-three-replicas
   - non-isolated-pod
+  
