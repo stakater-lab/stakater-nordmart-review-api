@@ -1,43 +1,44 @@
 package com.stakater.nordmart.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Review implements Serializable {
-    static final long serialVersionUID = -7304814269819778382L;
+
+
+    private static final long serialVersionUID = -7304814269819778382L;
 
     @Id
-    String id;
-    @NotBlank
-    String productId;
-    String customerName = "";
-    int rating = 3;
-    String reviewText = "";
-    Date dateTime;
+    private String id;
 
-    public Review(
-            final String productId,
-            final String customerName,
-            final String rating,
-            final String text) {
+    private String productId;
+    private String customerName = "";
+    private int rating = 3;
+    private String reviewText = "";
+    private Date dateTime;
+
+    public Review() {
+
+    }
+
+    public Review(String productId, String customerName, String rating, String text) {
         super();
-        setRating(NumberUtils.toInt(rating, 3));
-        if (StringUtils.isNotBlank(text)) {
-            this.reviewText = text;
+        try {
+            int ratingNumber = Integer.parseInt(rating);
+            if (ratingNumber < 1) {
+                this.rating = 1;
+            } else if (ratingNumber > 5) {
+                this.rating = 5;
+            } else {
+                this.rating = ratingNumber;
+            }
+            if (text != null) {
+                this.reviewText = text;
+            }
+        } catch (NumberFormatException ne) {
+
         }
         this.productId = productId;
         this.customerName = customerName;
@@ -45,15 +46,34 @@ public class Review implements Serializable {
 
     }
 
-    public void setRating(final int rating) {
-        this.rating = getRangedRating(rating);
+    public String getId() { return this.id; }
+    public String getProductId() { return this.productId; }
+    public String getCustomerName() { return this.customerName; }
+    public int getRating() { return this.rating; }
+    public String getReviewText() { return this.reviewText; }
+    public Date getDateTime() { return this.dateTime; }
+    public void setDateTime(Date d) { this.dateTime = d; }
+
+
+
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public static int getRangedRating(final int rating) {
-        if (rating < 1) {
-            return 1;
-        }
-        return Math.min(rating, 5);
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public void setReviewText(String reviewText) {
+        this.reviewText = reviewText;
     }
 
     @Override

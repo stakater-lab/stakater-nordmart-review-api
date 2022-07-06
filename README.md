@@ -2,6 +2,7 @@
 
 Spring Boot microservice for product review
 
+
 ## Introduction
 
 This project implements review functionality for the products; it provides CRUDS API for reviews.
@@ -56,35 +57,6 @@ _TODO_
 
 ## Test API
 
-Get Review
 ```bash
 curl localhost:8080/api/review/329199
 ```
-
-Add a Review with Username: bumblebee, ProductId: 329199, Review Rating: 5 and Comment: great
-```bash
-curl -X POST 'localhost:8080/api/review/329199/bumblebee/5/great'
-```
-
-Delete a Review with reviewId: 6277b5c05c21830faf89a3bf
-```bash
-curl -X DELETE localhost:8080/api/review/6277b5c05c21830faf89a3bf
-```
-
-## Alerts & Monitoring
-
-A grafana dashboard is setup to display the number of reviews overtime. The trend can be viewed by adding more reviews using the add API
-![Grafana Dashbaord](assets/grafana_dashboard.png)
-
-
-An Alertmanager rule is setup to send alerts if the total rating <= 2 goes beyond 5
-
-## DevSecOps scans
-
-tooling:
-- trivy
-- rhacs 
-- stackrox
-- checkov
-
-
