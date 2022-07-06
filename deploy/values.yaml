@@ -11,7 +11,7 @@ application:
       notifications:
         slack:
           webhookURL: https://hooks.slack.com/services/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
-          channelName: "notification-test-channel"
+          channelName: "#notification-test-channel"
         key: "level"
         pattern: "(ERROR|ERR|error|E[A-Z0-9]{4})"
     additionalLabels:
