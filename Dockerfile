@@ -1,7 +1,7 @@
 #################################################################################
 ##### BUILD
 #################################################################################
-FROM maven:3.6.3-openjdk-11-slim AS build
+FROM maven:3.8.6-openjdk-11-slim AS build
 COPY src /usr/src/app/src
 COPY pom.xml /usr/src/app
 RUN mvn -f /usr/src/app/pom.xml clean package
@@ -9,7 +9,7 @@ RUN mvn -f /usr/src/app/pom.xml clean package
 #################################################################################
 ##### RUN
 #################################################################################
-FROM registry.access.redhat.com/ubi8/openjdk-11
+FROM registry.access.redhat.com/ubi8/openjdk-11:1.13-1.1655306377
 
 LABEL name="inventory" \
       maintainer="Stakater <hello@stakater.com>" \

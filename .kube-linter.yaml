@@ -1,0 +1,12 @@
+checks:
+  addAllBuiltIn: true
+  exclude:
+  - no-node-affinity
+  - use-namespace
+  - run-as-non-root
+  - required-label-owner
+  - no-read-only-root-fs
+  - required-annotation-email
+  - minimum-three-replicas
+  - non-isolated-pod
+  
