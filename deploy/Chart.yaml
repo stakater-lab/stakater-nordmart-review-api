@@ -6,7 +6,7 @@ dependencies:
   version: 10.31.5
   repository: "https://charts.bitnami.com/bitnami"
 - name: application
-  version: 1.1.7
+  version: 1.1.14
   repository: https://stakater.github.io/stakater-charts  
 
 # DON'T TOUCH THIS
