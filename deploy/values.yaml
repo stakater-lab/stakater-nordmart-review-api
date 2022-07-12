@@ -154,7 +154,6 @@ application:
       uptimeRobotConfig:
         alertContacts: "3159465_0_2"
 
-
 #####################
 # MongoDB dependency
 #####################
