@@ -152,7 +152,7 @@ application:
     # add uptime robot additional config
     additionalConfig:
       uptimeRobotConfig:
-        alertContacts: "3159465_0_2"
+        alertContacts: "3514554"
 
 #####################
 # MongoDB dependency
