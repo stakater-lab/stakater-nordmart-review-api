@@ -145,6 +145,17 @@ application:
   ## Service Monitor
   serviceMonitor:
     enabled: true
+    
+  ## Endpoint Montior
+  endpointMonitor:
+    enabled: true
+    # add uptime robot additional config
+    additionalConfig:
+      uptimeRobotConfig:
+        alertContacts: "3514554"
+        keywordExists: 'yes'
+        keywordValue: '404'
+        monitorType: keyword
 
 #####################
 # MongoDB dependency
