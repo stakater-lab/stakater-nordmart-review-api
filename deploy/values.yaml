@@ -153,6 +153,9 @@ application:
     additionalConfig:
       uptimeRobotConfig:
         alertContacts: "3514554"
+        keywordExists: 'yes'
+        keywordValue: '404'
+        monitorType: keyword
 
 #####################
 # MongoDB dependency
