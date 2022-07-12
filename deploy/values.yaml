@@ -145,6 +145,15 @@ application:
   ## Service Monitor
   serviceMonitor:
     enabled: true
+    
+  ## Endpoint Montior
+  endpointMonitor:
+    enabled: true
+    # add uptime robot additional config
+    additionalConfig:
+      uptimeRobotConfig:
+        alertContacts: "3159465_0_0"
+
 
 #####################
 # MongoDB dependency
