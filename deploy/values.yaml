@@ -152,7 +152,7 @@ application:
     # add uptime robot additional config
     additionalConfig:
       uptimeRobotConfig:
-        alertContacts: "3159465_0_0"
+        alertContacts: "3159465_0_2"
 
 
 #####################
