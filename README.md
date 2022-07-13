@@ -86,5 +86,6 @@ tooling:
 - rhacs 
 - stackrox
 - checkov
+- sonar
 
 
