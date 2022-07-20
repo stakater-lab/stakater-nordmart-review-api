@@ -10,7 +10,7 @@ application:
     fluentdConfigAnnotations:
       notifications:
         slack:
-          webhookURL: https://hooks.slack.com/services/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
+          webhookURL: https://hooks.slack.com/services/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
           channelName: "#nordmart-gabbar-application-alerts"
         key: "level"
         pattern: "(ERROR|ERR|error|E[A-Z0-9]{4})"
