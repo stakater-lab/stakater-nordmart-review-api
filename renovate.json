@@ -19,5 +19,6 @@
         ]
       }
     ],
-    "rollbackPrs": true
+    "rollbackPrs": true,
+    "prConcurrentLimit": 4
   }
