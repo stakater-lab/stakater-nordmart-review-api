@@ -75,7 +75,7 @@ application:
                   kube_pod_labels{label_app="review",namespace="{{ .Release.Namespace }}"})) == 0
             for: 1m
             labels:
-              severity: {{ .Values.prometheusrules.severity | default "critical" }}              
+              severity: critical
 
   ## Alert manager Configuration to send the alerts
   alertmanagerConfig:
