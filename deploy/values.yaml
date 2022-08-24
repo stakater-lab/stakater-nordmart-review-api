@@ -186,4 +186,3 @@ mongodb:
 #####################
 grafanaDashboard:
   enabled: true
-
