@@ -57,3 +57,5 @@ COPY --from=builder /usr/src/app/application/ $HOME/
 
 VOLUME /tmp
 VOLUME ${HOME}/log
+
+
