@@ -7,6 +7,7 @@ application:
 
  # Deployment
   deployment:
+    replicas: 2
     fluentdConfigAnnotations:
       notifications:
         slack:
@@ -31,25 +32,27 @@ application:
       requests:
         memory: 128Mi
         cpu: 0.1
-    probes:
-      readinessProbe:
-        failureThreshold: 3
-        periodSeconds: 60
-        successThreshold: 1
-        timeoutSeconds: 1
-        initialDelaySeconds: 10
-        httpGet:
-          path: /actuator/health
-          port: 8080
-      livenessProbe:
-        failureThreshold: 3
-        periodSeconds: 60
-        successThreshold: 1
-        timeoutSeconds: 1
-        initialDelaySeconds: 10
-        httpGet:
-          path: /actuator/health
-          port: 8080
+
+    readinessProbe:
+      enabled: true
+      failureThreshold: 3
+      periodSeconds: 60
+      successThreshold: 1
+      timeoutSeconds: 1
+      initialDelaySeconds: 10
+      httpGet:
+        path: /actuator/health
+        port: 8080
+    livenessProbe:
+      enabled: true
+      failureThreshold: 3
+      periodSeconds: 60
+      successThreshold: 1
+      timeoutSeconds: 1
+      initialDelaySeconds: 10
+      httpGet:
+        path: /actuator/health
+        port: 8080
 
 
   ## Prometheus Rule to trigger alerts based on ratings
