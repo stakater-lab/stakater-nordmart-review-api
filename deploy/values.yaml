@@ -159,7 +159,7 @@ application:
 
   autoscaling:
     enabled: true
-    minReplicas: 1
+    minReplicas: 2
     maxReplicas: 5
     metrics:
     - type: Resource
