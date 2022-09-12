@@ -157,6 +157,24 @@ application:
         keywordValue: '404'
         monitorType: keyword
 
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: 
+          type: Utilization
+          averageUtilization: 60
+    - type: Resource
+      resource:
+        name: memory
+        target: 
+          type: Utilization
+          averageUtilization: 60
+
 #####################
 # MongoDB dependency
 #####################
