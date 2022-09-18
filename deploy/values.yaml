@@ -51,6 +51,18 @@ application:
           path: /actuator/health
           port: 8080
 
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 60
+
 
   ## Prometheus Rule to trigger alerts based on ratings
   prometheusRule:
