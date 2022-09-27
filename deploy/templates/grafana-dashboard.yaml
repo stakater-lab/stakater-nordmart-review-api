@@ -289,8 +289,8 @@ spec:
             "allValue": null,
             "current": {
               "selected": false,
-              "text": "gabbar-dev",
-              "value": "gabbar-dev"
+              "text": "{{ .Release.Namespace | replace "-dev" "" | replace "-build" "" | replace "-test" "" }}-dev",
+              "value": "{{ .Release.Namespace | replace "-dev" "" | replace "-build" "" | replace "-test" "" }}-dev"
             },
             "datasource": null,
             "definition": "label_values(kube_pod_info, namespace)",
@@ -304,13 +304,13 @@ spec:
             "options": [
               {
                 "selected": false,
-                "text": "gabbar-build",
-                "value": "gabbar-build"
+                "text": "{{ .Release.Namespace | replace "-dev" "" | replace "-build" "" | replace "-test" "" }}-build",
+                "value": "{{ .Release.Namespace | replace "-dev" "" | replace "-build" "" | replace "-test" "" }}-build"
               },
               {
                 "selected": true,
-                "text": "gabbar-dev",
-                "value": "gabbar-dev"
+                "text": "{{ .Release.Namespace | replace "-dev" "" | replace "-build" "" | replace "-test" "" }}-dev",
+                "value": "{{ .Release.Namespace | replace "-dev" "" | replace "-build" "" | replace "-test" "" }}-dev"
               }
             ],
             "query": {
@@ -318,7 +318,7 @@ spec:
               "refId": "StandardVariableQuery"
             },
             "refresh": 0,
-            "regex": "/.*gabbar.*/",
+            "regex": "/.*{{ .Release.Namespace | replace "-dev" "" | replace "-build" "" | replace "-test" "" }}.*/",
             "skipUrlSync": false,
             "sort": 5,
             "tagValuesQuery": "",
