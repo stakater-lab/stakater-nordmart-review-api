@@ -2,7 +2,7 @@ application:
   chart_path: deploy
   namespaceLabels:
     stakater.com/kind: pr
-    stakater.com/tenant: gabbar
+    stakater.com/tenant: test10
   value_overrides:
     application:
       deployment:
