@@ -4,7 +4,11 @@ from locust import HttpUser, task, events
 class getReviews(HttpUser):
     @task
     def cat(self):
-        self.client.get("/api/review/{productId}")
+        self.client.get("/api/review/329199")
+        self.client.get("/api/review/444435")
+        self.client.get("/api/review/444434")
+        self.client.get("/api/review/165954")
+        self.client.get("/api/review/165614")
 
 @events.quitting.add_listener
 def _(environment, **kw):
