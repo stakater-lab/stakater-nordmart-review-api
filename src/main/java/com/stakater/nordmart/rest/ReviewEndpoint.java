@@ -74,7 +74,7 @@ public class ReviewEndpoint {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
     public ResponseEntity<String> logError() {
-        String msg = "LOGGING ERROR FOR TILT HANZALA";
+        String msg = "LOGGING ERROR FOR MTEK";
         LOG.error(msg);
 
         return ResponseEntity
