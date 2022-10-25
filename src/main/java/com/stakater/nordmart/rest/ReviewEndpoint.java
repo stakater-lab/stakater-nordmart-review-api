@@ -74,7 +74,7 @@ public class ReviewEndpoint {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin
     public ResponseEntity<String> logError() {
-        String msg = "LOG ERROR MSG";
+        String msg = "LOG ERROR MSG TEST2";
         LOG.error(msg);
 
         return ResponseEntity
