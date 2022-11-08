@@ -86,4 +86,3 @@ tooling:
 - stackrox
 - checkov
 - sonar
-
