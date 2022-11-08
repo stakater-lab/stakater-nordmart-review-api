@@ -17,7 +17,6 @@ This project implements review functionality for the products; it provides CRUDS
 ## Dependencies
 
 It requires following things to be installed:
-
 * Java: ^8.0.
 * Maven
 * Mongodb
