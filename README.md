@@ -88,4 +88,3 @@ tooling:
 - checkov
 - sonar
 
-
