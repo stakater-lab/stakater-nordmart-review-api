@@ -5,7 +5,7 @@ application:
 
   applicationName: review
 
- # Deployment
+  # Deployment
   deployment:
     fluentdConfigAnnotations:
       notifications:
@@ -21,9 +21,6 @@ application:
       review-config:
         type: configmap
         nameSuffix: config  
-    image:
-      repository: review
-      tag: any-version
     resources: 
       limits:
         memory: 1Gi 
