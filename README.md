@@ -76,7 +76,6 @@ curl -X DELETE localhost:8080/api/review/6277b5c05c21830faf89a3bf
 A grafana dashboard is setup to display the number of reviews overtime. The trend can be viewed by adding more reviews using the add API
 ![Grafana Dashbaord](assets/grafana_dashboard.png)
 
-
 An Alertmanager rule is setup to send alerts if the total rating <= 2 goes beyond 5
 
 ## DevSecOps scans
