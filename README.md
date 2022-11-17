@@ -34,7 +34,6 @@ To run the application locally use the command given below:
 ```bash
 mvn clean spring-boot:run
 ```
-
 ### Kubernetes/OpenShift
 
 [Here](https://docs.cloud.stakater.com/content/sre/local-development/tilt/step-by-step-guide.html) is the step by step for local development with Tilt
