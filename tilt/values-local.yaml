@@ -7,4 +7,5 @@ application:
     replicas: 1
 
     image:
+      repository: review
       tag: null

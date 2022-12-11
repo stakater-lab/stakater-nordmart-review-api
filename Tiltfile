@@ -37,6 +37,7 @@ docker_build_with_restart(
   'review',
   '.',
   entrypoint=['java', 'org.springframework.boot.loader.JarLauncher'],
+  platform='linux/amd64',
   #########################################################
   # NOTE: Remember Dockerfile must have a particular format
   #########################################################  
