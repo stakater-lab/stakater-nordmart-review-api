@@ -164,8 +164,9 @@ application:
     # RefreshInterval is the amount of time before the values reading again from the SecretStore provider
     refreshInterval: "1m"
     files:
-     mongodb:
-     # Data defines the connection between the Kubernetes Secret keys and the Provider data
+     # The full name of secret will be review-mongodb-creds; review it applicationName defined above
+     mongodb-creds:
+      #Data defines the connection between the Kubernetes Secret keys and the Provider data
        data:
           mongodb-root-password:
             remoteRef:
@@ -190,7 +191,7 @@ mongodb:
   auth:
     enabled: true
     # Its created via an external secret from vault
-    existingSecret: mongodb-creds
+    existingSecret: review-mongodb-creds
 
   podSecurityContext:
     enabled: false
