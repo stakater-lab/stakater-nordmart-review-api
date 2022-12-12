@@ -48,7 +48,6 @@ application:
           path: /actuator/health
           port: 8080
 
-
   ## Prometheus Rule to trigger alerts based on ratings
   prometheusRule:
     enabled: true
@@ -170,7 +169,8 @@ mongodb:
        cpu: 0.1
        
   auth:
-    enabled: false
+    enabled: true
+    existingSecret: mongodb-creds
 
   podSecurityContext:
     enabled: false
