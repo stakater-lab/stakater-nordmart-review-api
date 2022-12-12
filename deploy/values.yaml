@@ -7,6 +7,8 @@ application:
 
   # Deployment
   deployment:
+    annotations:
+      secret.reloader.stakater.com/reload: review-mongodb-creds
     fluentdConfigAnnotations:
       notifications:
         slack:
@@ -179,6 +181,9 @@ application:
 mongodb:
 
   fullnameOverride: review-mongodb  
+
+  annotations:
+    secret.reloader.stakater.com/reload: review-mongodb-creds
   
   resources: 
      limits:
