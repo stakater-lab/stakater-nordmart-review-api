@@ -153,6 +153,25 @@ application:
         keywordValue: '404'
         monitorType: keyword
 
+  externalSecret:
+    enabled: true
+
+    # Default SecretStore for all externalsecrets defines which SecretStore to use when fetching the secret data
+    secretStore:
+      name: tenant-vault-secret-store
+      #kind: ClusterSecretStore # Defaults to SecretStore if not specified
+
+    # RefreshInterval is the amount of time before the values reading again from the SecretStore provider
+    refreshInterval: "1m"
+    files:
+     mongodb:
+     # Data defines the connection between the Kubernetes Secret keys and the Provider data
+       data:
+          mongodb-creds:
+            remoteRef:
+               key: mongodb-creds
+               property: password
+
 #####################
 # MongoDB dependency
 #####################
