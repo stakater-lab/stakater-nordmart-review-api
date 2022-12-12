@@ -190,7 +190,7 @@ mongodb:
        
   auth:
     enabled: true
-    # Its created via an external secret from vault
+    # Its created via an external secret from vault; defined above
     existingSecret: review-mongodb-creds
 
   podSecurityContext:

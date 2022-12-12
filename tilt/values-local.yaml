@@ -13,7 +13,4 @@ application:
 mongodb:
 
   auth:
-    enabled: true
-    # So, that we don't need an ExternalSecret for local development
-    rootPassword: password
-    existingSecret: ""  
+    enabled: false
