@@ -167,10 +167,11 @@ application:
      mongodb:
      # Data defines the connection between the Kubernetes Secret keys and the Provider data
        data:
-          mongodb-creds:
+          mongodb-root-password:
             remoteRef:
                key: mongodb-creds
                property: mongodb-root-password
+
 #####################
 # MongoDB dependency
 #####################
@@ -188,6 +189,7 @@ mongodb:
        
   auth:
     enabled: true
+    # Its created via an external secret from vault
     existingSecret: mongodb-creds
 
   podSecurityContext:
