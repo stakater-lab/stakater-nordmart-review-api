@@ -171,7 +171,6 @@ application:
             remoteRef:
                key: mongodb-creds
                property: password
-
 #####################
 # MongoDB dependency
 #####################
