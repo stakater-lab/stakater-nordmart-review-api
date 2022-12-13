@@ -182,6 +182,9 @@ mongodb:
 
   fullnameOverride: review-mongodb  
 
+  updateStrategy:
+    type: Recreate
+
   annotations:
     secret.reloader.stakater.com/reload: review-mongodb-creds
   
