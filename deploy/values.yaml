@@ -23,6 +23,9 @@ application:
       review-config:
         type: configmap
         nameSuffix: config  
+      review-secret:
+        type: secret
+        nameSuffix: mongodb-creds
     resources: 
       limits:
         memory: 1Gi 
