@@ -20,11 +20,11 @@ application:
       appCategory: backend
     imagePullSecrets: nexus-docker-config-forked
     env:
-    - name: MONGODB_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: review-mongodb-creds
-          key: mongodb-root-password    
+      MONGODB_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: review-mongodb-creds
+            key: mongodb-root-password    
     envFrom:
       review-config:
         type: configmap
