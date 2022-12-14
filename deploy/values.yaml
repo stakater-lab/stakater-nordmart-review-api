@@ -7,6 +7,8 @@ application:
 
   # Deployment
   deployment:
+    annotations:
+      secret.reloader.stakater.com/reload: review-mongodb-creds
     fluentdConfigAnnotations:
       notifications:
         slack:
@@ -17,6 +19,12 @@ application:
     additionalLabels:
       appCategory: backend
     imagePullSecrets: nexus-docker-config-forked
+    env:
+      MONGODB_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: review-mongodb-creds
+            key: mongodb-root-password    
     envFrom:
       review-config:
         type: configmap
@@ -47,7 +55,6 @@ application:
         httpGet:
           path: /actuator/health
           port: 8080
-
 
   ## Prometheus Rule to trigger alerts based on ratings
   prometheusRule:
@@ -154,12 +161,38 @@ application:
         keywordValue: '404'
         monitorType: keyword
 
+  externalSecret:
+    enabled: true
+
+    # Default SecretStore for all externalsecrets defines which SecretStore to use when fetching the secret data
+    secretStore:
+      name: tenant-vault-secret-store
+      #kind: ClusterSecretStore # Defaults to SecretStore if not specified
+
+    # RefreshInterval is the amount of time before the values reading again from the SecretStore provider
+    refreshInterval: "1m"
+    files:
+     # The full name of secret will be review-mongodb-creds; review it applicationName defined above
+     mongodb-creds:
+      #Data defines the connection between the Kubernetes Secret keys and the Provider data
+       data:
+          mongodb-root-password:
+            remoteRef:
+               key: review-api/mongodb-creds
+               property: mongodb-root-password
+
 #####################
 # MongoDB dependency
 #####################
 mongodb:
 
   fullnameOverride: review-mongodb  
+
+  updateStrategy:
+    type: Recreate
+
+  annotations:
+    secret.reloader.stakater.com/reload: review-mongodb-creds
   
   resources: 
      limits:
@@ -170,7 +203,9 @@ mongodb:
        cpu: 0.1
        
   auth:
-    enabled: false
+    enabled: true
+    # Its created via an external secret from vault; defined above
+    existingSecret: review-mongodb-creds
 
   podSecurityContext:
     enabled: false

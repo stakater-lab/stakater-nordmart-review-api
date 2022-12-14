@@ -1,4 +1,7 @@
-FROM registry.access.redhat.com/ubi8/openjdk-11
+FROM openjdk:11-jre
+
+#FROM registry.access.redhat.com/ubi8/openjdk-11
+USER 0
 
 # Environment variables
 ENV LANG="C.utf8" LANGUAGE="C.utf8" LC_ALL="C.utf8"
@@ -6,15 +9,16 @@ ENV PROFILES="default,docker"
 ENV JAVA_MAIN_CLASS="org.springframework.boot.loader.JarLauncher"
 ENV JAVA_OPTS_APPEND="-Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC"
 ENV JAVA_ARGS=""
-ENV HOME=/opt/app
+ENV HOME=/app
 
 # Expose the following port(s)
 EXPOSE 8443
 
 WORKDIR $HOME
 
+## User permissions when running live update on OCP
 RUN chgrp -R 0 $HOME && \
-    chmod -R g+rwX $HOME
+    chmod -R g=u $HOME
 
 COPY application/ $HOME/
 COPY dependencies/ $HOME/

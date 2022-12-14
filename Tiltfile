@@ -43,10 +43,10 @@ docker_build_with_restart(
   #########################################################  
   dockerfile='./DockerfileTilt',
   live_update=[
-    sync('./target/jar/application', '/opt/app'),
-    sync('./target/jar/dependencies', '/opt/app'),
-    sync('./target/jar/snapshot-dependencies', '/opt/app'),
-    sync('./target/jar/spring-boot-loader', '/opt/app'),
+    sync('./target/jar/application', '/app'),
+    sync('./target/jar/dependencies', '/app'),
+    sync('./target/jar/snapshot-dependencies', '/app'),
+    sync('./target/jar/spring-boot-loader', '/app'),
   ])
 
 yaml = helm('./deploy/', namespace=namespace, values=['./tilt/values-local.yaml'])

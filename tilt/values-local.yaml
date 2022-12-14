@@ -9,3 +9,8 @@ application:
     image:
       repository: review
       tag: null
+
+mongodb:
+
+  auth:
+    enabled: false
