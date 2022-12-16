@@ -9,3 +9,4 @@ application:
         image:
           repository: {{APPLICATION_IMAGE_NAME}}
           tag: {{APPLICATION_IMAGE_TAG}}
+
