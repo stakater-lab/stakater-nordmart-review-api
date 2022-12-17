@@ -39,19 +39,19 @@ application:
     probes:
       readinessProbe:
         failureThreshold: 3
-        periodSeconds: 60
+        periodSeconds: 5
         successThreshold: 1
         timeoutSeconds: 1
-        initialDelaySeconds: 10
+        initialDelaySeconds: 5
         httpGet:
           path: /actuator/health
           port: 8080
       livenessProbe:
         failureThreshold: 3
-        periodSeconds: 60
+        periodSeconds: 5
         successThreshold: 1
         timeoutSeconds: 1
-        initialDelaySeconds: 10
+        initialDelaySeconds: 5
         httpGet:
           path: /actuator/health
           port: 8080
