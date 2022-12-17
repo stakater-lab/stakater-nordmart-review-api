@@ -178,7 +178,7 @@ application:
        data:
           mongodb-root-password:
             remoteRef:
-               key: review-api/mongodb-creds
+               key: review-api/preview/mongodb-creds
                property: mongodb-root-password
 
 #####################
