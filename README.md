@@ -87,3 +87,16 @@ tooling:
 - stackrox
 - checkov
 - sonar
+
+## MongoDB Secret Update Scenario
+
+- The secret is fetched from vault via external secret
+- To simulate password update; first update the mongodb password via terminal
+```
+mongo admin --username root --password CURRENT_PASSWORD
+db = db.getSiblingDB('admin')
+db.changeUserPassword("root", "NEW_PASSWORD")
+```
+- Then go to vault and update the password
+- External secret will fetch the new secret
+- And then reloader will restart the application
