@@ -1,4 +1,4 @@
-FROM openjdk:11-jre
+FROM openjdk:11.0.16-jre
 
 #FROM registry.access.redhat.com/ubi8/openjdk-11
 USER 0
