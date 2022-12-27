@@ -179,7 +179,6 @@ application:
           mongodb-root-password:
             remoteRef:
                key: review-api/preview/mongodb-creds
-               property: mongodb-root-password
 
 #####################
 # MongoDB dependency
