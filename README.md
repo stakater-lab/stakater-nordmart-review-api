@@ -100,3 +100,4 @@ db.changeUserPassword("root", "NEW_PASSWORD")
 - Then go to vault and update the password
 - External secret will fetch the new secret
 - And then reloader will restart the application
+
