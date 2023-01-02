@@ -36,25 +36,28 @@ application:
       requests:
         memory: 128Mi
         cpu: 0.1
-    probes:
-      readinessProbe:
-        failureThreshold: 5
-        periodSeconds: 5
-        successThreshold: 1
-        timeoutSeconds: 5
-        initialDelaySeconds: 15
-        httpGet:
-          path: /actuator/health
-          port: 8080
-      livenessProbe:
-        failureThreshold: 5
-        periodSeconds: 5
-        successThreshold: 1
-        timeoutSeconds: 5
-        initialDelaySeconds: 15
-        httpGet:
-          path: /actuator/health
-          port: 8080
+
+    readinessProbe:
+      enabled: true
+      failureThreshold: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+      initialDelaySeconds: 15
+      httpGet:
+        path: /actuator/health
+        port: 8080
+
+    livenessProbe:
+      enabled: true
+      failureThreshold: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 5
+      initialDelaySeconds: 15
+      httpGet:
+        path: /actuator/health
+        port: 8080
 
   ## Prometheus Rule to trigger alerts based on ratings
   prometheusRule:
