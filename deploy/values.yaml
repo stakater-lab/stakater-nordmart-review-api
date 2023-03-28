@@ -29,6 +29,15 @@ application:
       review-config:
         type: configmap
         nameSuffix: config  
+    
+    volumes:
+      tmp:
+        emptyDir: {}
+
+    volumeMounts:
+      tmp:
+        mountPath: /tmp
+
     resources: 
       limits:
         memory: 1Gi 
@@ -132,7 +141,7 @@ application:
       mongodb-creds:
       #Data defines the connection between the Kubernetes Secret keys and the Provider data
         dataFrom:
-        - key: review-api/preview/mongodb-creds
+          key: review-api/dev/mongodb-creds
 
 #####################
 # MongoDB dependency
