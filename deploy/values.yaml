@@ -76,44 +76,6 @@ application:
             labels:
               severity: critical
 
-  ## Alert manager Configuration to send the alerts
-  alertmanagerConfig:
-    enabled: true
-    selectionLabels:
-      alertmanagerConfig: workload
-    spec:
-      receivers:
-        - name: nordmart-review-receiver
-          slackConfigs:
-            - apiURL:
-                key: api_url
-                name: review-slack-webhook
-              channel: '#nordmart-gabbar-application-alerts'
-              sendResolved: true
-              text: |2-
-                {{ range .Alerts }}
-                *Alert:* `{{ .Labels.severity | toUpper }}` - {{ .Annotations.summary }}
-                *Description:* {{ .Annotations.description }}
-                *Details:*
-                  {{ range .Labels.SortedPairs }} *{{ .Name }}:* `{{ .Value }}`
-                  {{ end }}
-                {{ end }}
-              title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] SAAP Alertmanager Event Notification'
-              httpConfig:
-                tlsConfig:
-                  insecureSkipVerify: true
-      route:
-        groupBy:
-          - alertname
-          - severity
-        groupInterval: 3m
-        groupWait: 30s
-        repeatInterval: 6h
-        matchers:
-          - name: alertname
-            value: NordmartReviewLowRatingsCritical
-        receiver: nordmart-review-receiver
-
   ## ConfigMap
   configMap:
     enabled: true
