@@ -129,12 +129,10 @@ application:
     refreshInterval: "1m"
     files:
      # The full name of secret will be review-mongodb-creds; review it applicationName defined above
-     mongodb-creds:
+      mongodb-creds:
       #Data defines the connection between the Kubernetes Secret keys and the Provider data
-       data:
-          mongodb-root-password:
-            remoteRef:
-               key: review-api/preview/mongodb-creds
+        dataFrom:
+        - key: review-api/preview/mongodb-creds
 
 #####################
 # MongoDB dependency
