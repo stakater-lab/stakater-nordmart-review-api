@@ -7,7 +7,7 @@ COPY pom.xml /usr/src/app
 RUN mvn -f /usr/src/app/pom.xml clean package
 
 #################################################################################
-##### RUN
+#### RUN
 #################################################################################
 FROM registry.access.redhat.com/ubi8/openjdk-11:1.14-10
 
