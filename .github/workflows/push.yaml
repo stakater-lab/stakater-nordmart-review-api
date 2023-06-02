@@ -1,6 +1,6 @@
 name: Push
 on:
-  pull_request:
+  push:
     branches: main
 
 env:
@@ -73,4 +73,4 @@ jobs:
           WITH_V: false
           DEFAULT_BUMP: patch
           RELEASE_BRANCHES: main
-          DRY_RUN: true
+          DRY_RUN: false
