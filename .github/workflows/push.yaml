@@ -1,11 +1,10 @@
 name: Push
 on:
-  pull_request:
+  push:
     branches: main
 
 env:
-  DOCKER_FILE_PATH_TEST: Dockerfile
-  GOLANG_VERSION: 1.19
+  DOCKER_FILE_PATH: Dockerfile
 
 jobs:
   build-test-code:
@@ -39,9 +38,9 @@ jobs:
       - name: Login to Registry
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io/stakater-lab
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io/stakater
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Generate image repository path
         run: |
@@ -51,12 +50,27 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ${{ env.DOCKER_FILE_PATH_TEST  }}
+          file: ${{ env.DOCKER_FILE_PATH  }}
           pull: true
-          push: false
+          push: true
           cache-to: type=inline
           tags: |
             ${{ env.IMAGE_REPOSITORY }}:v${{ steps.generate_tag.outputs.new_tag }}
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Package and Push Helm Chart
+        run: |
+          sed -i "s/^version:.*/version:  ${{ steps.generate_tag.outputs.new_tag }}/" deploy/Chart.yaml
+          helm dependency update deploy/
+          helm package deploy/
+
+      - name: Generate Tag
+        uses: anothrNick/github-tag-action@1.61.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false
+          DEFAULT_BUMP: patch
+          RELEASE_BRANCHES: main
+          DRY_RUN: false
