@@ -1,5 +1,5 @@
 application:
-    
+
   deployment:
     imagePullSecrets: null
 
@@ -9,3 +9,14 @@ application:
     image:
       repository: review
       tag: null
+
+    volumes:
+#      tmp:
+#        emptyDir: {}
+
+    volumeMounts:
+#      tmp:
+#        mountPath: /tmp
+
+    containerSecurityContext:
+      readOnlyRootFilesystem: false
