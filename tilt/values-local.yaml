@@ -10,13 +10,9 @@ application:
       repository: review
       tag: null
 
-    volumes:
-#      tmp:
-#        emptyDir: {}
+    volumes: null
 
-    volumeMounts:
-#      tmp:
-#        mountPath: /tmp
+    volumeMounts: null
 
     containerSecurityContext:
       readOnlyRootFilesystem: false
