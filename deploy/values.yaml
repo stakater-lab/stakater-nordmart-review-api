@@ -1,7 +1,7 @@
 ##################################
 # Application / App / Microservice
 ##################################
-application: 
+application:
 
   applicationName: review
 
@@ -24,12 +24,12 @@ application:
         valueFrom:
           secretKeyRef:
             name: review-mongodb-creds
-            key: mongodb-root-password    
+            key: mongodb-root-password
     envFrom:
       review-config:
         type: configmap
-        nameSuffix: config  
-    
+        nameSuffix: config
+
     volumes:
       tmp:
         emptyDir: {}
@@ -38,9 +38,9 @@ application:
       tmp:
         mountPath: /tmp
 
-    resources: 
+    resources:
       limits:
-        memory: 1Gi 
+        memory: 1Gi
         cpu: 0.6
       requests:
         memory: 128Mi
@@ -97,12 +97,12 @@ application:
   rbac:
     serviceAccount:
       enabled: true
-     
-  ## Service     
+
+  ## Service
   service:
     ports:
     - name: http
-      port: 8080     
+      port: 8080
       targetPort: 8080
 
   ## Route
@@ -114,7 +114,7 @@ application:
   ## Service Monitor
   serviceMonitor:
     enabled: true
-    
+
   ## Endpoint Montior
   endpointMonitor:
     enabled: true
@@ -137,7 +137,7 @@ application:
     # RefreshInterval is the amount of time before the values reading again from the SecretStore provider
     refreshInterval: "1m"
     files:
-     # The full name of secret will be review-mongodb-creds; review it applicationName defined above
+    # The full name of secret will be review-mongodb-creds; review it applicationName defined above
       mongodb-creds:
       #Data defines the connection between the Kubernetes Secret keys and the Provider data
         dataFrom:
@@ -148,19 +148,19 @@ application:
 #####################
 mongodb:
 
-  fullnameOverride: review-mongodb  
+  fullnameOverride: review-mongodb
 
   updateStrategy:
     type: Recreate
 
-  resources: 
+  resources:
      limits:
-       memory: 1Gi 
+       memory: 1Gi
        cpu: 0.5
      requests:
        memory: 128Mi
        cpu: 0.1
-       
+
   auth:
     enabled: true
     # Its created via an external secret from vault; defined above
