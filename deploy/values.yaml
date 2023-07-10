@@ -48,22 +48,22 @@ application:
 
     readinessProbe:
       enabled: true
-      failureThreshold: 50
-      periodSeconds: 50
+      failureThreshold: 5
+      periodSeconds: 5
       successThreshold: 1
-      timeoutSeconds: 50
-      initialDelaySeconds: 50
+      timeoutSeconds: 5
+      initialDelaySeconds: 15
       httpGet:
         path: /actuator/health
         port: 8080
 
     livenessProbe:
       enabled: true
-      failureThreshold: 50
-      periodSeconds: 50
+      failureThreshold: 5
+      periodSeconds: 5
       successThreshold: 1
-      timeoutSeconds: 50
-      initialDelaySeconds: 50
+      timeoutSeconds: 5
+      initialDelaySeconds: 15
       httpGet:
         path: /actuator/health
         port: 8080
@@ -165,22 +165,6 @@ mongodb:
     enabled: true
     # Its created via an external secret from vault; defined above
     existingSecret: review-mongodb-creds
-
-  readinessProbe:
-    enabled: true
-    failureThreshold: 50
-    periodSeconds: 50
-    successThreshold: 1
-    timeoutSeconds: 50
-    initialDelaySeconds: 50
-
-  livenessProbe:
-    enabled: true
-    failureThreshold: 50
-    periodSeconds: 50
-    successThreshold: 1
-    timeoutSeconds: 50
-    initialDelaySeconds: 50
 
   podSecurityContext:
     enabled: false
