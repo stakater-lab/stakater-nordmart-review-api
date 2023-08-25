@@ -11,7 +11,7 @@
     spec:
       params:
         - name: repo_url
-          value: "git@github.com:<YOUR-ORG>/<YOUR-REPO-NAME/" # Place your repo SSH URL
+          value: "git@github.com:ayeshasiddiqa161/stakater-nordmart-review-api" # Place your repo SSH URL
         - name: gitrevision
           value: {{revision}} # Dynamic variable to fetch branch name of the push event on your repo
         - name: repo_path
