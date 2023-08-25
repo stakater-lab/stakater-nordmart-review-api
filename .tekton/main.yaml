@@ -1,61 +1,65 @@
-    apiVersion: tekton.dev/v1beta1
-    kind: PipelineRun
-    metadata:
-      name: main # pipelineRun name
-      annotations:
-        pipelinesascode.tekton.dev/on-event: "[push]" # Trigger the pipelineRun on push events on branch main
-        pipelinesascode.tekton.dev/on-target-branch: "main"
-        pipelinesascode.tekton.dev/task: "[https://raw.usercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, git-clone]"
-        # pipelineRun Tasks are fetching from our tekton-catalog repo where all the tasks are rendered
-        pipelinesascode.tekton.dev/max-keep-runs: "2" # Only remain 2 latest pipelineRuns on SAAP
-    spec:
-      params:
-        - name: repo_url
-          value: "git@github.com:ayeshasiddiqa161/stakater-nordmart-review-api" # Place your repo SSH URL
-        - name: gitrevision
-          value: {{revision}} # Dynamic variable to fetch branch name of the push event on your repo
-        - name: repo_path
-          value: {{repo_name}} # Dynamic varaible to fetch repo name
-        - name: image_registry_url
-          value: "image-registry-openshift-image-registry.apps.om-sno2.lcaas.lab.kubeapp.cloud/" # Place image registry URL without https://
-      pipelineSpec: # Define what parameters will be used for pipeline
-        params:
-          - name: repo_url
-          - name: gitrevision
-          - name: repo_path
-          - name: image_registry_url
-        workspaces: # Mention what workspaces will be used by this pipeline to store data and used by data transferring between tasks
-          - name: source
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: main
+  annotations:
+    pipelinesascode.tekton.dev/on-event: "[push]"
+    pipelinesascode.tekton.dev/on-target-branch: "main"
+    pipelinesascode.tekton.dev/task: "[https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, git-clone]"
+    pipelinesascode.tekton.dev/max-keep-runs: "2"
+
+spec:
+  params:
+    - name: repo_url
+      value: "git@github.com:ayeshasiddiqa161/stakater-nordmart-review-api.git"
+    - name: gitrevision
+      value: {{revision}}
+    - name: repo_path
+      value: {{repo_name}}
+    - name: image_registry_url
+      value: "nexus-docker-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/rabbitmq-test"
+    - name: helm_registry
+      value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
+      
+  pipelineSpec:
+    params:
+      - name: repo_url
+      - name: gitrevision
+      - name: repo_path
+      - name: image_registry_url
+      - name: helm_registry
+    workspaces:
+      - name: source
+      - name: ssh-directory
+    tasks:
+      - name: fetch-repository
+        taskRef:
+          name: git-clone
+          kind: ClusterTask
+        workspaces:
+          - name: output
+            workspace: source
           - name: ssh-directory
-        tasks: # Mention what tasks will be used by this pipeline
-          - name: fetch-repository #Name what you want to call the task
-            taskRef:
-              name: git-clone # Name of tasks mentioned in tekton-catalog
-              kind: Task
-            workspaces: # Mention what workspaces will be used by this task
-              - name: output
-                workspace: source
-              - name: ssh-directory
-                workspace: ssh-directory
-            params: # Parameters will be used by this task
-              - name: depth
-                value: "0"
-              - name: url
-                value: $(params.repo_url)
-              - name: revision
-                value: $(params.gitrevision)
-      workspaces: # Mention Workspaces configuration
-        - name: source
-          volumeClaimTemplate:
-            spec:
-              accessModes:
-                - ReadWriteOnce
-              resources:
-                requests:
-                  storage: 1Gi
-        - name: ssh-directory # Using ssh-directory workspace for our task to have better security
-          secret:
-            secretName: nordmart-ssh-creds # Created this secret earlier
-        - name: basic-auth
-          secret:
-            secretName: git-auth
+            workspace: ssh-directory
+        params:
+          - name: depth
+            value: "0"
+          - name: url
+            value: $(params.repo_url)
+          - name: revision
+            value: $(params.gitrevision)
+workspaces:
+    - name: source
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: ssh-directory
+      secret:
+        secretName: nordmart-ssh-creds
+    - name: basic-auth
+      secret:
+        secretName: git-auth
