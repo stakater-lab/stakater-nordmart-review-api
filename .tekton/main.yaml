@@ -62,4 +62,4 @@ workspaces:
         secretName: nordmart-ssh-creds
     - name: basic-auth
       secret:
-        secretName: git-auth
+        secretName: git-auth-ayesha
