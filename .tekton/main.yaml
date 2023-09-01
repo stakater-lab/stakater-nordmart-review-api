@@ -1,0 +1,144 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: main
+  annotations:
+    pipelinesascode.tekton.dev/on-event: "[push]"
+    pipelinesascode.tekton.dev/on-target-branch: "main"
+    pipelinesascode.tekton.dev/task: "[https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah-as-user/rendered/stakater-buildah-as-user-0.0.1.yaml, git-clone, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.3.yaml]"
+    pipelinesascode.tekton.dev/max-keep-runs: "2"
+
+spec:
+  params:
+    - name: repo_url
+      value: "git@github.com:AsfaMumtaz/stakater-nordmart-review-api.git"
+    - name: gitrevision
+      value: {{revision}}
+    - name: repo_path
+      value: {{repo_name}}
+    - name: image_registry_url
+      value: "nexus-docker-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/rabbitmq-test"
+    - name: helm_registry
+      value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
+      
+  pipelineSpec:
+    params:
+      - name: repo_url
+      - name: gitrevision
+      - name: repo_path
+      - name: image_registry_url
+      - name: helm_registry
+    workspaces:
+      - name: source
+      - name: ssh-directory
+    tasks:
+      - name: fetch-repository
+        taskRef:
+          name: git-clone
+          kind: ClusterTask
+        workspaces:
+          - name: output
+            workspace: source
+          - name: ssh-directory
+            workspace: ssh-directory
+        params:
+          - name: depth
+            value: "0"
+          - name: url
+            value: $(params.repo_url)
+          - name: revision
+            value: $(params.gitrevision)
+      - name: create-git-tag
+        runAfter:
+         - fetch-repository
+        taskRef:
+           name: stakater-create-git-tag-0.0.7
+           kind: Task
+        params:
+          - name: PR_NUMBER
+            value: "NA"
+          - name: GIT_REVISION
+            value: $(params.gitrevision)
+        workspaces:
+          - name: source
+            workspace: source
+          - name: ssh-directory
+            workspace: ssh-directory
+      - name: buildah
+        runAfter:
+        - create-git-tag
+        taskRef:
+          name: stakater-buildah-as-user-0.0.1
+          kind: Task
+        params:
+          - name: IMAGE
+            value: $(params.image_registry_url):1.0.0
+          - name: TLSVERIFY
+            value: "false"
+          - name: FORMAT
+            value: "docker"
+          - name: BUILD_IMAGE
+            value: "true"
+          - name: IMAGE_REGISTRY
+            value: $(params.image_registry_url)
+          - name: CURRENT_GIT_TAG
+            value: 1.0.0
+        workspaces:
+          - name: source
+            workspace: source
+#      - name: helm-push
+#        runAfter:
+#          - buildah
+#        taskRef:
+#          name: stakater-helm-push-0.0.9
+#          kind: Task
+#        params:
+#          - name: PR_NUMBER
+#            value: "NA"
+#          - name: REPO_PATH
+#            value: $(params.repo_path)
+#          - name: GIT_REVISION
+#            value: $(params.gitrevision)
+#          - name: REGISTRY
+#            value: $(params.helm_registry)
+#          - name: SEM_VER
+#            value: $(tasks.create-git-tag.results.GIT_TAG)
+#        workspaces:
+#          - name: source
+#            workspace: source
+#      - name: push-main-tag
+#        runAfter:
+#          - helm-push
+#        params:
+#          - name: PR_NUMBER
+#            value: "NA"
+#          - name: GIT_REVISION
+#            value: $(params.gitrevision)
+#          - name: IMAGE_TAG
+#            value: $(tasks.create-git-tag.results.GIT_TAG)
+#          - name: GIT_SECRET_NAME
+#            value: "git-auth"
+#          - name: PROTOCOL
+#            value: "https"
+#        taskRef:
+#          kind: ClusterTask
+#          name: push-tag-test
+#        workspaces:
+#          - name: source
+#            workspace: source
+  workspaces:
+    - name: source
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: ssh-directory
+      secret:
+        secretName: nordmart-ssh-creds
+    - name: basic-auth
+      secret:
+        secretName: git-auth
+
