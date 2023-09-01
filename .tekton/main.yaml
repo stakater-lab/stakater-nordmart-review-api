@@ -141,4 +141,3 @@ spec:
     - name: basic-auth
       secret:
         secretName: git-auth
-
