@@ -5,7 +5,7 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-event: "[push]"
     pipelinesascode.tekton.dev/on-target-branch: "main"
-    pipelinesascode.tekton.dev/task: "[https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah-as-user/rendered/stakater-buildah-as-user-0.0.1.yaml, git-clone, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.3.yaml]"
+    pipelinesascode.tekton.dev/task: "[git-clone, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml]"
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 
 spec:
@@ -35,7 +35,7 @@ spec:
       - name: fetch-repository
         taskRef:
           name: git-clone
-          kind: ClusterTask
+          kind: Task
         workspaces:
           - name: output
             workspace: source
@@ -50,10 +50,10 @@ spec:
             value: $(params.gitrevision)
       - name: create-git-tag
         runAfter:
-         - fetch-repository
+          - fetch-repository
         taskRef:
-           name: stakater-create-git-tag-0.0.7
-           kind: Task
+          name: stakater-create-git-tag-0.0.7
+          kind: Task
         params:
           - name: PR_NUMBER
             value: "NA"
@@ -66,13 +66,13 @@ spec:
             workspace: ssh-directory
       - name: buildah
         runAfter:
-        - create-git-tag
+          - create-git-tag
         taskRef:
-          name: stakater-buildah-as-user-0.0.1
+          name: stakater-buildah-0.0.18
           kind: Task
         params:
           - name: IMAGE
-            value: $(params.image_registry_url):1.0.0
+            value: $(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)
           - name: TLSVERIFY
             value: "false"
           - name: FORMAT
@@ -82,50 +82,50 @@ spec:
           - name: IMAGE_REGISTRY
             value: $(params.image_registry_url)
           - name: CURRENT_GIT_TAG
-            value: 1.0.0
+            value: $(tasks.create-git-tag.results.CURRENT_GIT_TAG)
         workspaces:
           - name: source
             workspace: source
-#      - name: helm-push
-#        runAfter:
-#          - buildah
-#        taskRef:
-#          name: stakater-helm-push-0.0.9
-#          kind: Task
-#        params:
-#          - name: PR_NUMBER
-#            value: "NA"
-#          - name: REPO_PATH
-#            value: $(params.repo_path)
-#          - name: GIT_REVISION
-#            value: $(params.gitrevision)
-#          - name: REGISTRY
-#            value: $(params.helm_registry)
-#          - name: SEM_VER
-#            value: $(tasks.create-git-tag.results.GIT_TAG)
-#        workspaces:
-#          - name: source
-#            workspace: source
-#      - name: push-main-tag
-#        runAfter:
-#          - helm-push
-#        params:
-#          - name: PR_NUMBER
-#            value: "NA"
-#          - name: GIT_REVISION
-#            value: $(params.gitrevision)
-#          - name: IMAGE_TAG
-#            value: $(tasks.create-git-tag.results.GIT_TAG)
-#          - name: GIT_SECRET_NAME
-#            value: "git-auth"
-#          - name: PROTOCOL
-#            value: "https"
-#        taskRef:
-#          kind: ClusterTask
-#          name: push-tag-test
-#        workspaces:
-#          - name: source
-#            workspace: source
+      - name: helm-push
+        runAfter:
+          - buildah
+        taskRef:
+          name: stakater-helm-push-0.0.9
+          kind: Task
+        params:
+          - name: PR_NUMBER
+            value: "NA"
+          - name: REPO_PATH
+            value: $(params.repo_path)
+          - name: GIT_REVISION
+            value: $(params.gitrevision)
+          - name: REGISTRY
+            value: $(params.helm_registry)
+          - name: SEM_VER
+            value: $(tasks.create-git-tag.results.GIT_TAG)
+        workspaces:
+          - name: source
+            workspace: source
+      - name: push-main-tag
+        runAfter:
+          - helm-push
+        params:
+          - name: PR_NUMBER
+            value: "NA"
+          - name: GIT_REVISION
+            value: $(params.gitrevision)
+          - name: IMAGE_TAG
+            value: $(tasks.create-git-tag.results.GIT_TAG)
+          - name: GIT_SECRET_NAME
+            value: "git-auth"
+          - name: PROTOCOL
+            value: "https"
+        taskRef:
+          kind: Task
+          name: stakater-push-main-tag-0.0.4
+        workspaces:
+          - name: source
+            workspace: source
   workspaces:
     - name: source
       volumeClaimTemplate:
