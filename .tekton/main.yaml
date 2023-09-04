@@ -89,7 +89,7 @@ spec:
             workspace: source
       - name: unit-test
         runAfter:
-          - code-lintint
+          - code-linting
           - kube-linting
         taskRef:
           name: stakater-unit-test-0.0.5
