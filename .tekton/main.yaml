@@ -17,7 +17,7 @@ spec:
     - name: repo_path
       value: {{repo_name}}
     - name: image_registry_url
-      value: "nexus-docker-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/rabbitmq-test"
+      value: "nexus-docker-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/stakater-nordmart-review-api"
     - name: helm_registry
       value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
       
