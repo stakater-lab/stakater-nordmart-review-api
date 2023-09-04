@@ -5,7 +5,7 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-event: "[push]"
     pipelinesascode.tekton.dev/on-target-branch: "main"
-    pipelinesascode.tekton.dev/task: "[git-clone, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml]"
+    pipelinesascode.tekton.dev/task: "[git-clone, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-code-linting/rendered/stakater-code-linting-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-unit-test/rendered/stakater-unit-test-0.0.5.yaml]"
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 
 spec:
@@ -64,9 +64,42 @@ spec:
             workspace: source
           - name: ssh-directory
             workspace: ssh-directory
-      - name: buildah
+      - name: code-linting
         runAfter:
           - create-git-tag
+        taskRef:
+          name: stakater-code-linting-0.0.3
+          kind: Task
+        workspaces:
+          - name: source
+            workspace: source
+      - name: kube-linting
+        runAfter:
+          - create-git-tag
+        taskRef:
+          name: stakater-kube-linting-0.0.4
+          kind: Task
+        params:
+          - name: file
+            value: manifest.yaml
+          - name: deployment_files_path
+            value: deploy
+        workspaces:
+          - name: source
+            workspace: source
+      - name: unit-test
+        runAfter:
+          - code-lintint
+          - kube-linting
+        taskRef:
+          name: stakater-unit-test-0.0.5
+          kind: Task
+        workspaces:
+          - name: source
+            workspace: source
+      - name: buildah
+        runAfter:
+          - unit-test
         taskRef:
           name: stakater-buildah-0.0.18
           kind: Task
