@@ -80,9 +80,9 @@ spec:
           name: stakater-kube-linting-0.0.4
           kind: Task
         params:
-          - name: file
+          - name: FILE
             value: manifest.yaml
-          - name: deployment_files_path
+          - name: DEPLOYMENT_FILES_PATH
             value: deploy
         workspaces:
           - name: source
