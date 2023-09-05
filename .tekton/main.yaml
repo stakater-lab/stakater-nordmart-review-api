@@ -165,8 +165,8 @@ spec:
           - name: CD_REPO_URL
             value: https://github.com/AsfaMumtaz/nordmart-apps-gitops-config.git
         taskRef:
-          kind: Task
-          name: stakater-github-update-cd-repo-0.0.4
+          kind: ClusterTask
+          name: stakater-github-update-cd-repo-test
 
         workspaces:
           - name: source
