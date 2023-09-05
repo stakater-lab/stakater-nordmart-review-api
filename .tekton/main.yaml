@@ -171,6 +171,8 @@ spec:
         workspaces:
           - name: source
             workspace: source
+          - name: ssh-directory
+            workspace: ssh-directory
 #      - name: push-main-tag
 #        runAfter:
 #          - update-cd-repo
