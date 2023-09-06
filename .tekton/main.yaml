@@ -172,7 +172,7 @@ spec:
           - name: source
             workspace: source
           - name: ssh-directory
-            workspace: ssh-directory
+            workspace: cd-ssh-directory
 #      - name: push-main-tag
 #        runAfter:
 #          - update-cd-repo
@@ -205,6 +205,9 @@ spec:
     - name: ssh-directory
       secret:
         secretName: nordmart-ssh-creds
+    - name: cd-ssh-directory
+      secret:
+        secretName: cd-ssh
     - name: basic-auth
       secret:
         secretName: git-auth
