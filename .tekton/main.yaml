@@ -5,7 +5,7 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-event: "[push]"
     pipelinesascode.tekton.dev/on-target-branch: "main"
-    pipelinesascode.tekton.dev/task: "[git-clone, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-trivy-scan/rendered/stakater-trivy-scan-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/9a14f66dd3d18b525484fe993337f99c88dc6123/stakater-sonarqube-scan/rendered/stakater-sonarqube-scan-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-code-linting/rendered/stakater-code-linting-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-unit-test/rendered/stakater-unit-test-0.0.5.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.4.yaml]"
+    pipelinesascode.tekton.dev/task: "[git-clone, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-check/rendered/stakater-rox-image-check-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-trivy-scan/rendered/stakater-trivy-scan-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/9a14f66dd3d18b525484fe993337f99c88dc6123/stakater-sonarqube-scan/rendered/stakater-sonarqube-scan-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-code-linting/rendered/stakater-code-linting-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-unit-test/rendered/stakater-unit-test-0.0.5.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.4.yaml]"
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 
 spec:
@@ -76,6 +76,28 @@ spec:
         workspaces:
           - name: source
             workspace: source
+      - name: rox-image-scan
+        runAfter:
+          - buildah
+        taskRef:
+          task: stakater-rox-image-scan-0.0.4
+          kind: Task
+        params:
+        - name: IMAGE
+          value: '$(params.image_registry_url):$(tasks.stakater-create-git-tag.results.GIT_TAG)'
+        - name: ROX_API_TOKEN
+          value: rox-secret
+        - name: ROX_CENTRAL_ENDPOINT
+          value: rox-secret
+        - name: OUTPUT_FORMAT
+          value: csv
+        - name: IMAGE_DIGEST
+          value: $(tasks.buildah.results.IMAGE_DIGEST)
+        - name: BUILD_IMAGE
+          value: "true"
+        workspaces:
+            - name: source
+              workspace: source
 #      - name: trivy-scan
 #        runAfter:
 #          - create-git-tag
@@ -138,28 +160,28 @@ spec:
 #        workspaces:
 #          - name: source
 #            workspace: source
-#      - name: buildah
-#        runAfter:
-#          - unit-test
-#        taskRef:
-#          name: stakater-buildah-0.0.18
-#          kind: Task
-#        params:
-#          - name: IMAGE
-#            value: $(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)
-#          - name: TLSVERIFY
-#            value: "false"
-#          - name: FORMAT
-#            value: "docker"
-#          - name: BUILD_IMAGE
-#            value: "true"
-#          - name: IMAGE_REGISTRY
-#            value: $(params.image_registry_url)
-#          - name: CURRENT_GIT_TAG
-#            value: $(tasks.create-git-tag.results.CURRENT_GIT_TAG)
-#        workspaces:
-#          - name: source
-#            workspace: source
+      - name: buildah
+        runAfter:
+          - create-git-tag
+        taskRef:
+          name: stakater-buildah-0.0.18
+          kind: Task
+        params:
+          - name: IMAGE
+            value: $(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)
+          - name: TLSVERIFY
+            value: "false"
+          - name: FORMAT
+            value: "docker"
+          - name: BUILD_IMAGE
+            value: "true"
+          - name: IMAGE_REGISTRY
+            value: $(params.image_registry_url)
+          - name: CURRENT_GIT_TAG
+            value: $(tasks.create-git-tag.results.CURRENT_GIT_TAG)
+        workspaces:
+          - name: source
+            workspace: source
 #      - name: helm-push
 #        runAfter:
 #          - buildah
