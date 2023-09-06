@@ -84,7 +84,7 @@ spec:
           kind: Task
         params:
         - name: IMAGE
-          value: '$(params.image_registry_url):$(tasks.stakater-create-git-tag.results.GIT_TAG)'
+          value: '$(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)'
         - name: ROX_API_TOKEN
           value: rox-secret
         - name: ROX_CENTRAL_ENDPOINT
