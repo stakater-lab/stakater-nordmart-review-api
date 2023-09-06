@@ -73,7 +73,9 @@ spec:
         params:
           name: IMAGE
           value: $(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)
-
+        workspaces:
+          - name: source
+            workspace: source
 #      - name: sonarqube-scan
 #        runAfter:
 #          - create-git-tag
