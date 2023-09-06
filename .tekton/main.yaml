@@ -5,7 +5,7 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-event: "[push]"
     pipelinesascode.tekton.dev/on-target-branch: "main"
-    pipelinesascode.tekton.dev/task: "[git-clone, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-code-linting/rendered/stakater-code-linting-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-unit-test/rendered/stakater-unit-test-0.0.5.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.4.yaml]"
+    pipelinesascode.tekton.dev/task: "[git-clone,https://raw.githubusercontent.com/stakater/tekton-catalog/9a14f66dd3d18b525484fe993337f99c88dc6123/stakater-sonarqube-scan/rendered/stakater-sonarqube-scan-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-code-linting/rendered/stakater-code-linting-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-unit-test/rendered/stakater-unit-test-0.0.5.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.4.yaml]"
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 
 spec:
@@ -64,6 +64,23 @@ spec:
             workspace: source
           - name: ssh-directory
             workspace: ssh-directory
+      - name: sonarqube-scan
+        runAfter:
+          - create-git-tag
+        taskRef:
+          name: stakater-sonarqube-scan-0.0.4
+          kind: Task
+        params:
+          - name: SONAR_HOST_URL
+            value: https://sonarqube-stakater-sonarqube.apps.stakater-nonprod.xizesfy7.kubeapp.cloud
+          - name: SONAR_PROJECT_KEY
+            value: $(params.repo_path)
+          - name: SONAR_LOGIN
+        workspaces:
+          - name: source
+            workspace: source
+
+
 #      - name: code-linting
 #        runAfter:
 #          - create-git-tag
@@ -141,38 +158,38 @@ spec:
 #        workspaces:
 #          - name: source
 #            workspace: source
-      - name: update-cd-repo
-        runAfter:
-          - create-git-tag
-
-        params:
-          - name: IMAGE_TAG
-            value: $(tasks.create-git-tag.results.GIT_TAG)
-          - name: IMAGE_NAME
-            value: $(params.image_registry_url)
-          - name: PR_NUMBER
-            value: "NA"
-          - name: REPO_PATH
-            value: $(params.repo_path)
-          - name: GIT_REVISION
-            value: $(params.gitrevision)
-          - name: NAMESPACE
-            value: arsenal-dev
-          - name: ENVIRONMENT
-            value: dev
-          - name: HELM_REGISTRY
-            value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
-          - name: CD_REPO_URL
-            value: git@github.com:AsfaMumtaz/nordmart-apps-gitops-config.git
-        taskRef:
-          kind: ClusterTask
-          name: stakater-github-update-cd-repo-test
-
-        workspaces:
-          - name: source
-            workspace: source
-          - name: ssh-directory
-            workspace: cd-ssh-directory
+#      - name: update-cd-repo
+#        runAfter:
+#          - create-git-tag
+#
+#        params:
+#          - name: IMAGE_TAG
+#            value: $(tasks.create-git-tag.results.GIT_TAG)
+#          - name: IMAGE_NAME
+#            value: $(params.image_registry_url)
+#          - name: PR_NUMBER
+#            value: "NA"
+#          - name: REPO_PATH
+#            value: $(params.repo_path)
+#          - name: GIT_REVISION
+#            value: $(params.gitrevision)
+#          - name: NAMESPACE
+#            value: arsenal-dev
+#          - name: ENVIRONMENT
+#            value: dev
+#          - name: HELM_REGISTRY
+#            value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
+#          - name: CD_REPO_URL
+#            value: git@github.com:AsfaMumtaz/nordmart-apps-gitops-config.git
+#        taskRef:
+#          kind: ClusterTask
+#          name: stakater-github-update-cd-repo-test
+#
+#        workspaces:
+#          - name: source
+#            workspace: source
+#          - name: ssh-directory
+#            workspace: cd-ssh-directory
 #      - name: push-main-tag
 #        runAfter:
 #          - update-cd-repo
