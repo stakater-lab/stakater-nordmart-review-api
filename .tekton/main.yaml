@@ -80,7 +80,7 @@ spec:
         runAfter:
           - buildah
         taskRef:
-          task: stakater-rox-image-scan-0.0.3
+          task: stakater-rox-image-scan-0.0.4
           kind: Task
         params:
         - name: IMAGE
