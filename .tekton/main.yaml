@@ -15,7 +15,7 @@ spec:
       value: {{revision}}
     - name: repo_path
       value: {{repo_name}}
-    - name: image_registry_url
+    - name: image_registry
       value: ""
     - name: helm_registry
       value: ""
@@ -24,7 +24,7 @@ spec:
       - name: repo_url
       - name: git_revision
       - name: repo_path
-      - name: image_registry_url
+      - name: image_registry
       - name: helm_registry
     workspaces:
       - name: source
@@ -70,7 +70,7 @@ spec:
           kind: Task
         params:
           name: IMAGE
-          value: $(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)
+          value: $(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)
         workspaces:
           - name: source
             workspace: source
@@ -132,7 +132,7 @@ spec:
           kind: Task
         params:
           - name: IMAGE
-            value: $(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)
+            value: $(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)
           - name: TLSVERIFY
             value: "false"
           - name: FORMAT
@@ -140,7 +140,7 @@ spec:
           - name: BUILD_IMAGE
             value: "true"
           - name: IMAGE_REGISTRY
-            value: $(params.image_registry_url)
+            value: $(params.image_registry)
           - name: CURRENT_GIT_TAG
             value: $(tasks.create-git-tag.results.CURRENT_GIT_TAG)
         workspaces:
@@ -154,7 +154,7 @@ spec:
           kind: Task
         params:
           - name: IMAGE
-            value: '$(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)'
+            value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
           - name: ROX_API_TOKEN
             value: rox-secret
           - name: ROX_CENTRAL_ENDPOINT
@@ -192,7 +192,7 @@ spec:
           - name: IMAGE_TAG
             value: $(tasks.create-git-tag.results.GIT_TAG)
           - name: IMAGE_NAME
-            value: $(params.image_registry_url)
+            value: $(params.image_registry)
           - name: PR_NUMBER
             value: "NA"
           - name: REPO_PATH
