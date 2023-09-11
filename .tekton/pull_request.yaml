@@ -63,22 +63,18 @@ spec:
             value: $(params.repo_url)
           - name: revision
             value: $(params.git_revision)
-      - name: stakater-fetch-pr-number
+      - name: fetch-pr-number-test
         runAfter:
           - fetch-repository
         taskRef:
-          name: stakater-fetch-pr-number-0.0.32
-          kind: Task
+          name: fetch-pr-number-test
+          kind: ClusterTask
         workspaces:
           - name: source
             workspace: source
         params:
           - name: provider
             value: "github"
-          - name: username
-            value: AsfaMumtaz
-          - name: password
-            value: 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
           - name: hash
             value: $(params.git_revision)
           - name: workspace
