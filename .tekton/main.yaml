@@ -190,9 +190,6 @@ spec:
           value: $(tasks.buildah.results.IMAGE_DIGEST)
         - name: BUILD_IMAGE
           value: "true"
-        workspaces:
-          - name: source
-            workspace: source
 
       - name: rox-image-check
         runAfter:
@@ -210,9 +207,6 @@ spec:
             value: rox-creds
           - name: BUILD_IMAGE
             value: "true"
-        workspaces:
-          - name: source
-            workspace: source
 
       - name: rox-deployment-check
         runAfter:

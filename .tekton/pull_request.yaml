@@ -6,6 +6,7 @@
 #    pipelinesascode.tekton.dev/on-event: "[pull_request]"
 #    pipelinesascode.tekton.dev/on-target-branch: "main"
 #    pipelinesascode.tekton.dev/task: "[git-clone,
+#    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-fetch-pr-number/rendered/stakater-fetch-pr-number-0.0.32.yaml,
 #    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml,
 #    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-code-linting/rendered/stakater-code-linting-0.0.3.yaml,
 #    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.4.yaml,
@@ -21,6 +22,12 @@
 #    pipelinesascode.tekton.dev/max-keep-runs: "2"
 #
 #spec:
+#  resources:
+#    - name: auth-credentials
+#      resourceSpec:
+#        type: Secret
+#        secret:
+#          name: auth-creds
 #  params:
 #    - name: repo_url
 #      value: "git@github.com:AsfaMumtaz/stakater-nordmart-review-api.git"
@@ -32,7 +39,10 @@
 #      value: "nexus-docker-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/stakater-nordmart-review-api"
 #    - name: helm_registry
 #      value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
-#
+#    - name: username
+#      value: $(resources.auth-creds.params.username)
+#    - name: password
+#      value: $(resources.auth-creds.params.password)
 #  pipelineSpec:
 #    params:
 #      - name: repo_url
@@ -40,6 +50,8 @@
 #      - name: repo_path
 #      - name: image_registry
 #      - name: helm_registry
+#      - name: username
+#      - name: password
 #    workspaces:
 #      - name: source
 #      - name: ssh-directory
@@ -65,7 +77,7 @@
 #        runAfter:
 #          - fetch-repository
 #        taskRef:
-#          name: stakater-fetch-pr-number-0.0.31
+#          name: stakater-fetch-pr-number-0.0.32
 #          kind: Task
 #        workspaces:
 #          - name: source
