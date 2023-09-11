@@ -3,7 +3,7 @@ kind: PipelineRun
 metadata:
   name: main
   annotations:
-    pipelinesascode.tekton.dev/on-event: "[push]"
+    pipelinesascode.tekton.dev/on-event: "[pull_request]"
     pipelinesascode.tekton.dev/on-target-branch: "main"
     pipelinesascode.tekton.dev/task: "[git-clone, 
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, 
@@ -32,7 +32,7 @@ spec:
       value: "nexus-docker-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/stakater-nordmart-review-api"
     - name: helm_registry
       value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
-      
+
   pipelineSpec:
     params:
       - name: repo_url
@@ -61,6 +61,28 @@ spec:
             value: $(params.repo_url)
           - name: revision
             value: $(params.git_revision)
+      - name: stakater-fetch-pr-number
+        runAfter:
+          - fetch-repository
+        taskRef:
+          name: stakater-fetch-pr-number-0.0.31
+          kind: Task
+        workspaces:
+          - name: source
+            workspace: source
+        params:
+          - name: provider
+            value: "bitbucket"
+          - name: username
+            value: "asfamumtaz"
+          - name: password
+            value: "ATBBsvFHFwZmFuEkCXYMp9eAczAh6FDF9827"
+          - name: hash
+            value: $(params.gitrevision)
+          - name: workspace
+            value: rabbitmqwebhook
+          - name: repository
+            value: rabbitmq-test
 
       - name: create-git-tag
         runAfter:
@@ -178,21 +200,18 @@ spec:
           name: stakater-rox-image-scan-0.0.4
           kind: Task
         params:
-        - name: IMAGE
-          value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
-        - name: ROX_API_TOKEN
-          value: rox-creds
-        - name: ROX_CENTRAL_ENDPOINT
-          value: rox-creds
-        - name: OUTPUT_FORMAT
-          value: csv
-        - name: IMAGE_DIGEST
-          value: $(tasks.buildah.results.IMAGE_DIGEST)
-        - name: BUILD_IMAGE
-          value: "true"
-        workspaces:
-          - name: source
-            workspace: source
+          - name: IMAGE
+            value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
+          - name: ROX_API_TOKEN
+            value: rox-creds
+          - name: ROX_CENTRAL_ENDPOINT
+            value: rox-creds
+          - name: OUTPUT_FORMAT
+            value: csv
+          - name: IMAGE_DIGEST
+            value: $(tasks.buildah.results.IMAGE_DIGEST)
+          - name: BUILD_IMAGE
+            value: "true"
 
       - name: rox-image-check
         runAfter:
@@ -210,9 +229,6 @@ spec:
             value: rox-creds
           - name: BUILD_IMAGE
             value: "true"
-        workspaces:
-          - name: source
-            workspace: source
 
       - name: rox-deployment-check
         runAfter:
@@ -230,9 +246,6 @@ spec:
             value: manifest.yaml
           - name: DEPLOYMENT_FILES_PATH
             value: deploy
-        workspaces:
-          - name: source
-            workspace: source
 
       - name: checkov-scan
         runAfter:
@@ -241,9 +254,6 @@ spec:
         taskRef:
           name: stakater-checkov-scan-0.0.3
           kind: Task
-        workspaces:
-          - name: source
-            workspace: source
 
       - name: helm-push
         runAfter:
@@ -269,58 +279,58 @@ spec:
         workspaces:
           - name: source
             workspace: source
-#      - name: update-cd-repo
-#        runAfter:
-#          - create-git-tag
-#
-#        params:
-#          - name: IMAGE_TAG
-#            value: $(tasks.create-git-tag.results.GIT_TAG)
-#          - name: IMAGE_NAME
-#            value: $(params.image_registry_url)
-#          - name: PR_NUMBER
-#            value: "NA"
-#          - name: REPO_PATH
-#            value: $(params.repo_path)
-#          - name: GIT_REVISION
-#            value: $(params.gitrevision)
-#          - name: NAMESPACE
-#            value: arsenal-dev
-#          - name: ENVIRONMENT
-#            value: dev
-#          - name: HELM_REGISTRY
-#            value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
-#          - name: CD_REPO_URL
-#            value: git@github.com:AsfaMumtaz/nordmart-apps-gitops-config.git
-#        taskRef:
-#          kind: ClusterTask
-#          name: stakater-github-update-cd-repo-test
-#
-#        workspaces:
-#          - name: source
-#            workspace: source
-#          - name: ssh-directory
-#            workspace: cd-ssh-directory
-#      - name: push-main-tag
-#        runAfter:
-#          - update-cd-repo
-#        params:
-#          - name: PR_NUMBER
-#            value: "NA"
-#          - name: GIT_REVISION
-#            value: $(params.gitrevision)
-#          - name: IMAGE_TAG
-#            value: $(tasks.create-git-tag.results.GIT_TAG)
-#          - name: GIT_SECRET_NAME
-#            value: "git-auth"
-#          - name: PROTOCOL
-#            value: "https"
-#        taskRef:
-#          kind: Task
-#          name: stakater-push-main-tag-0.0.4
-#        workspaces:
-#          - name: source
-#            workspace: source
+  #      - name: update-cd-repo
+  #        runAfter:
+  #          - create-git-tag
+  #
+  #        params:
+  #          - name: IMAGE_TAG
+  #            value: $(tasks.create-git-tag.results.GIT_TAG)
+  #          - name: IMAGE_NAME
+  #            value: $(params.image_registry_url)
+  #          - name: PR_NUMBER
+  #            value: "NA"
+  #          - name: REPO_PATH
+  #            value: $(params.repo_path)
+  #          - name: GIT_REVISION
+  #            value: $(params.gitrevision)
+  #          - name: NAMESPACE
+  #            value: arsenal-dev
+  #          - name: ENVIRONMENT
+  #            value: dev
+  #          - name: HELM_REGISTRY
+  #            value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
+  #          - name: CD_REPO_URL
+  #            value: git@github.com:AsfaMumtaz/nordmart-apps-gitops-config.git
+  #        taskRef:
+  #          kind: ClusterTask
+  #          name: stakater-github-update-cd-repo-test
+  #
+  #        workspaces:
+  #          - name: source
+  #            workspace: source
+  #          - name: ssh-directory
+  #            workspace: cd-ssh-directory
+  #      - name: push-main-tag
+  #        runAfter:
+  #          - update-cd-repo
+  #        params:
+  #          - name: PR_NUMBER
+  #            value: "NA"
+  #          - name: GIT_REVISION
+  #            value: $(params.gitrevision)
+  #          - name: IMAGE_TAG
+  #            value: $(tasks.create-git-tag.results.GIT_TAG)
+  #          - name: GIT_SECRET_NAME
+  #            value: "git-auth"
+  #          - name: PROTOCOL
+  #            value: "https"
+  #        taskRef:
+  #          kind: Task
+  #          name: stakater-push-main-tag-0.0.4
+  #        workspaces:
+  #          - name: source
+  #            workspace: source
   workspaces:
     - name: source
       volumeClaimTemplate:
