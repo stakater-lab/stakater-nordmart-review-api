@@ -118,7 +118,7 @@ spec:
         runAfter:
           - unit-test
         taskRef:
-          name: stakater-sonarqube-scan-0.0.4
+          name: stakater-sonarqube-scan-0.0.5
           kind: Task
         params:
           - name: SONAR_HOST_URL
