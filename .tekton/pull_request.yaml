@@ -40,9 +40,9 @@ spec:
     - name: helm_registry
       value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
     - name: username
-      value: $(resources.auth-creds.params.username)
+      value: $(resources.auth-credentials.params.username)
     - name: password
-      value: $(resources.auth-creds.params.password)
+      value: $(resources.auth-credentials.params.password)
   pipelineSpec:
     params:
       - name: repo_url
