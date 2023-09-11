@@ -5,18 +5,27 @@ metadata:
   annotations:
     pipelinesascode.tekton.dev/on-event: "[push]"
     pipelinesascode.tekton.dev/on-target-branch: "main"
-    pipelinesascode.tekton.dev/task: "[git-clone, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-scan/rendered/stakater-rox-image-scan-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-scan/rendered/stakater-rox-image-scan-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-checkov-scan/rendered/stakater-checkov-scan-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-check/rendered/stakater-rox-image-check-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-trivy-scan/rendered/stakater-trivy-scan-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/9a14f66dd3d18b525484fe993337f99c88dc6123/stakater-sonarqube-scan/rendered/stakater-sonarqube-scan-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.9.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-code-linting/rendered/stakater-code-linting-0.0.3.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-unit-test/rendered/stakater-unit-test-0.0.5.yaml, https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.4.yaml]"
+    pipelinesascode.tekton.dev/task: "[git-clone, 
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, 
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-code-linting/rendered/stakater-code-linting-0.0.3.yaml, 
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.4.yaml, 
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-unit-test/rendered/stakater-unit-test-0.0.5.yaml, 
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-sonarqube-scan/rendered/stakater-sonarqube-scan-0.0.5.yaml, 
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml, 
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-trivy-scan/rendered/stakater-trivy-scan-0.0.3.yaml,
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-scan/rendered/stakater-rox-image-scan-0.0.4.yaml, 
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.10.yaml]"
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 
 spec:
   params:
     - name: repo_url
       value: "git@github.com:AsfaMumtaz/stakater-nordmart-review-api.git"
-    - name: gitrevision
+    - name: git_revision
       value: {{revision}}
     - name: repo_path
       value: {{repo_name}}
-    - name: image_registry_url
+    - name: image_registry
       value: "nexus-docker-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/stakater-nordmart-review-api"
     - name: helm_registry
       value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
@@ -24,13 +33,14 @@ spec:
   pipelineSpec:
     params:
       - name: repo_url
-      - name: gitrevision
+      - name: git_revision
       - name: repo_path
-      - name: image_registry_url
+      - name: image_registry
       - name: helm_registry
     workspaces:
       - name: source
       - name: ssh-directory
+
     tasks:
       - name: fetch-repository
         taskRef:
@@ -47,7 +57,8 @@ spec:
           - name: url
             value: $(params.repo_url)
           - name: revision
-            value: $(params.gitrevision)
+            value: $(params.git_revision)
+
       - name: create-git-tag
         runAfter:
           - fetch-repository
@@ -58,115 +69,76 @@ spec:
           - name: PR_NUMBER
             value: "NA"
           - name: GIT_REVISION
-            value: $(params.gitrevision)
+            value: $(params.git_revision)
         workspaces:
           - name: source
             workspace: source
           - name: ssh-directory
             workspace: ssh-directory
-#      - name: trivy
-#        runAfter:
-#          - create-git-tag
-#        taskRef:
-#          name: stakater-trivy-scan-0.0.3
-#          kind: Task
-#        params:
-#          - name: IMAGE
-#            value: $(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)
-#        workspaces:
-#          - name: source
-#            workspace: source
-      - name: rox-image-scan
-        runAfter:
-          - buildah
-        taskRef:
-          name: stakater-rox-image-scan-0.0.4
-          kind: Task
-        params:
-        - name: IMAGE
-          value: '$(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)'
-        - name: ROX_API_TOKEN
-          value: rox-secret
-        - name: ROX_CENTRAL_ENDPOINT
-          value: rox-secret
-        - name: OUTPUT_FORMAT
-          value: csv
-        - name: IMAGE_DIGEST
-          value: $(tasks.buildah.results.IMAGE_DIGEST)
-        - name: BUILD_IMAGE
-          value: "true"
 
-#      - name: trivy-scan
-#        runAfter:
-#          - create-git-tag
-#        taskRef:
-#          name: stakater-trivy-scan-0.0.3
-#          kind: Task
-#        params:
-#          name: IMAGE
-#          value: $(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)
-#        workspaces:
-#          - name: source
-#            workspace: source
-#      - name: sonarqube-scan
-#        runAfter:
-#          - create-git-tag
-#        taskRef:
-#          name: stakater-sonarqube-scan-0.0.4
-#          kind: Task
-#        params:
-#          - name: SONAR_HOST_URL
-#            value: https://sonarqube-stakater-sonarqube.apps.stakater-nonprod.xizesfy7.kubeapp.cloud
-#          - name: SONAR_PROJECT_KEY
-#            value: $(params.repo_path)
-#          - name: SONAR_LOGIN
-#        workspaces:
-#          - name: source
-#            workspace: source
-#      - name: code-linting
-#        runAfter:
-#          - create-git-tag
-#        taskRef:
-#          name: stakater-code-linting-0.0.3
-#          kind: Task
-#        workspaces:
-#          - name: source
-#            workspace: source
-#      - name: kube-linting
-#        runAfter:
-#          - create-git-tag
-#        taskRef:
-#          name: stakater-kube-linting-0.0.4
-#          kind: Task
-#        params:
-#          - name: FILE
-#            value: manifest.yaml
-#          - name: DEPLOYMENT_FILES_PATH
-#            value: deploy
-#          - name: NAMESPACE
-#            value: arsenal-build
-#        workspaces:
-#          - name: source
-#            workspace: source
-#      - name: unit-test
-#        runAfter:
-#          - code-linting
-#          - kube-linting
-#        taskRef:
-#          name: stakater-unit-test-0.0.5
-#          kind: Task
-#        workspaces:
-#          - name: source
-#            workspace: source
-      - name: buildah
+      - name: code-linting
         runAfter:
           - create-git-tag
+        taskRef:
+          name: stakater-code-linting-0.0.3
+          kind: Task
+        workspaces:
+          - name: source
+            workspace: source
+
+      - name: kube-linting
+        runAfter:
+          - create-git-tag
+        taskRef:
+          name: stakater-kube-linting-0.0.4
+          kind: Task
+        params:
+          - name: FILE
+            value: manifest.yaml
+          - name: DEPLOYMENT_FILES_PATH
+            value: deploy
+          - name: NAMESPACE
+            value: chelsea-build
+        workspaces:
+          - name: source
+            workspace: source
+
+      - name: unit-test
+        runAfter:
+          - code-linting
+          - kube-linting
+        taskRef:
+          name: stakater-unit-test-0.0.5
+          kind: Task
+        workspaces:
+          - name: source
+            workspace: source
+
+      - name: sonarqube-scan
+        runAfter:
+          - unit-test
+        taskRef:
+          name: stakater-sonarqube-scan-0.0.4
+          kind: Task
+        params:
+          - name: SONAR_HOST_URL
+            value: https://sonarqube-stakater-sonarqube.apps.stakater-nonprod.xizesfy7.kubeapp.cloud
+          - name: SONAR_PROJECT_KEY
+            value: $(params.repo_path)
+          - name: SONAR_LOGIN
+        workspaces:
+          - name: source
+            workspace: source
+
+      - name: buildah
+        runAfter:
+          - unit-test
         taskRef:
           name: stakater-buildah-0.0.18
           kind: Task
         params:
           - name: IMAGE
-            value: $(params.image_registry_url):$(tasks.create-git-tag.results.GIT_TAG)
+            value: $(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)
           - name: TLSVERIFY
             value: "false"
           - name: FORMAT
@@ -174,32 +146,68 @@ spec:
           - name: BUILD_IMAGE
             value: "true"
           - name: IMAGE_REGISTRY
-            value: $(params.image_registry_url)
+            value: $(params.image_registry)
           - name: CURRENT_GIT_TAG
             value: $(tasks.create-git-tag.results.CURRENT_GIT_TAG)
         workspaces:
           - name: source
             workspace: source
-#      - name: helm-push
-#        runAfter:
-#          - buildah
-#        taskRef:
-#          name: stakater-helm-push-0.0.9
-#          kind: Task
-#        params:
-#          - name: PR_NUMBER
-#            value: "NA"
-#          - name: REPO_PATH
-#            value: $(params.repo_path)
-#          - name: GIT_REVISION
-#            value: $(params.gitrevision)
-#          - name: REGISTRY
-#            value: $(params.helm_registry)
-#          - name: SEM_VER
-#            value: $(tasks.create-git-tag.results.GIT_TAG)
-#        workspaces:
-#          - name: source
-#            workspace: source
+
+      - name: trivy-scan
+        runAfter:
+          - buildah
+          - sonarqube-scan
+        taskRef:
+          name: stakater-trivy-scan-0.0.3
+          kind: Task
+        params:
+          - name: IMAGE
+            value: $(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)
+        workspaces:
+          - name: source
+            workspace: source
+
+      - name: rox-image-scan
+        runAfter:
+          - buildah
+          - sonarqube-scan
+        taskRef:
+          name: stakater-rox-image-scan-0.0.4
+          kind: Task
+        params:
+        - name: IMAGE
+          value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
+        - name: ROX_API_TOKEN
+          value: rox-creds
+        - name: ROX_CENTRAL_ENDPOINT
+          value: rox-creds
+        - name: OUTPUT_FORMAT
+          value: csv
+        - name: IMAGE_DIGEST
+          value: $(tasks.buildah.results.IMAGE_DIGEST)
+        - name: BUILD_IMAGE
+          value: "true"
+
+      - name: helm-push
+        runAfter:
+          - buildah
+        taskRef:
+          name: stakater-helm-push-0.0.10
+          kind: Task
+        params:
+          - name: PR_NUMBER
+            value: "NA"
+          - name: REPO_PATH
+            value: $(params.repo_path)
+          - name: GIT_REVISION
+            value: $(params.git_revision)
+          - name: REGISTRY
+            value: $(params.helm_registry)
+          - name: SEM_VER
+            value: $(tasks.create-git-tag.results.GIT_TAG)
+        workspaces:
+          - name: source
+            workspace: source
 #      - name: update-cd-repo
 #        runAfter:
 #          - create-git-tag
@@ -264,9 +272,9 @@ spec:
     - name: ssh-directory
       secret:
         secretName: nordmart-ssh-creds
-    - name: cd-ssh-directory
-      secret:
-        secretName: cd-ssh
-    - name: basic-auth
-      secret:
-        secretName: git-auth
+#    - name: cd-ssh-directory
+#      secret:
+#        secretName: cd-ssh
+#    - name: basic-auth
+#      secret:
+#        secretName: git-auth
