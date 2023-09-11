@@ -11,7 +11,7 @@ spec:
   params:
     - name: repo_url
       value: "git@github.com:stakater-lab/stakater-nordmart-review-api.git"
-    - name: gitrevision
+    - name: git_revision
       value: {{revision}}
     - name: repo_path
       value: {{repo_name}}
@@ -22,7 +22,7 @@ spec:
   pipelineSpec:
     params:
       - name: repo_url
-      - name: gitrevision
+      - name: git_revision
       - name: repo_path
       - name: image_registry_url
       - name: helm_registry
@@ -45,7 +45,7 @@ spec:
           - name: url
             value: $(params.repo_url)
           - name: revision
-            value: $(params.gitrevision)
+            value: $(params.git_revision)
       - name: create-git-tag
         runAfter:
           - fetch-repository
@@ -56,7 +56,7 @@ spec:
           - name: PR_NUMBER
             value: "NA"
           - name: GIT_REVISION
-            value: $(params.gitrevision)
+            value: $(params.git_revision)
         workspaces:
           - name: source
             workspace: source
@@ -177,7 +177,7 @@ spec:
           - name: REPO_PATH
             value: $(params.repo_path)
           - name: GIT_REVISION
-            value: $(params.gitrevision)
+            value: $(params.git_revision)
           - name: REGISTRY
             value: $(params.helm_registry)
           - name: SEM_VER
@@ -198,7 +198,7 @@ spec:
           - name: REPO_PATH
             value: $(params.repo_path)
           - name: GIT_REVISION
-            value: $(params.gitrevision)
+            value: $(params.git_revision)
           - name: NAMESPACE
             value: arsenal-dev
           - name: ENVIRONMENT
@@ -222,7 +222,7 @@ spec:
           - name: PR_NUMBER
             value: "NA"
           - name: GIT_REVISION
-            value: $(params.gitrevision)
+            value: $(params.git_revision)
           - name: IMAGE_TAG
             value: $(tasks.create-git-tag.results.GIT_TAG)
           - name: GIT_SECRET_NAME
