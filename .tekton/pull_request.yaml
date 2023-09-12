@@ -98,7 +98,7 @@ spec:
           - name: PR_NUMBER
             value: $(params.pull_request_number)
           - name: GIT_URL
-            value: $(params.repo_url)
+            value: https://github.com/AsfaMumtaz/stakater-nordmart-review-api.git
           - name: GIT_BRANCH
             value: $(params.git_branch)
           - name: IMAGE_TAG
