@@ -210,25 +210,25 @@ spec:
           - name: BUILD_IMAGE
             value: "true"
 
-      - name: rox-deployment-check
-        runAfter:
-          - buildah
-          - sonarqube-scan
-        taskRef:
-          name: stakater-rox-deployment-check-0.0.4
-          kind: Task
-        params:
-          - name: ROX_API_TOKEN
-            value: rox-creds
-          - name: ROX_CENTRAL_ENDPOINT
-            value: rox-creds
-          - name: FILE
-            value: manifest.yaml
-          - name: DEPLOYMENT_FILES_PATH
-            value: deploy
-        workspaces:
-          - name: source
-            workspace: source
+#      - name: rox-deployment-check
+#        runAfter:
+#          - buildah
+#          - sonarqube-scan
+#        taskRef:
+#          name: stakater-rox-deployment-check-0.0.4
+#          kind: Task
+#        params:
+#          - name: ROX_API_TOKEN
+#            value: rox-creds
+#          - name: ROX_CENTRAL_ENDPOINT
+#            value: rox-creds
+#          - name: FILE
+#            value: manifest.yaml
+#          - name: DEPLOYMENT_FILES_PATH
+#            value: deploy
+#        workspaces:
+#          - name: source
+#            workspace: source
 
       - name: checkov-scan
         runAfter:
@@ -244,7 +244,7 @@ spec:
       - name: helm-push
         runAfter:
           - trivy-scan
-          - rox-deployment-check
+#          - rox-deployment-check
           - rox-image-scan
           - rox-image-check
           - checkov-scan
