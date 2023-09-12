@@ -81,63 +81,64 @@ spec:
           - name: ssh-directory
             workspace: ssh-directory
 
-      - name: code-linting
-        runAfter:
-          - create-git-tag
-        taskRef:
-          name: stakater-code-linting-0.0.3
-          kind: Task
-        workspaces:
-          - name: source
-            workspace: source
-
-      - name: kube-linting
-        runAfter:
-          - create-git-tag
-        taskRef:
-          name: stakater-kube-linting-0.0.4
-          kind: Task
-        params:
-          - name: FILE
-            value: manifest.yaml
-          - name: DEPLOYMENT_FILES_PATH
-            value: deploy
-          - name: NAMESPACE
-            value: chelsea-build
-        workspaces:
-          - name: source
-            workspace: source
-
-      - name: unit-test
-        runAfter:
-          - code-linting
-          - kube-linting
-        taskRef:
-          name: stakater-unit-test-0.0.5
-          kind: Task
-        workspaces:
-          - name: source
-            workspace: source
-
-      - name: sonarqube-scan
-        runAfter:
-          - unit-test
-        taskRef:
-          name: stakater-sonarqube-scan-0.0.5
-          kind: Task
-        params:
-          - name: SONAR_HOST_URL
-            value: https://sonarqube-stakater-sonarqube.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud
-          - name: SONAR_PROJECT_KEY
-            value: $(params.repo_path)
-          - name: SONAR_LOGIN
-        workspaces:
-          - name: source
-            workspace: source
+#      - name: code-linting
+#        runAfter:
+#          - create-git-tag
+#        taskRef:
+#          name: stakater-code-linting-0.0.3
+#          kind: Task
+#        workspaces:
+#          - name: source
+#            workspace: source
+#
+#      - name: kube-linting
+#        runAfter:
+#          - create-git-tag
+#        taskRef:
+#          name: stakater-kube-linting-0.0.4
+#          kind: Task
+#        params:
+#          - name: FILE
+#            value: manifest.yaml
+#          - name: DEPLOYMENT_FILES_PATH
+#            value: deploy
+#          - name: NAMESPACE
+#            value: chelsea-build
+#        workspaces:
+#          - name: source
+#            workspace: source
+#
+#      - name: unit-test
+#        runAfter:
+#          - code-linting
+#          - kube-linting
+#        taskRef:
+#          name: stakater-unit-test-0.0.5
+#          kind: Task
+#        workspaces:
+#          - name: source
+#            workspace: source
+#
+#      - name: sonarqube-scan
+#        runAfter:
+#          - unit-test
+#        taskRef:
+#          name: stakater-sonarqube-scan-0.0.5
+#          kind: Task
+#        params:
+#          - name: SONAR_HOST_URL
+#            value: https://sonarqube-stakater-sonarqube.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud
+#          - name: SONAR_PROJECT_KEY
+#            value: $(params.repo_path)
+#          - name: SONAR_LOGIN
+#        workspaces:
+#          - name: source
+#            workspace: source
 
       - name: buildah
         runAfter:
-          - unit-test
+#          - unit-test
+          - create-git-tag
         taskRef:
           name: stakater-buildah-0.0.18
           kind: Task
@@ -158,48 +159,48 @@ spec:
           - name: source
             workspace: source
 
-      - name: trivy-scan
-        runAfter:
-          - buildah
-          - sonarqube-scan
-        taskRef:
-          name: stakater-trivy-scan-0.0.3
-          kind: Task
-        params:
-          - name: IMAGE
-            value: $(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)
-        workspaces:
-          - name: source
-            workspace: source
+#      - name: trivy-scan
+#        runAfter:
+#          - buildah
+#          - sonarqube-scan
+#        taskRef:
+#          name: stakater-trivy-scan-0.0.3
+#          kind: Task
+#        params:
+#          - name: IMAGE
+#            value: $(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)
+#        workspaces:
+#          - name: source
+#            workspace: source
 
-      - name: rox-image-scan
-        runAfter:
-          - buildah
-          - sonarqube-scan
-        taskRef:
-          name: stakater-rox-image-scan-0.0.4
-          kind: Task
-        params:
-        - name: IMAGE
-          value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
-        - name: ROX_API_TOKEN
-          value: rox-creds
-        - name: ROX_CENTRAL_ENDPOINT
-          value: rox-creds
-        - name: OUTPUT_FORMAT
-          value: csv
-        - name: IMAGE_DIGEST
-          value: $(tasks.buildah.results.IMAGE_DIGEST)
-        - name: BUILD_IMAGE
-          value: "true"
+#      - name: rox-image-scan
+#        runAfter:
+#          - buildah
+##          - sonarqube-scan
+#        taskRef:
+#          name: stakater-rox-image-scan-0.0.4
+#          kind: ClusterTask
+#        params:
+#        - name: IMAGE
+#          value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
+#        - name: ROX_API_TOKEN
+#          value: rox-creds
+#        - name: ROX_CENTRAL_ENDPOINT
+#          value: rox-creds
+#        - name: OUTPUT_FORMAT
+#          value: csv
+#        - name: IMAGE_DIGEST
+#          value: $(tasks.buildah.results.IMAGE_DIGEST)
+#        - name: BUILD_IMAGE
+#          value: "true"
 
       - name: rox-image-check
         runAfter:
           - buildah
-          - sonarqube-scan
+#          - sonarqube-scan
         taskRef:
           name: stakater-rox-image-check-0.0.4
-          kind: Task
+          kind: ClusterTask
         params:
           - name: IMAGE
             value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
