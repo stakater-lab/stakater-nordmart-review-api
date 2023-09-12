@@ -25,7 +25,7 @@ metadata:
 spec:
   params:
     - name: repo_url
-      value: "git@github.com:stakater-lab/stakater-nordmart-review-api.git"
+      value: "git@github.com:DESTINATION_ORG/stakater-nordmart-review-api.git"
     - name: git_revision
       value: {{revision}}
     - name: repo_path
@@ -277,7 +277,7 @@ spec:
           - name: IMAGE_NAME
             value: $(params.image_registry)
           - name: PR_NUMBER
-            value: $(params.pull_request_number)
+            value: "NA"
           - name: REPO_PATH
             value: $(params.repo_path)
           - name: GIT_REVISION
@@ -289,7 +289,7 @@ spec:
           - name: HELM_REGISTRY
             value: $(params.helm_registry)
           - name: CD_REPO_URL
-            value: git@github.com:stakater-lab/nordmart-apps-gitops-config.git
+            value: git@github.com:DESTINATION_ORG/webinar-apps-gitops-config.git
         workspaces:
           - name: source
             workspace: source
@@ -304,7 +304,7 @@ spec:
           name: stakater-push-main-tag-0.0.4
         params:
           - name: PR_NUMBER
-            value: $(params.pull_request_number)
+            value: "NA"
           - name: GIT_REVISION
             value: $(params.git_revision)
           - name: IMAGE_TAG
@@ -328,4 +328,4 @@ spec:
               storage: 1Gi
     - name: ssh-directory
       secret:
-        secretName: nordmart-ssh-creds
+        secretName: nordmart-api-ssh-creds
