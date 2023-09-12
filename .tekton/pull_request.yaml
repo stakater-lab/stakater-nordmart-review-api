@@ -265,7 +265,9 @@ spec:
             value: manifest.yaml
           - name: DEPLOYMENT_FILES_PATH
             value: deploy
-
+        workspaces:
+          - name: source
+            workspace: source
       - name: checkov-scan
         runAfter:
           - buildah
