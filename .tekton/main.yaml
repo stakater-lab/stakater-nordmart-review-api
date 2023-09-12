@@ -31,10 +31,10 @@ spec:
     - name: repo_path
       value: {{repo_name}}
     - name: image_registry
-      value: ""
+      value: nexus-docker-stakater-nexus.ROUTE_SUBDOMAIN/stakater-nordmart-review-api
     - name: helm_registry
-      value: ""
-
+      value: >-
+        https://nexus-helm-stakater-nexus.ROUTE_SUBDOMAIN/repository/helm-charts/
   pipelineSpec:
     params:
       - name: repo_url
