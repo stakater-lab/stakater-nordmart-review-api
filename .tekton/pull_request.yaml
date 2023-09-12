@@ -274,6 +274,9 @@ spec:
         taskRef:
           name: stakater-checkov-scan-0.0.3
           kind: Task
+        workspaces:
+          - name: source
+            workspace: source
 
       - name: helm-push
         runAfter:
@@ -346,7 +349,7 @@ spec:
           - name: GIT_SECRET_NAME
             value: "pat-creds"
           - name: PROTOCOL
-            value: "ssh"
+            value: "https"
         workspaces:
           - name: source
             workspace: source
