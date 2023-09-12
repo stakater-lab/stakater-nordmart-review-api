@@ -109,7 +109,7 @@ spec:
             value: https://api.github.com/repos/$(params.organization)/$(params.repo_path)/pulls/$(params.pull_request_number)/commits
         taskRef:
           kind: ClusterTask
-          task: stakater-create-environment
+          name: stakater-create-environment
         workspaces:
           - name: output
             workspace: source
