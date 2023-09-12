@@ -304,7 +304,7 @@ spec:
           name: stakater-push-main-tag-0.0.4
         params:
           - name: PR_NUMBER
-            value: $(params.pull_request_number)
+            value: "NA"
           - name: GIT_REVISION
             value: $(params.git_revision)
           - name: IMAGE_TAG
