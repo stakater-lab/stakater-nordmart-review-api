@@ -29,10 +29,16 @@ spec:
       value: {{revision}}
     - name: repo_path
       value: {{repo_name}}
+    - name: git_branch
+      value: {{source_branch}}
+    - name: pull_request_number
+      value: {{pull_request_number}}
     - name: image_registry
       value: "nexus-docker-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/stakater-nordmart-review-api"
     - name: helm_registry
       value: "https://nexus-helm-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/repository/helm-charts/"
+    - name: organization
+      value: AsfaMumtaz
   pipelineSpec:
     params:
       - name: repo_url
@@ -40,7 +46,7 @@ spec:
       - name: repo_path
       - name: image_registry
       - name: helm_registry
-
+      - name: pull_request_number
 
     workspaces:
       - name: source
@@ -63,42 +69,50 @@ spec:
             value: $(params.repo_url)
           - name: revision
             value: $(params.git_revision)
-      - name: fetch-pr-number-test
+
+      - name: create-git-tag
         runAfter:
           - fetch-repository
         taskRef:
-          name: fetch-pr-number-test
-          kind: ClusterTask
+          name: stakater-create-git-tag-0.0.7
+          kind: Task
+        params:
+          - name: PR_NUMBER
+            value: $(params.pull_request_number)
+          - name: GIT_REVISION
+            value: $(params.git_revision)
         workspaces:
           - name: source
             workspace: source
-        params:
-          - name: provider
-            value: "github"
-          - name: hash
-            value: $(params.git_revision)
-          - name: workspace
-            value: AsfaMumtaz
-          - name: repository
-            value: stakater-nordmart-review-api
+          - name: ssh-directory
+            workspace: ssh-directory
 
-#      - name: create-git-tag
-#        runAfter:
-#          - fetch-repository
-#        taskRef:
-#          name: stakater-create-git-tag-0.0.7
-#          kind: Task
-#        params:
-#          - name: PR_NUMBER
-#            value: "NA"
-#          - name: GIT_REVISION
-#            value: $(params.git_revision)
-#        workspaces:
-#          - name: source
-#            workspace: source
-#          - name: ssh-directory
-#            workspace: ssh-directory
-#
+      - name: stakater-create-environment
+        runAfter:
+          - create-git-tag
+        params:
+          - name: CREATE_ON_CLUSTER
+            value: "true"
+          - name: REPO_NAME
+            value: $(params.repo_path)
+          - name: PR_NUMBER
+            value: $(params.pull_request_number)
+          - name: GIT_URL
+            value: $(params.repo_url)
+          - name: GIT_BRANCH
+            value: $(params.git_branch)
+          - name: IMAGE_TAG
+            value: $(tasks.create-git-tag.results.GIT_TAG)
+          - name: IMAGE_REPO
+            value: $(params.image_registry)
+          - name: PULL_REQUEST_COMMITS_API
+            value: https://api.github.com/repos/$(params.organization)/$(params.repo_path)/pulls/$(params.pull_request_number)/commits
+        taskRef:
+          kind: ClusterTask
+          task: stakater-create-environment
+        workspaces:
+          - name: output
+            workspace: source
 #      - name: code-linting
 #        runAfter:
 #          - create-git-tag
