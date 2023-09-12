@@ -138,7 +138,6 @@ spec:
       - name: buildah
         runAfter:
           - unit-test
-          - create-git-tag
         taskRef:
           name: stakater-buildah-0.0.18
           kind: Task
