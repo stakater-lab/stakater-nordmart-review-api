@@ -51,6 +51,8 @@ spec:
       - name: image_registry
       - name: helm_registry
       - name: pull_request_number
+      - name: organization
+      - name: git_branch
 
     workspaces:
       - name: source
