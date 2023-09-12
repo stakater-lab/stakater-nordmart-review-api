@@ -277,7 +277,7 @@ spec:
           - name: IMAGE_NAME
             value: $(params.image_registry)
           - name: PR_NUMBER
-            value: $(params.pull_request_number)
+            value: "NA"
           - name: REPO_PATH
             value: $(params.repo_path)
           - name: GIT_REVISION
@@ -304,7 +304,7 @@ spec:
           name: stakater-push-main-tag-0.0.4
         params:
           - name: PR_NUMBER
-            value: $(params.pull_request_number)
+            value: "NA"
           - name: GIT_REVISION
             value: $(params.git_revision)
           - name: IMAGE_TAG
