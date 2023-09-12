@@ -277,7 +277,7 @@ spec:
           - name: IMAGE_NAME
             value: $(params.image_registry)
           - name: PR_NUMBER
-            value: $(params.pull_request_number)
+            value: "NA"
           - name: REPO_PATH
             value: $(params.repo_path)
           - name: GIT_REVISION
@@ -328,4 +328,4 @@ spec:
               storage: 1Gi
     - name: ssh-directory
       secret:
-        secretName: nordmart-ssh-creds
+        secretName: nordmart-api-ssh-creds
