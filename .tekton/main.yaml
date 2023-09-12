@@ -179,7 +179,7 @@ spec:
           - sonarqube-scan
         taskRef:
           name: stakater-rox-image-scan-0.0.4
-          kind: ClusterTask
+          kind: Task
         params:
         - name: IMAGE
           value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
