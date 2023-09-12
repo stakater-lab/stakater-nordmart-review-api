@@ -289,7 +289,7 @@ spec:
           - name: HELM_REGISTRY
             value: $(params.helm_registry)
           - name: CD_REPO_URL
-            value: git@github.com:DESTINATION_ORG/nordmart-apps-gitops-config.git
+            value: git@github.com:DESTINATION_ORG/webinar-apps-gitops-config.git
         workspaces:
           - name: source
             workspace: source
