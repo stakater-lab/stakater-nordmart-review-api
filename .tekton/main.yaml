@@ -103,7 +103,7 @@ spec:
           - name: DEPLOYMENT_FILES_PATH
             value: deploy
           - name: NAMESPACE
-            value: chelsea-build
+            value: TENANT-build
         workspaces:
           - name: source
             workspace: source
@@ -172,64 +172,6 @@ spec:
           - name: source
             workspace: source
 
-      - name: rox-image-scan
-        runAfter:
-          - buildah
-          - sonarqube-scan
-        taskRef:
-          name: stakater-rox-image-scan-0.0.4
-          kind: Task
-        params:
-          - name: IMAGE
-            value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
-          - name: ROX_API_TOKEN
-            value: rox-creds
-          - name: ROX_CENTRAL_ENDPOINT
-            value: rox-creds
-          - name: OUTPUT_FORMAT
-            value: csv
-          - name: IMAGE_DIGEST
-            value: $(tasks.buildah.results.IMAGE_DIGEST)
-          - name: BUILD_IMAGE
-            value: "true"
-
-      - name: rox-image-check
-        runAfter:
-          - buildah
-          - sonarqube-scan
-        taskRef:
-          name: stakater-rox-image-check-0.0.4
-          kind: Task
-        params:
-          - name: IMAGE
-            value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
-          - name: ROX_API_TOKEN
-            value: rox-creds
-          - name: ROX_CENTRAL_ENDPOINT
-            value: rox-creds
-          - name: BUILD_IMAGE
-            value: "true"
-
-      - name: rox-deployment-check
-        runAfter:
-          - buildah
-          - sonarqube-scan
-        taskRef:
-          name: stakater-rox-deployment-check-0.0.4
-          kind: Task
-        params:
-          - name: ROX_API_TOKEN
-            value: rox-creds
-          - name: ROX_CENTRAL_ENDPOINT
-            value: rox-creds
-          - name: FILE
-            value: manifest.yaml
-          - name: DEPLOYMENT_FILES_PATH
-            value: deploy
-        workspaces:
-          - name: source
-            workspace: source
-
       - name: checkov-scan
         runAfter:
           - buildah
@@ -244,9 +186,6 @@ spec:
       - name: helm-push
         runAfter:
           - trivy-scan
-          - rox-deployment-check
-          - rox-image-scan
-          - rox-image-check
           - checkov-scan
         taskRef:
           name: stakater-helm-push-0.0.10
