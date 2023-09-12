@@ -31,9 +31,9 @@ spec:
     - name: repo_path
       value: {{repo_name}}
     - name: image_registry
-      value: "nexus-docker-stakater-nexus.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud"
+      value: "nexus-docker-stakater-nexus.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud/stakater-nordmart-review-api"
     - name: helm_registry
-      value: "https://nexus-helm-stakater-nexus.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud/repository/helm-charts/"
+      value: "https://nexus-helm-stakater-nexus.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud/repository/helm-charts//repository/helm-charts/"
       
   pipelineSpec:
     params:
