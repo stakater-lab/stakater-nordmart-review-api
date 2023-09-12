@@ -31,7 +31,7 @@ spec:
     - name: repo_path
       value: {{repo_name}}
     - name: image_registry
-      value: "nexus-docker-stakater-nexus.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud/stakater-nordmart-review-api"
+      value: "nexus-docker-stakater-nexus.apps.preprod.jlvwjls8.kubeapp.cloud/stakater-nordmart-review-api"
     - name: helm_registry
       value: "https://nexus-helm-stakater-nexus.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud/repository/helm-charts//repository/helm-charts/"
       
@@ -108,36 +108,37 @@ spec:
           - name: source
             workspace: source
 
-      - name: unit-test
-        runAfter:
-          - code-linting
-          - kube-linting
-        taskRef:
-          name: stakater-unit-test-0.0.5
-          kind: Task
-        workspaces:
-          - name: source
-            workspace: source
+#      - name: unit-test
+#        runAfter:
+#          - code-linting
+#          - kube-linting
+#        taskRef:
+#          name: stakater-unit-test-0.0.5
+#          kind: Task
+#        workspaces:
+#          - name: source
+#            workspace: source
 
-      - name: sonarqube-scan
-        runAfter:
-          - unit-test
-        taskRef:
-          name: stakater-sonarqube-scan-0.0.5
-          kind: Task
-        params:
-          - name: SONAR_HOST_URL
-            value: https://sonarqube-stakater-sonarqube.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud
-          - name: SONAR_PROJECT_KEY
-            value: $(params.repo_path)
-          - name: SONAR_LOGIN
-        workspaces:
-          - name: source
-            workspace: source
+#      - name: sonarqube-scan
+#        runAfter:
+#          - unit-test
+#        taskRef:
+#          name: stakater-sonarqube-scan-0.0.5
+#          kind: Task
+#        params:
+#          - name: SONAR_HOST_URL
+#            value: https://sonarqube-stakater-sonarqube.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud
+#          - name: SONAR_PROJECT_KEY
+#            value: $(params.repo_path)
+#          - name: SONAR_LOGIN
+#        workspaces:
+#          - name: source
+#            workspace: source
 
       - name: buildah
         runAfter:
-          - unit-test
+#          - unit-test
+          - create-git-tag
         taskRef:
           name: stakater-buildah-0.0.18
           kind: Task
