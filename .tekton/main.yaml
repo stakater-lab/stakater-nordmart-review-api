@@ -31,7 +31,7 @@ spec:
     - name: repo_path
       value: {{repo_name}}
     - name: image_registry
-      value: nexus-docker-stakater-nexus.ROUTE_SUBDOMAIN
+      value: nexus-docker-stakater-nexus.ROUTE_SUBDOMAIN/stakater-nordmart-review-api
     - name: helm_registry
       value: >-
         https://nexus-helm-stakater-nexus.ROUTE_SUBDOMAIN/repository/helm-charts/
