@@ -127,7 +127,7 @@ spec:
           kind: Task
         params:
           - name: SONAR_HOST_URL
-            value: https://sonarqube-stakater-sonarqube.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud
+            value: https://sonarqube-stakater-sonarqube.ROUTE_SUBDOMAIN
           - name: SONAR_PROJECT_KEY
             value: $(params.repo_path)
           - name: SONAR_LOGIN
