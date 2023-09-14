@@ -301,8 +301,8 @@ spec:
         runAfter:
           - create-git-tag
         taskRef:
-          kind: Task
-          name: stakater-push-main-tag-0.0.4
+          kind: ClusterTask
+          name: stakater-push-main-tag-test
         params:
           - name: PR_NUMBER
             value: "NA"
