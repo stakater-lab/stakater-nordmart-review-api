@@ -310,8 +310,6 @@ spec:
             value: $(params.git_revision)
           - name: IMAGE_TAG
             value: $(tasks.create-git-tag.results.GIT_TAG)
-          - name: GIT_SECRET_NAME
-            value: "pat-creds"
           - name: PROTOCOL
             value: "ssh"
         workspaces:
