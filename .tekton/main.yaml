@@ -317,6 +317,8 @@ spec:
         workspaces:
           - name: source
             workspace: source
+          - name: ssh-directory
+            workspace: ssh-directory
 
   workspaces:
     - name: source
