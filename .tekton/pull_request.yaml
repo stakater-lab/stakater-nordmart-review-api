@@ -379,4 +379,4 @@ spec:
               storage: 1Gi
     - name: ssh-directory
       secret:
-        secretName: nordmart-ssh-creds
+        secretName: nordmart-api-ssh-creds
