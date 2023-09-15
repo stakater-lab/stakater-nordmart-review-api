@@ -314,10 +314,10 @@ spec:
         workspaces:
           - name: source
             workspace: source
-          - name: ssh-directory
-            workspace: ssh-directory
-#          - name: basic-auth
-#            workspace: basic-auth
+#          - name: ssh-directory
+#            workspace: ssh-directory
+          - name: basic-auth
+            workspace: basic-auth
 
   workspaces:
     - name: source
