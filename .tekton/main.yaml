@@ -310,15 +310,14 @@ spec:
             value: $(params.git_revision)
           - name: IMAGE_TAG
             value: $(tasks.create-git-tag.results.GIT_TAG)
-#          - name: PROTOCOL
-#            value: "ssh"
+
         workspaces:
           - name: source
             workspace: source
-#          - name: ssh-directory
-#            workspace: ssh-directory
-          - name: basic-auth
-            workspace: basic-auth
+          - name: ssh-directory
+            workspace: ssh-directory
+#          - name: basic-auth
+#            workspace: basic-auth
 
   workspaces:
     - name: source
