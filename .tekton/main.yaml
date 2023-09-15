@@ -233,7 +233,7 @@ spec:
           - name: source
             workspace: source
           - name: ssh-directory
-            workspace: ssh-directory
+            workspace: cd-ssh-creds
 
       - name: push-main-tag
         runAfter:
@@ -268,3 +268,6 @@ spec:
     - name: ssh-directory
       secret:
         secretName: nordmart-api-ssh-creds
+    - name: cd-ssh-creds
+      secret:
+        secretName: cd-ssh-creds
