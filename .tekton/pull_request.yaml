@@ -333,7 +333,7 @@ spec:
 
       - name: stakater-validate-environment
         runAfter:
-          - push-main-tag
+          - update-cd-repo
         taskRef:
           kind: Task
           name: stakater-validate-environment-0.0.4
