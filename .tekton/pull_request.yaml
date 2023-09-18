@@ -278,30 +278,31 @@ spec:
 #          - name: source
 #            workspace: source
 #
-#      - name: helm-push
-#        runAfter:
+      - name: helm-push
+        runAfter:
 #          - trivy-scan
 #          - rox-deployment-check
 #          - rox-image-scan
 #          - rox-image-check
 #          - checkov-scan
-#        taskRef:
-#          name: stakater-helm-push-0.0.10
-#          kind: Task
-#        params:
-#          - name: PR_NUMBER
-#            value: $(params.pull_request_number)
-#          - name: REPO_PATH
-#            value: $(params.repo_path)
-#          - name: GIT_REVISION
-#            value: $(params.git_revision)
-#          - name: REGISTRY
-#            value: $(params.helm_registry)
-#          - name: SEM_VER
-#            value: $(tasks.create-git-tag.results.GIT_TAG)
-#        workspaces:
-#          - name: source
-#            workspace: source
+          - buildah
+        taskRef:
+          name: stakater-helm-push-0.0.10
+          kind: Task
+        params:
+          - name: PR_NUMBER
+            value: $(params.pull_request_number)
+          - name: REPO_PATH
+            value: $(params.repo_path)
+          - name: GIT_REVISION
+            value: $(params.git_revision)
+          - name: REGISTRY
+            value: $(params.helm_registry)
+          - name: SEM_VER
+            value: $(tasks.create-git-tag.results.GIT_TAG)
+        workspaces:
+          - name: source
+            workspace: source
 #      - name: update-cd-repo
 #        runAfter:
 #          - helm-push
@@ -356,7 +357,7 @@ spec:
 
       - name: stakater-validate-environment
         runAfter:
-          - buildah
+          - helm-push
         taskRef:
           kind: Task
           name: stakater-validate-environment-0.0.4
