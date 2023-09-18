@@ -245,7 +245,7 @@ spec:
           - helm-push
         taskRef:
           kind: Task
-          name: stakater-github-update-cd-repo-0.0.5
+          name: stakater-github-update-cd-repo-0.0.7
         params:
           - name: IMAGE_TAG
             value: $(tasks.create-git-tag.results.GIT_TAG)
