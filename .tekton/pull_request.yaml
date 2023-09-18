@@ -20,8 +20,7 @@ metadata:
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-check/rendered/stakater-rox-image-check-0.0.4.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-checkov-scan/rendered/stakater-checkov-scan-0.0.3.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.10.yaml, 
-    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.5.yaml, 
-    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml,
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.7.yaml, 
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-validate-environment/rendered/stakater-validate-environment-0.0.4.yaml]"
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 
@@ -331,27 +330,6 @@ spec:
             workspace: source
           - name: ssh-directory
             workspace: ssh-directory
-
-      - name: push-main-tag
-        runAfter:
-          - update-cd-repo
-        taskRef:
-          kind: Task
-          name: stakater-push-main-tag-0.0.4
-        params:
-          - name: PR_NUMBER
-            value: $(params.pull_request_number)
-          - name: GIT_REVISION
-            value: $(params.git_revision)
-          - name: IMAGE_TAG
-            value: $(tasks.create-git-tag.results.GIT_TAG)
-          - name: GIT_SECRET_NAME
-            value: "pat-creds"
-          - name: PROTOCOL
-            value: "ssh"
-        workspaces:
-          - name: source
-            workspace: source
 
       - name: stakater-validate-environment
         runAfter:
