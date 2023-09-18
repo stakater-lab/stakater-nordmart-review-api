@@ -172,28 +172,28 @@ spec:
 #          - name: source
 #            workspace: source
 #
-#      - name: buildah
-#        runAfter:
-#          - unit-test
-#        taskRef:
-#          name: stakater-buildah-0.0.18
-#          kind: Task
-#        params:
-#          - name: IMAGE
-#            value: $(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)
-#          - name: TLSVERIFY
-#            value: "false"
-#          - name: FORMAT
-#            value: "docker"
-#          - name: BUILD_IMAGE
-#            value: "true"
-#          - name: IMAGE_REGISTRY
-#            value: $(params.image_registry)
-#          - name: CURRENT_GIT_TAG
-#            value: $(tasks.create-git-tag.results.CURRENT_GIT_TAG)
-#        workspaces:
-#          - name: source
-#            workspace: source
+      - name: buildah
+        runAfter:
+          - stakater-create-environment
+        taskRef:
+          name: stakater-buildah-0.0.18
+          kind: Task
+        params:
+          - name: IMAGE
+            value: $(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)
+          - name: TLSVERIFY
+            value: "false"
+          - name: FORMAT
+            value: "docker"
+          - name: BUILD_IMAGE
+            value: "true"
+          - name: IMAGE_REGISTRY
+            value: $(params.image_registry)
+          - name: CURRENT_GIT_TAG
+            value: $(tasks.create-git-tag.results.CURRENT_GIT_TAG)
+        workspaces:
+          - name: source
+            workspace: source
 #
 #      - name: trivy-scan
 #        runAfter:
@@ -356,7 +356,7 @@ spec:
 
       - name: stakater-validate-environment
         runAfter:
-          - stakater-create-environment
+          - buildah
         taskRef:
           kind: Task
           name: stakater-validate-environment-0.0.4
