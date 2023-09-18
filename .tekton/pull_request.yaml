@@ -356,7 +356,7 @@ spec:
 
       - name: stakater-validate-environment
         runAfter:
-          - push-main-tag
+          - stakater-create-environment
         taskRef:
           kind: Task
           name: stakater-validate-environment-0.0.4
