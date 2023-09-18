@@ -18,7 +18,7 @@ application:
         pattern: "(ERROR|ERR|error|E[A-Z0-9]{4})"
     additionalLabels:
       appCategory: backend
-    imagePullSecrets: nexus-docker-config-forked
+    imagePullSecrets: review-docker-reg-creds
     env:
       MONGODB_PASSWORD:
         valueFrom:
@@ -142,6 +142,13 @@ application:
       #Data defines the connection between the Kubernetes Secret keys and the Provider data
         dataFrom:
           key: review-api/dev/mongodb-creds
+      docker-reg-creds: 
+        type: kubernetes.io/dockerconfigjson
+        data:
+          .dockerconfigjson:
+            remoteRef:
+              property: .dockerconfigjson
+              key: docker-reg-creds
 
 #####################
 # MongoDB dependency
