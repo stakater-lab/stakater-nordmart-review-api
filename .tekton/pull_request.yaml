@@ -20,8 +20,7 @@ metadata:
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-check/rendered/stakater-rox-image-check-0.0.4.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-checkov-scan/rendered/stakater-checkov-scan-0.0.3.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.10.yaml, 
-    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.5.yaml, 
-    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-push-main-tag/rendered/stakater-push-main-tag-0.0.4.yaml,
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.7.yaml, 
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-validate-environment/rendered/stakater-validate-environment-0.0.4.yaml]"
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 
@@ -212,63 +211,6 @@ spec:
           - name: source
             workspace: source
 
-      - name: rox-image-scan
-        runAfter:
-          - buildah
-          - sonarqube-scan
-        taskRef:
-          name: stakater-rox-image-scan-0.0.4
-          kind: Task
-        params:
-          - name: IMAGE
-            value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
-          - name: ROX_API_TOKEN
-            value: rox-creds
-          - name: ROX_CENTRAL_ENDPOINT
-            value: rox-creds
-          - name: OUTPUT_FORMAT
-            value: csv
-          - name: IMAGE_DIGEST
-            value: $(tasks.buildah.results.IMAGE_DIGEST)
-          - name: BUILD_IMAGE
-            value: "true"
-
-      - name: rox-image-check
-        runAfter:
-          - buildah
-          - sonarqube-scan
-        taskRef:
-          name: stakater-rox-image-check-0.0.4
-          kind: Task
-        params:
-          - name: IMAGE
-            value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
-          - name: ROX_API_TOKEN
-            value: rox-creds
-          - name: ROX_CENTRAL_ENDPOINT
-            value: rox-creds
-          - name: BUILD_IMAGE
-            value: "true"
-
-      - name: rox-deployment-check
-        runAfter:
-          - buildah
-          - sonarqube-scan
-        taskRef:
-          name: stakater-rox-deployment-check-0.0.4
-          kind: Task
-        params:
-          - name: ROX_API_TOKEN
-            value: rox-creds
-          - name: ROX_CENTRAL_ENDPOINT
-            value: rox-creds
-          - name: FILE
-            value: manifest.yaml
-          - name: DEPLOYMENT_FILES_PATH
-            value: deploy
-        workspaces:
-          - name: source
-            workspace: source
       - name: checkov-scan
         runAfter:
           - buildah
@@ -280,9 +222,6 @@ spec:
       - name: helm-push
         runAfter:
           - trivy-scan
-          - rox-deployment-check
-          - rox-image-scan
-          - rox-image-check
           - checkov-scan
         taskRef:
           name: stakater-helm-push-0.0.10
@@ -332,30 +271,9 @@ spec:
           - name: ssh-directory
             workspace: ssh-directory
 
-      - name: push-main-tag
-        runAfter:
-          - update-cd-repo
-        taskRef:
-          kind: Task
-          name: stakater-push-main-tag-0.0.4
-        params:
-          - name: PR_NUMBER
-            value: $(params.pull_request_number)
-          - name: GIT_REVISION
-            value: $(params.git_revision)
-          - name: IMAGE_TAG
-            value: $(tasks.create-git-tag.results.GIT_TAG)
-          - name: GIT_SECRET_NAME
-            value: "pat-creds"
-          - name: PROTOCOL
-            value: "ssh"
-        workspaces:
-          - name: source
-            workspace: source
-
       - name: stakater-validate-environment
         runAfter:
-          - push-main-tag
+          - update-cd-repo
         taskRef:
           kind: Task
           name: stakater-validate-environment-0.0.4
