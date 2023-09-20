@@ -21,6 +21,7 @@ LABEL name="inventory" \
 ENV HOME=/opt/app
 WORKDIR $HOME
 
+
 # Expose the port on which your service will run
 EXPOSE 8080
 
