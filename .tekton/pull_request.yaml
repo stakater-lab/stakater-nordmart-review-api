@@ -218,6 +218,9 @@ spec:
         taskRef:
           name: stakater-checkov-scan-0.0.3
           kind: Task
+        workspaces:
+          - name: source
+            workspace: source
 
       - name: helm-push
         runAfter:
