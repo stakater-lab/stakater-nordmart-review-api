@@ -42,7 +42,7 @@ spec:
       value: >-
         https://nexus-helm-stakater-nexus.ROUTE_SUBDOMAIN/repository/helm-charts/
     - name: organization
-      value: stakater-lab
+      value: DESTINATION_ORG
   pipelineSpec:
     params:
       - name: repo_url
