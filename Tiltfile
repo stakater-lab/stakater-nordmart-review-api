@@ -4,8 +4,12 @@
 
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load('ext://restart_process', 'docker_build_with_restart')
+load('ext://helm_resource', 'helm_resource', 'helm_repo')
 
 settings = read_json('tilt_options.json', default={})
+
+# Add Helm repos
+helm_repo('stakater', 'https://stakater.github.io/stakater-charts')
 
 if settings.get("namespace"):
   namespace =  settings.get("namespace")
@@ -14,7 +18,7 @@ if settings.get("default_registry"):
   default_registry(settings.get("default_registry").format(namespace), host_from_cluster='image-registry.openshift-image-registry.svc:5000/{}'.format(namespace))
 
 if settings.get("allow_k8s_contexts"):
-  allow_k8s_contexts(settings.get("allow_k8s_contexts"))
+  allow_k8s_contexts("chelsea-dev/api-tno2-lab-kubeapp-cloud:6443/pele@chelsea.com")
 
 # Watch source code and on change rebuild artifacts and place in target folder
 local_resource(
@@ -40,7 +44,7 @@ docker_build_with_restart(
   platform='linux/amd64',
   #########################################################
   # NOTE: Remember Dockerfile must have a particular format
-  #########################################################  
+  #########################################################
   dockerfile='./DockerfileTilt',
   live_update=[
     sync('./target/jar/application', '/app'),
@@ -49,12 +53,7 @@ docker_build_with_restart(
     sync('./target/jar/spring-boot-loader', '/app'),
   ])
 
-yaml = helm('./deploy/', namespace=namespace, values=['./tilt/values-local.yaml'])
 
-k8s_yaml(yaml)
+namespace = "chelsea-dev"
+helm_resource('review', './deploy', namespace=namespace, image_deps=["review"], image_keys=[('application.deployment.image.repository', 'application.deployment.image.tag')], flags=['--values=./tilt/values-local.yaml'])
 
-#######################################################################
-# NOTE: These are application dependent; so, you will need to update it
-#######################################################################
-k8s_resource('review-mongodb', port_forwards=['27017:27017'])
-k8s_resource('review', port_forwards=['9000:8080'], resource_deps=['review-compile'])
