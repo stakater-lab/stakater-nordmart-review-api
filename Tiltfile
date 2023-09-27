@@ -18,7 +18,7 @@ if settings.get("default_registry"):
   default_registry(settings.get("default_registry").format(namespace), host_from_cluster='image-registry.openshift-image-registry.svc:5000/{}'.format(namespace))
 
 if settings.get("allow_k8s_contexts"):
-  allow_k8s_contexts("chelsea-dev/api-tno2-lab-kubeapp-cloud:6443/pele@chelsea.com")
+  allow_k8s_contexts(settings.get("allow_k8s_contexts"))
 
 # Watch source code and on change rebuild artifacts and place in target folder
 local_resource(
