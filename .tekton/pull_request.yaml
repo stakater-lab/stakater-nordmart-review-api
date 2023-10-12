@@ -10,14 +10,14 @@ metadata:
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-git-tag/rendered/stakater-create-git-tag-0.0.7.yaml, 
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-create-environment/rendered/stakater-create-environment-0.0.4.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-code-linting/rendered/stakater-code-linting-0.0.3.yaml,
-    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.4.yaml,
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-kube-linting/rendered/stakater-kube-linting-0.0.6.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-unit-test/rendered/stakater-unit-test-0.0.5.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-sonarqube-scan/rendered/stakater-sonarqube-scan-0.0.5.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-buildah/rendered/stakater-buildah-0.0.18.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-trivy-scan/rendered/stakater-trivy-scan-0.0.3.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-scan/rendered/stakater-rox-image-scan-0.0.4.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-deployment-check/rendered/stakater-rox-deployment-check-0.0.4.yaml,
-    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-check/rendered/stakater-rox-image-check-0.0.4.yaml,
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-rox-image-check/rendered/stakater-rox-image-check-0.0.5.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-checkov-scan/rendered/stakater-checkov-scan-0.0.3.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.12.yaml, 
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.7.yaml, 
@@ -134,7 +134,7 @@ spec:
         runAfter:
           - stakater-create-environment
         taskRef:
-          name: stakater-kube-linting-0.0.4
+          name: stakater-kube-linting-0.0.6
           kind: Task
         params:
           - name: FILE
@@ -211,6 +211,64 @@ spec:
           - name: source
             workspace: source
 
+      - name: rox-image-scan
+        runAfter:
+          - buildah
+          - sonarqube-scan
+        taskRef:
+          name: stakater-rox-image-scan-0.0.4
+          kind: Task
+        params:
+        - name: IMAGE
+          value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
+        - name: ROX_API_TOKEN
+          value: rox-creds
+        - name: ROX_CENTRAL_ENDPOINT
+          value: rox-creds
+        - name: OUTPUT_FORMAT
+          value: csv
+        - name: IMAGE_DIGEST
+          value: $(tasks.buildah.results.IMAGE_DIGEST)
+        - name: BUILD_IMAGE
+          value: "true"
+
+      - name: rox-image-check
+        runAfter:
+          - buildah
+          - sonarqube-scan
+        taskRef:
+          name: stakater-rox-image-check-0.0.5
+          kind: Task
+        params:
+          - name: IMAGE
+            value: '$(params.image_registry):$(tasks.create-git-tag.results.GIT_TAG)'
+          - name: ROX_API_TOKEN
+            value: rox-creds
+          - name: ROX_CENTRAL_ENDPOINT
+            value: rox-creds
+          - name: BUILD_IMAGE
+            value: "true"
+
+      - name: rox-deployment-check
+        runAfter:
+          - buildah
+          - sonarqube-scan
+        taskRef:
+          name: stakater-rox-deployment-check-0.0.4
+          kind: Task
+        params:
+          - name: ROX_API_TOKEN
+            value: rox-creds
+          - name: ROX_CENTRAL_ENDPOINT
+            value: rox-creds
+          - name: FILE
+            value: manifest.yaml
+          - name: DEPLOYMENT_FILES_PATH
+            value: deploy
+        workspaces:
+          - name: source
+            workspace: source
+
       - name: checkov-scan
         runAfter:
           - buildah
@@ -225,6 +283,9 @@ spec:
       - name: helm-push
         runAfter:
           - trivy-scan
+          - rox-deployment-check
+          - rox-image-scan
+          - rox-image-check
           - checkov-scan
         taskRef:
           name: stakater-helm-push-0.0.12
