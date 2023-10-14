@@ -2,23 +2,34 @@
 # Application / App / Microservice
 ##################################
 application:
-
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
   applicationName: review
 
   # Deployment
   deployment:
+    reloadOnChange: true
     annotations:
       secret.reloader.stakater.com/reload: review-mongodb-creds
     fluentdConfigAnnotations:
       notifications:
         slack:
-          webhookURL: https://hooks.slack.com/services/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
+          webhookURL: # place the Slack Webhook URL here
           channelName: "#nordmart-gabbar-application-alerts"
         key: "level"
         pattern: "(ERROR|ERR|error|E[A-Z0-9]{4})"
     additionalLabels:
       appCategory: backend
-    imagePullSecrets: review-docker-reg-creds
+    imagePullSecrets: nexus-docker-config-forked
     env:
       MONGODB_PASSWORD:
         valueFrom:
@@ -30,13 +41,15 @@ application:
         type: configmap
         nameSuffix: config
 
-    volumes:
-      tmp:
-        emptyDir: {}
-
-    volumeMounts:
-      tmp:
-        mountPath: /tmp
+# #Binding Persistent Volume
+#     volumes:
+#       tmp:
+#         persistentVolumeClaim:
+#           claimName: review
+# #Define the MOunt Path
+#     volumeMounts:
+#       tmp:
+#         mountPath: /data
 
     resources:
       limits:
@@ -48,25 +61,68 @@ application:
 
     readinessProbe:
       enabled: true
-      failureThreshold: 5
-      periodSeconds: 5
+      failureThreshold: 50
+      periodSeconds: 50
       successThreshold: 1
-      timeoutSeconds: 5
-      initialDelaySeconds: 15
+      timeoutSeconds: 50
+      initialDelaySeconds: 150
       httpGet:
         path: /actuator/health
         port: 8080
 
     livenessProbe:
       enabled: true
-      failureThreshold: 5
-      periodSeconds: 5
+      failureThreshold: 50
+      periodSeconds: 50
       successThreshold: 1
-      timeoutSeconds: 5
-      initialDelaySeconds: 15
+      timeoutSeconds: 50
+      initialDelaySeconds: 150
       httpGet:
         path: /actuator/health
         port: 8080
+
+    ports:
+    - containerPort: 8080
+      name: http
+      protocol: TCP
+
+# #Persistent Volume Claim
+#   persistence:
+#     enabled: false
+#     mountPVC: false
+#     mountPath: "/data"
+#     name: "review"
+#     accessMode: ReadWriteOnce
+#     storageClass: ""
+#     storageSize: 5Gi
+#     volumeMode: "Filesystem"
+#     volumeName: ""
+
+## Service
+  service:
+    enabled: true
+    ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+
+## Route
+  route:
+    enabled: true
+    port:
+      targetPort: http
+
+# Ingress
+  ingress:
+    enabled: false
+    servicePort: http
+    hosts:
+      - host:  review.<CLUSTER-NAME>.kubeapp.cloud
+        paths:
+        - path: /
+          servicePort: 'http'
+    tls:
+    - {}
 
   ## Prometheus Rule to trigger alerts based on ratings
   prometheusRule:
@@ -79,11 +135,62 @@ application:
           - alert: NordmartReviewLowRatingsCritical
             annotations:
               message: >-
-                Total ratings below 2 has crossed the threshold 8. Total reviews: {{ $value }}.
+                Total ratings below 2 has crossed the threshold 1. Total reviews: {{ $value }}.
             expr: >
-              sum by (namespace) (nordmart_review_ratings_total{rating="2"} or nordmart_review_ratings_total{rating="1"}) > 8
+              sum by (namespace) (nordmart_review_ratings_total{rating="2"} or nordmart_review_ratings_total{rating="1"}) > 1
             labels:
               severity: critical
+      - name: nordmart-review-api-rules
+        rules:
+          - alert: NordmartReviewApiNotAvailable
+            annotations:
+              message: 'Nordmart Review API in namespace chelsea-dev is not available for the last 1 minutes.'
+            expr: (1 - absent(kube_pod_status_ready{condition="true",namespace="chelsea-dev"} * 
+             on(pod) group_left(label_app) 
+             kube_pod_labels{label_app="review",namespace="chelsea-dev"})) == 0
+            for: 1m
+            labels:
+              severity: critical
+
+
+  alertmanagerConfig:
+    enabled: true
+    selectionLabels:
+      alertmanagerConfig: workload
+    spec:
+      receivers:
+        - name: nordmart-review-receiver
+          slackConfigs:
+            - apiURL:
+                key: api_url
+                name: review-slack-webhook
+              channel: '#ratings-alert'
+              sendResolved: true
+              text: |2-
+                {{ range .Alerts }}
+                *Alert:* `{{ .Labels.severity | toUpper }}` - {{ .Annotations.summary }}
+                *Description:* {{ .Annotations.description }}
+                *Details:*
+                  {{ range .Labels.SortedPairs }} *{{ .Name }}:* `{{ .Value }}`
+                  {{ end }}
+                {{ end }}
+              title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] SAAP Alertmanager Event Notification'
+              httpConfig:
+                tlsConfig:
+                  insecureSkipVerify: true
+      route:
+        groupBy:
+          - alertname
+          - severity
+        groupInterval: 3m
+        groupWait: 30s
+        repeatInterval: 1h
+        matchers:
+          - name: alertname
+            value: NordmartReviewLowRatingsCritical
+          - name: alertname
+            value: NordmartReviewApiNotAvailable
+        receiver: nordmart-review-receiver
 
   ## ConfigMap
   configMap:
@@ -98,22 +205,13 @@ application:
     serviceAccount:
       enabled: true
 
-  ## Service
-  service:
-    ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
-
-  ## Route
-  route:
-    enabled: true
-    port:
-      targetPort: http
-
   ## Service Monitor
   serviceMonitor:
     enabled: true
+    endpoints:
+    - interval: 5s
+      path: /actuator/prometheus # path where your metrics are exposed
+      port: http
 
   ## Endpoint Montior
   endpointMonitor:
@@ -129,26 +227,38 @@ application:
   externalSecret:
     enabled: true
 
-    # Default SecretStore for all externalsecrets defines which SecretStore to use when fetching the secret data
+  #SecretStore defines which SecretStore to use when fetching the secret data
     secretStore:
       name: tenant-vault-secret-store
-      #kind: ClusterSecretStore # Defaults to SecretStore if not specified
+      kind: SecretStore # or ClusterSecretStore
 
-    # RefreshInterval is the amount of time before the values reading again from the SecretStore provider
+  #RefreshInterval is the amount of time before the values reading again from the SecretStore provider
     refreshInterval: "1m"
     files:
-    # The full name of secret will be review-mongodb-creds; review it applicationName defined above
       mongodb-creds:
-      #Data defines the connection between the Kubernetes Secret keys and the Provider data
+      #Used to fetch all properties from the Provider key
         dataFrom:
-          key: review-api/dev/mongodb-creds
-      docker-reg-creds: 
-        type: kubernetes.io/dockerconfigjson
-        data:
-          .dockerconfigjson:
-            remoteRef:
-              property: .dockerconfigjson
-              key: docker-reg-creds
+          key: chelsea/kv/review-mongodb-creds
+
+  pdb:
+    enabled: false
+    minAvailable: 2
+    maxUnavailable: 2
+
+  networkPolicy:
+    enabled: false
+    podSelector:
+      matchLabels:
+        app.kubernetes.io/name: mongodb
+    ingress:
+      - ports:
+          - protocol: TCP
+            port: 27017
+        from:
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/name: review
+
 
 #####################
 # MongoDB dependency
@@ -161,12 +271,12 @@ mongodb:
     type: Recreate
 
   resources:
-     limits:
-       memory: 1Gi
-       cpu: 0.5
-     requests:
-       memory: 128Mi
-       cpu: 0.1
+    limits:
+      memory: 1Gi
+      cpu: 0.5
+    requests:
+      memory: 128Mi
+      cpu: 0.1
 
   auth:
     enabled: true
@@ -184,3 +294,4 @@ mongodb:
 #####################
 grafanaDashboard:
   enabled: true
+
