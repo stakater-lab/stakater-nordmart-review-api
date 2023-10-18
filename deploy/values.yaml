@@ -18,7 +18,7 @@ application:
         pattern: "(ERROR|ERR|error|E[A-Z0-9]{4})"
     additionalLabels:
       appCategory: backend
-    imagePullSecrets: review-docker-reg-creds
+    imagePullSecrets: docker-reg-creds
     env:
       MONGODB_PASSWORD:
         valueFrom:
