@@ -4,7 +4,7 @@ description: A Helm chart for Kubernetes
 dependencies:
 - name: mongodb
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 13.15.4
+  version: 13.18.5
 - name: application
   repository: https://stakater.github.io/stakater-charts
   version: 2.1.18
