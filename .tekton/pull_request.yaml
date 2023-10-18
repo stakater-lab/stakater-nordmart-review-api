@@ -115,7 +115,7 @@ spec:
           - name: IMAGE_REPO
             value: $(params.image_registry)
           - name: PULL_REQUEST_COMMITS_API
-            value: https://api.github.com/repos/$(params.organization)/$(params.repo_path)/pulls/$(params.pull_request_number)/commits
+            value: https://api.github.com/repos/stakater-lab/$(params.repo_path)/pulls/$(params.pull_request_number)/commits
         workspaces:
           - name: output
             workspace: source
