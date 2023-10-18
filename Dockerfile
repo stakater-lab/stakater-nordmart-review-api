@@ -9,7 +9,7 @@ RUN mvn -f /usr/src/app/pom.xml clean package
 #################################################################################
 ##### RUN
 #################################################################################
-FROM registry.access.redhat.com/ubi8/openjdk-11:1.14-10
+FROM registry.access.redhat.com/ubi8/openjdk-11:1.17-1.1696520348
 
 LABEL name="inventory" \
       maintainer="Stakater <hello@stakater.com>" \
