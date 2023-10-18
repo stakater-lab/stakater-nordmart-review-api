@@ -229,7 +229,7 @@ spec:
           - name: NAMESPACE
             value: psg-dev
           - name: ENVIRONMENT
-            value: dev
+            value: 01-dev
           - name: HELM_REGISTRY
             value: $(params.helm_registry)
           - name: CD_REPO_URL
