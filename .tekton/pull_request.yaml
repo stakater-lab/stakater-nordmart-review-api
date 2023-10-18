@@ -322,7 +322,7 @@ spec:
           - name: GIT_REVISION
             value: $(params.git_revision)
           - name: NAMESPACE
-            value: arsenal-dev
+            value: psg-dev
           - name: ENVIRONMENT
             value: dev
           - name: HELM_REGISTRY
