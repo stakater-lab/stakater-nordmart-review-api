@@ -2,7 +2,7 @@ application:
   chart_path: deploy
   namespaceLabels:
     stakater.com/kind: pr
-    stakater.com/tenant: arsenal
+    stakater.com/tenant: psg
   value_overrides:
     application:
       deployment:
