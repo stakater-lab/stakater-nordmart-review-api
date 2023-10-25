@@ -39,6 +39,8 @@ spec:
       value: stakater-lab
     - name: tenant
       value: psg
+    - name: route_subdomain
+      value: apps.tno1-ams.s9nghh76.lab.kubeapp.cloud
   pipelineSpec:
     params:
       - name: repo_url
@@ -46,6 +48,9 @@ spec:
       - name: repo_path
       - name: image_registry
       - name: helm_registry
+      - name: organization
+      - name: tenant
+      - name: route_subdomain
     workspaces:
       - name: source
       - name: ssh-directory
@@ -131,7 +136,7 @@ spec:
           kind: Task
         params:
           - name: SONAR_HOST_URL
-            value: https://sonarqube-stakater-sonarqube.apps.tno1-ams.s9nghh76.lab.kubeapp.cloud
+            value: https://sonarqube-stakater-sonarqube.$(params.route_subdomain)
 
           - name: SONAR_PROJECT_KEY
             value: $(params.repo_path)
@@ -227,13 +232,13 @@ spec:
           - name: GIT_REVISION
             value: main
           - name: NAMESPACE
-            value: psg-dev
+            value: $(params.tenant)-dev
           - name: ENVIRONMENT
             value: 01-dev
           - name: HELM_REGISTRY
             value: $(params.helm_registry)
           - name: CD_REPO_URL
-            value: git@github.com:stakater/nordmart-apps-gitops-config.git
+            value: git@github.com:$(params.organization)/nordmart-apps-gitops-config.git
         workspaces:
           - name: source
             workspace: source
