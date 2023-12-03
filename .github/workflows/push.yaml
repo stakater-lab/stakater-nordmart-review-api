@@ -50,7 +50,10 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          platforms: linux/amd64
+          # have to skip tests as embeded monogdb doesn't work with arm64
+          build-args: |
+            "MVN_CMD=clean package -DskipTests"
+          platforms: linux/amd64,linux/arm64
           file: ${{ env.DOCKER_FILE_PATH  }}
           pull: true
           push: true
