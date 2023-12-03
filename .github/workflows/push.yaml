@@ -66,7 +66,7 @@ jobs:
           sed -i "s/^version:.*/version:  ${{ steps.generate_tag.outputs.new_tag }}/" deploy/Chart.yaml
           helm dependency update deploy/
           helm package deploy/
-          helm push stakater-nordmart-review-${{ steps.generate_tag.outputs.new_tag }}.tgz oci://ghcr.io/stakater-lab/charts
+          helm push stakater-nordmart-review-api-${{ steps.generate_tag.outputs.new_tag }}.tgz oci://ghcr.io/stakater-lab/charts
 
       - name: Push Latest Tag
         uses: anothrNick/github-tag-action@1.66.0
