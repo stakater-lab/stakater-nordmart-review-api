@@ -21,7 +21,7 @@ metadata:
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-checkov-scan/rendered/stakater-checkov-scan-0.0.3.yaml,
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-helm-push/rendered/stakater-helm-push-0.0.12.yaml, 
     https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-github-update-cd-repo/rendered/stakater-github-update-cd-repo-0.0.7.yaml, 
-    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-validate-environment/rendered/stakater-validate-environment-0.0.4.yaml]"
+    https://raw.githubusercontent.com/stakater/tekton-catalog/main/stakater-validate-environment/rendered/stakater-validate-environment-0.0.8.yaml]"
     pipelinesascode.tekton.dev/max-keep-runs: "2"
 
 spec:
@@ -345,7 +345,7 @@ spec:
           - update-cd-repo
         taskRef:
           kind: Task
-          name: stakater-validate-environment-0.0.4
+          name: stakater-validate-environment-0.0.8
         params:
           - name: TIMEOUT
             value: "300"
